@@ -1,7 +1,6 @@
 package ctn.futurefood;
 
 import ctn.futurefood.datagen.*;
-import ctn.futurefood.datagen.DatagenI18ZhCn;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -16,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
  * 数据生成主类
  */
 @EventBusSubscriber()
-public class FutureFoodDatagen {
+public class FfDatagen {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
@@ -29,11 +28,11 @@ public class FutureFoodDatagen {
 		generator.addProvider(event.includeClient(), new DatagenItemModel(output, exFileHelper));
 		generator.addProvider(event.includeClient(), new DatagenBlockState(output, exFileHelper));
 		generator.addProvider(event.includeClient(), new DatagenParticle(output, exFileHelper));
-		Tags.Block pmBlockTags = new Tags.Block(output, lookupProvider, exFileHelper);
+		FfTags.Block pmBlockTags = new FfTags.Block(output, lookupProvider, exFileHelper);
 		generator.addProvider(event.includeClient(), pmBlockTags);
-		generator.addProvider(event.includeClient(), new Tags.Item(output, lookupProvider, pmBlockTags.contentsGetter(), exFileHelper));
-		generator.addProvider(event.includeClient(), new Tags.DamageType(output, lookupProvider, exFileHelper));
-		generator.addProvider(event.includeClient(), new Tags.Entity(output, lookupProvider, exFileHelper));
+		generator.addProvider(event.includeClient(), new FfTags.Item(output, lookupProvider, pmBlockTags.contentsGetter(), exFileHelper));
+		generator.addProvider(event.includeClient(), new FfTags.DamageType(output, lookupProvider, exFileHelper));
+		generator.addProvider(event.includeClient(), new FfTags.Entity(output, lookupProvider, exFileHelper));
 		
 		// 服务端数据生成
 		generator.addProvider(event.includeServer(), new DatagenDatapackBuiltinEntries(output, lookupProvider));

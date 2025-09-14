@@ -255,15 +255,15 @@ public class RecipeTool {
 				.pattern("###");
 	}
 	
-	public static  Ingredient getIngredient(ItemLike item) {
+	public static Ingredient getIngredient(ItemLike item) {
 		return Ingredient.of(item);
 	}
 	
-	public static  Ingredient getIngredient(TagKey<Item> tag) {
+	public static Ingredient getIngredient(TagKey<Item> tag) {
 		return Ingredient.of(tag);
 	}
 	
-	public static void requires(ShapedBuilder builder, Map< Character,  Ingredient> requires,
+	public static void requires(ShapedBuilder builder, Map<Character, Ingredient> requires,
 			String group, RecipeOutput recipeOutput) {
 		defineRequires(builder, requires)
 				.basicUnlockedBy()

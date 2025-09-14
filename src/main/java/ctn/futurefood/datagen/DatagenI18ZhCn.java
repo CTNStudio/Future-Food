@@ -12,6 +12,10 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
+import static ctn.futurefood.init.FfBlocks.QED;
+import static ctn.futurefood.init.FfBlocks.QER;
+import static ctn.futurefood.init.FfCreativeModeTab.FUTURE_FOOD;
+
 
 public class DatagenI18ZhCn extends LanguageProvider {
 	public DatagenI18ZhCn(PackOutput output) {
@@ -20,6 +24,9 @@ public class DatagenI18ZhCn extends LanguageProvider {
 	
 	@Override
 	protected void addTranslations() {
+		add(QED, "量子能源扩散器");
+		add(QER, "量子能源接收器");
+		add(FUTURE_FOOD, "未来食物");
 	}
 	
 	public void addConfig(String configKey, String translationDescribe, String commentDescribe) {

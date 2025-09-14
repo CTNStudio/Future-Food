@@ -37,20 +37,20 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
 		return RecipeProvider.has(count, item);
 	}
 	
-	public static  Criterion<InventoryChangeTrigger.TriggerInstance> has( TagKey<Item> tag) {
+	public static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> tag) {
 		return RecipeProvider.has(tag);
 	}
 	
-	public static  Criterion<InventoryChangeTrigger.TriggerInstance> has( ItemLike itemLike) {
+	public static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike itemLike) {
 		return RecipeProvider.has(itemLike);
 	}
 	
-	public  ShapedBuilder buildingRecipeBuilder(ItemLike result) {
+	public ShapedBuilder buildingRecipeBuilder(ItemLike result) {
 		return buildingRecipeBuilder(result, 1);
 	}
 	
 	@Override
-	protected abstract void buildRecipes( RecipeOutput output);
+	protected abstract void buildRecipes(RecipeOutput output);
 	
 	/// 战斗用品
 	protected void armorRecipe(RecipeOutput output,
@@ -117,11 +117,11 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
 		requires(builder, Map.of('#', requires), group, recipeOutput);
 	}
 	
-	private  ResourceLocation getLocation(String unpackedName) {
+	private ResourceLocation getLocation(String unpackedName) {
 		return ResourceLocation.fromNamespaceAndPath(modId, unpackedName);
 	}
 	
-	public static  String getItemName(ItemLike itemLike) {
+	public static String getItemName(ItemLike itemLike) {
 		return RecipeProvider.getItemName(itemLike);
 	}
 	
@@ -365,7 +365,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
 		requires(builder, Map.of('#', requires), group, recipeOutput);
 	}
 	
-	public  ShapedBuilder buildingRecipeBuilder(ItemLike result, int count) {
+	public ShapedBuilder buildingRecipeBuilder(ItemLike result, int count) {
 		ResourceLocation location = getLocation(getItemName(result));
 		return ShapedBuilder.shaped(location, RecipeCategory.BUILDING_BLOCKS, result, count);
 	}
