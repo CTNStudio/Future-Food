@@ -9,7 +9,6 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.Iterator;
 import java.util.Map;

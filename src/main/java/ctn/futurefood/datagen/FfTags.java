@@ -18,7 +18,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import javax.annotation.CheckForNull;
 import java.util.concurrent.CompletableFuture;
 
-public class Tags {
+public class FfTags {
 	public static class Block extends BlockTagsProvider {
 		
 		public Block(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @CheckForNull ExistingFileHelper existingFileHelper) {

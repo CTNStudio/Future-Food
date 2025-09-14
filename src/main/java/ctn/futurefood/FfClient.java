@@ -12,8 +12,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(value = FutureFood.ID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = FutureFood.ID, value = Dist.CLIENT)
-public class FutureFoodClient {
-	public FutureFoodClient(ModContainer container) {
+public class FfClient {
+	public FfClient(ModContainer container) {
 		container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 	}
 	

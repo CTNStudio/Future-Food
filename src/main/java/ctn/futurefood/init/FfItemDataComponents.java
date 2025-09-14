@@ -1,7 +1,7 @@
 package ctn.futurefood.init;
 
 import com.mojang.serialization.Codec;
-import ctn.ctntemplate.CtnTemplate;
+import ctn.futurefood.FutureFood;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -15,10 +15,8 @@ import java.util.function.UnaryOperator;
 /**
  * 物品组件
  */
-public class ItemDataComponents {
-	public static final DeferredRegister<DataComponentType<?>> ITEM_DATA_COMPONENT_REGISTER = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, CtnTemplate.ID);
-
-//	public static final Supplier<DataComponentType<Boolean>>           MODE_BOOLEAN         = recordBoolean("mode_boolean");
+public class FfItemDataComponents {
+	public static final DeferredRegister<DataComponentType<?>> ITEM_DATA_COMPONENT_REGISTER = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, FutureFood.ID);
 	
 	private static final EncoderCache ENCODER_CACHE = new EncoderCache(512);
 	
