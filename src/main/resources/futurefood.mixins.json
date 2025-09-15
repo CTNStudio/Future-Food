@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "ctn.futurefood.mixin",
+  "package": "top.ctnstudio.futurefood.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "injectors": {
