@@ -1,19 +1,12 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.logging.log4j.util.Lazy;
-import top.ctnstudio.futurefood.FutureFood;
+import top.ctnstudio.futurefood.init.ModTileEntity;
 
 public class QerBlockEntity extends BlockEntity {
-  private static final Lazy<BlockEntityType<?>> lazyType = Lazy.lazy(() ->
-    FutureFood.getModObject(BuiltInRegistries.BLOCK_ENTITY_TYPE,
-      "quantum_energy_receiver_block_entity"));
-
   public QerBlockEntity(BlockPos pos, BlockState blockState) {
-    super(lazyType.get(), pos, blockState);
+    super(ModTileEntity.QER.get(), pos, blockState);
   }
 }

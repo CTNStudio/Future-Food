@@ -76,6 +76,9 @@ repositories {
 
 dependencies {
   implementation "club.snowlyicewolf:amarok-json-for-java:1.7.9"
+  additionalRuntimeClasspath "club.snowlyicewolf:amarok-json-for-java:1.7.9"
+
+  jarJar "club.snowlyicewolf:amarok-json-for-java:1.7.9"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

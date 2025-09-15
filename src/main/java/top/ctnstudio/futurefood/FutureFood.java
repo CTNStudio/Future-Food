@@ -5,26 +5,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.ctnstudio.futurefood.init.ModBlock;
 import top.ctnstudio.futurefood.init.ModTileEntity;
-
-import static top.ctnstudio.futurefood.init.ModBlock.BLOCK_REGISTER;
-import static top.ctnstudio.futurefood.init.FfItems.ITEM_REGISTER;
 
 @Mod(FutureFood.ID)
 public class FutureFood {
   public static final String ID = "futurefood";
-  public static final Logger LOGGER = LogManager.getLogger();
+  public static final Logger LOGGER = LogManager.getLogger(ID);
 
   public FutureFood(IEventBus modEventBus, ModContainer modContainer) {
-    NeoForge.EVENT_BUS.register(this);
-
     modEventBus.addListener(this::register);
-
-    BLOCK_REGISTER.register(modEventBus);
   }
 
   /**
@@ -45,6 +38,7 @@ public class FutureFood {
    * Register the objects in mod.
    */
   private void register(final RegisterEvent event) {
+    ModBlock.init(event);
     ModTileEntity.init(event);
   }
 }
