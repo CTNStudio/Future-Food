@@ -10,6 +10,7 @@ import top.ctnstudio.futurefood.FutureFood;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QerEntityBlock;
 
+import javax.annotation.Nonnull;
 import java.util.Stack;
 import java.util.function.Supplier;
 
@@ -23,6 +24,7 @@ public final class ModBlock {
   private ModBlock() {
   }
 
+  @Nonnull
   private static Supplier<Block> registerBlock(String name, Supplier<Block> block) {
     return data.push(new Pair<>(FutureFood.modRL(name), block)).getValue();
   }

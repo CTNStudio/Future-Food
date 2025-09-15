@@ -5,11 +5,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import top.ctnstudio.futurefood.FutureFood;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Stack;
 import java.util.function.Supplier;
 
@@ -25,8 +27,9 @@ public final class ModTileEntity {
   private ModTileEntity() {
   }
 
-  private static Supplier<BlockEntityType<?>> register(String name,
-                                                       BlockEntityType.BlockEntitySupplier<?> blockEntity) {
+  @Nonnull
+  private static Supplier<BlockEntityType<?>> register(final String name,
+                                                       final BlockEntitySupplier<?> blockEntity) {
     final Supplier<BlockEntityType<?>> dat = () -> {
       final var block = BuiltInRegistries.BLOCK.get(FutureFood.modRL(name));
       return BlockEntityType.Builder.of(blockEntity, block).build(null);

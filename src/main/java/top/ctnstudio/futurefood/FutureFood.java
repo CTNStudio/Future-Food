@@ -11,6 +11,10 @@ import org.apache.logging.log4j.Logger;
 import top.ctnstudio.futurefood.init.ModBlock;
 import top.ctnstudio.futurefood.init.ModTileEntity;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 @Mod(FutureFood.ID)
 public class FutureFood {
   public static final String ID = "futurefood";
@@ -26,11 +30,20 @@ public class FutureFood {
    * @param name the path for rl.
    * @return build a ResourceLocation data with mod id for namespace.
    */
-  public static ResourceLocation modRL(String name) {
-    return ResourceLocation.tryBuild(FutureFood.ID, name);
+  @Nonnull
+  public static ResourceLocation modRL(final String name) {
+    return ResourceLocation.fromNamespaceAndPath(FutureFood.ID, name);
   }
 
-  public static <T> T getModObject(Registry<T> registry, String name) {
+  /**
+   * Get the object which was mod register it.
+   * @param registry the register, get it from {@code BuiltInRegistries}.
+   * @param name the data register name.
+   * @return the target data output if it had be registry.
+   * @param <T> the type of data, it will auto input by registry.
+   */
+  @CheckForNull
+  public static <T> T getModObject(final Registry<T> registry, final String name) {
     return registry.get(modRL(name));
   }
 
