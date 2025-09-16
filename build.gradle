@@ -105,6 +105,11 @@ repositories {
       includeGroup("software.bernie.geckolib")
     }
   }
+
+  // Ziggy 的模组仓库
+  maven {
+    url = uri("https://maven.zigythebird.com/mods")
+  }
 }
 
 dependencies {

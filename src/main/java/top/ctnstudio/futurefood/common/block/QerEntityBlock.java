@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
+import top.ctnstudio.futurefood.core.init.ModBlock;
 
 import javax.annotation.Nullable;
 
@@ -15,7 +16,12 @@ public class QerEntityBlock extends DirectionalEntityBlock {
   private static final MapCodec<QerEntityBlock> CODEC = simpleCodec(QerEntityBlock::new);
 
   public QerEntityBlock() {
-    super(BlockBehaviour.Properties.of());
+    super(BlockBehaviour.Properties.of()
+      .noOcclusion()
+      .isValidSpawn(ModBlock.argumentNever())
+      .isRedstoneConductor(ModBlock.never())
+      .isSuffocating(ModBlock.never())
+      .isViewBlocking(ModBlock.never()));
   }
 
   private QerEntityBlock(Properties properties) {

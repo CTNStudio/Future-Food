@@ -3,10 +3,13 @@ package top.ctnstudio.futurefood.core.init;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.apache.logging.log4j.util.Lazy;
+import org.jetbrains.annotations.NotNull;
 import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QerEntityBlock;
@@ -25,6 +28,14 @@ public final class ModBlock extends AbstractObjectRegister<Block> {
 
   private ModBlock() {
     super(BuiltInRegistries.BLOCK, Registries.BLOCK);
+  }
+
+  public static @NotNull BlockBehaviour.StatePredicate never() {
+    return (blockState, blockGetter, blockPos) -> false;
+  }
+
+  public static @NotNull BlockBehaviour.StateArgumentPredicate<EntityType<?>> argumentNever() {
+    return (state, level, pos, value) -> false;
   }
 
   @Override
