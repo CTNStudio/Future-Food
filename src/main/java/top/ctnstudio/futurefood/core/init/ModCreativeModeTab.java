@@ -9,9 +9,7 @@ import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.function.Supplier;
 
-// TODO - 迁移到新的注册器。
-public final class ModCreativeModeTab {
-
+public final class ModCreativeModeTab  {
   public static void init(final RegisterEvent event) {
     if (event.getRegistry() != BuiltInRegistries.CREATIVE_MODE_TAB) {
       return;
