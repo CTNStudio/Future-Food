@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood;
+package top.ctnstudio.futurefood.core;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModContainer;

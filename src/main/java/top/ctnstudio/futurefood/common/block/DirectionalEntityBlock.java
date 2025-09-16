@@ -13,38 +13,42 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class DirectionalEntityBlock extends BaseEntityBlock {
-	protected static final DirectionProperty FACING = BlockStateProperties.FACING;
-	protected DirectionalEntityBlock(Properties properties) {
-		super(properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-	}
+  protected static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
-	}
+  protected DirectionalEntityBlock(Properties properties) {
+    super(properties);
+    this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+  }
 
-	/**
-	 * 放置时调用
-	 */
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
-	}
+  @Override
+  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    builder.add(FACING);
+  }
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed blockstate.
-	 */
-	@Override
-	protected @NotNull BlockState rotate(BlockState state, Rotation rot) {
-		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
-	}
+  /**
+   * 放置时调用
+   */
+  @Override
+  public BlockState getStateForPlacement(BlockPlaceContext context) {
+    return this.defaultBlockState().setValue(FACING,
+      context.getNearestLookingDirection().getOpposite());
+  }
 
-	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed blockstate.
-	 */
-	@Override
-	protected @NotNull BlockState mirror(BlockState state, Mirror mirror) {
-		return state.rotate(mirror.getRotation(state.getValue(FACING)));
-	}
+  /**
+   * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable,
+   * returns the passed blockstate.
+   */
+  @Override
+  protected @NotNull BlockState rotate(BlockState state, Rotation rot) {
+    return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+  }
+
+  /**
+   * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable,
+   * returns the passed blockstate.
+   */
+  @Override
+  protected @NotNull BlockState mirror(BlockState state, Mirror mirror) {
+    return state.rotate(mirror.getRotation(state.getValue(FACING)));
+  }
 }

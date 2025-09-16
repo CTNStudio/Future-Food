@@ -49,7 +49,8 @@ public class SliceSprite {
   /**
    * 使用九宫格切片方式绘制图像，并支持指定纹理大小
    */
-  public void blitNineSliced(ResourceLocation texture, GuiGraphics guiGraphics, int x, int y, int textureWidth, int textureHeight) {
+  public void blitNineSliced(ResourceLocation texture, GuiGraphics guiGraphics, int x, int y,
+                             int textureWidth, int textureHeight) {
     int sliceX = x;
     for (SliceSpriteSliceData[] sliceDatum : sliceData) {
       int width = sliceDatum[0].width();

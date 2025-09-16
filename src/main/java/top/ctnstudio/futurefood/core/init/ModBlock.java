@@ -1,0 +1,32 @@
+package top.ctnstudio.futurefood.core.init;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import org.apache.logging.log4j.util.Lazy;
+import top.ctnstudio.futurefood.common.block.QedEntityBlock;
+import top.ctnstudio.futurefood.common.block.QerEntityBlock;
+
+import java.util.function.Supplier;
+
+public final class ModBlock extends AbstractObjectRegister<Block> {
+  public static final ModBlock INSTANCE = new ModBlock();
+
+  public static final Supplier<Block> QED =
+    INSTANCE.register("quantum_energy_diffuser", QedEntityBlock::new);
+  public static final Supplier<Block> QER =
+    INSTANCE.register("quantum_energy_receiver", QerEntityBlock::new);
+
+  private ModBlock() {
+    super(BuiltInRegistries.BLOCK, Registries.BLOCK);
+  }
+
+  @Override
+  public void afterRegister(ResourceLocation registerName, Lazy<Block> lazy) {
+    ModItem.INSTANCE.register(registerName, () ->
+      new BlockItem(lazy.get(), new Item.Properties()));
+  }
+}

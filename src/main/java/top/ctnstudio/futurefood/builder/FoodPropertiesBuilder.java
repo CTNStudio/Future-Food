@@ -13,7 +13,8 @@ public class FoodPropertiesBuilder {
    * 食物效果列表构建器。
    * 用于存储食物可能带来的效果（如中毒、治疗等）。
    */
-  private final ImmutableList.Builder<FoodProperties.PossibleEffect> effects = ImmutableList.builder();
+  private final ImmutableList.Builder<FoodProperties.PossibleEffect> effects =
+    ImmutableList.builder();
   /**
    * 食物的营养值。
    * 影响玩家饥饿值的恢复量。
@@ -117,7 +118,8 @@ public class FoodPropertiesBuilder {
    * @param probability 效果触发的概率（0-1之间）
    * @return 当前构建器实例，用于链式调用
    */
-  public FoodPropertiesBuilder addEffect(java.util.function.Supplier<MobEffectInstance> effectIn, float probability) {
+  public FoodPropertiesBuilder addEffect(java.util.function.Supplier<MobEffectInstance> effectIn,
+                                         float probability) {
     this.effects.add(new FoodProperties.PossibleEffect(effectIn, probability));
     return this;
   }
@@ -164,6 +166,7 @@ public class FoodPropertiesBuilder {
    * @return 构建好的FoodProperties实例
    */
   public FoodProperties build() {
-    return new FoodProperties(this.nutrition, saturation, this.canAlwaysEat, this.eatSeconds, this.usingConvertsTo, this.effects.build());
+    return new FoodProperties(this.nutrition, saturation, this.canAlwaysEat, this.eatSeconds,
+      this.usingConvertsTo, this.effects.build());
   }
 }

@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood;
+package top.ctnstudio.futurefood.core;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -8,10 +8,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.ctnstudio.futurefood.init.ModBlock;
-import top.ctnstudio.futurefood.init.ModCreativeModeTab;
-import top.ctnstudio.futurefood.init.ModItem;
-import top.ctnstudio.futurefood.init.ModTileEntity;
+import top.ctnstudio.futurefood.core.init.ModBlock;
+import top.ctnstudio.futurefood.core.init.ModCreativeModeTab;
+import top.ctnstudio.futurefood.core.init.ModItem;
+import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -38,10 +38,11 @@ public class FutureFood {
 
   /**
    * Get the object which was mod register it.
+   *
    * @param registry the register, get it from {@code BuiltInRegistries}.
-   * @param name the data register name.
+   * @param name     the data register name.
+   * @param <T>      the type of data, it will auto input by registry.
    * @return the target data output if it had be registry.
-   * @param <T> the type of data, it will auto input by registry.
    */
   @CheckForNull
   public static <T> T getModObject(final Registry<T> registry, final String name) {

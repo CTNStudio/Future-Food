@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.init;
+package top.ctnstudio.futurefood.core.init;
 
 import club.someoneice.json.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -7,14 +7,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import top.ctnstudio.futurefood.FutureFood;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
+import top.ctnstudio.futurefood.core.FutureFood;
 
 import javax.annotation.Nonnull;
 import java.util.Stack;
 import java.util.function.Supplier;
 
+// TODO - 迁移到新的注册器。
 public final class ModTileEntity {
   private static final Stack<Pair<ResourceLocation, Supplier<BlockEntityType<?>>>> data =
     new Stack<>();

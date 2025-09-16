@@ -130,7 +130,6 @@ public final class SliceSpriteData {
     this.height = height;
   }
 
-
   public int getuOffset() {
     return uOffset;
   }
@@ -139,7 +138,6 @@ public final class SliceSpriteData {
     this.uOffset = uOffset;
   }
 
-
   public int getvOffset() {
     return vOffset;
   }
@@ -147,7 +145,6 @@ public final class SliceSpriteData {
   public void setvOffset(int vOffset) {
     this.vOffset = vOffset;
   }
-
 
   public int getLeft() {
     return left;
