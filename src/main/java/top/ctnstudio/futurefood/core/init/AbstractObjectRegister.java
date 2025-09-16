@@ -29,11 +29,15 @@ public abstract class AbstractObjectRegister<T> implements IObjectRegister<T> {
 
   @Override
   public Supplier<T> register(String name, Supplier<T> supplier) {
-    return this.data.put(FutureFood.modRL(name), Lazy.lazy(supplier));
+    final var lazy = Lazy.lazy(supplier);
+    this.data.put(FutureFood.modRL(name), Lazy.lazy(supplier));
+    return lazy;
   }
 
   public Supplier<T> register(ResourceLocation name, Supplier<T> supplier) {
-    return this.data.put(name, Lazy.lazy(supplier));
+    final var lazy = Lazy.lazy(supplier);
+    this.data.put(name, Lazy.lazy(supplier));
+    return lazy;
   }
 
   @Override
