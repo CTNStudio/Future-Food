@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 import top.ctnstudio.futurefood.FutureFood;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QerEntityBlock;
+import top.ctnstudio.futurefood.common.item.ItemBlockBase;
 
 import javax.annotation.Nonnull;
 import java.util.Stack;
@@ -37,6 +38,8 @@ public final class ModBlock {
     while (!data.isEmpty()) {
       final var pair = data.pop();
       event.register(Registries.BLOCK, pair.getKey(), pair.getValue());
+
+      ModItem.data.put(pair.getKey(), () -> new ItemBlockBase(pair.getKey()));
     }
   }
 }

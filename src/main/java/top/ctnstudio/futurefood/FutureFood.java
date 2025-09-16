@@ -15,7 +15,6 @@ import top.ctnstudio.futurefood.init.ModTileEntity;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 @Mod(FutureFood.ID)
 public class FutureFood {
