@@ -77,10 +77,44 @@ configurations {
 }
 
 repositories {
+  mavenLocal()
   mavenCentral()
+
+  // Modrinth Maven 仓库
+  maven {
+    url = uri("https://api.modrinth.com/maven")
+  }
+
+  // BlameJared 的 Forge 相关仓库
+  maven {
+    url = uri("https://maven.blamejared.com/")
+  }
+
+  // Curse Maven (用于 CurseForge 模组)
+  maven {
+    url = uri("https://www.cursemaven.com")
+    content {
+      includeGroup "curse.maven"
+    }
+  }
+
+  // GeckoLib 官方仓库
+  maven {
+    url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
+    content {
+      includeGroup("software.bernie.geckolib")
+    }
+  }
 }
 
 dependencies {
+  implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+  compileOnly "curse.maven:jade-api-324717:6291517"
+  implementation "curse.maven:jade-324717:6291517"
+  compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+  compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+  localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+
   implementation "club.snowlyicewolf:amarok-json-for-java:1.7.9"
   additionalRuntimeClasspath "club.snowlyicewolf:amarok-json-for-java:1.7.9"
 
@@ -89,6 +123,7 @@ dependencies {
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
+            geckolib_version       : geckolib_version,
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             neo_version            : neo_version,
