@@ -23,6 +23,7 @@ import static top.ctnstudio.futurefood.core.FutureFood.LOGGER;
  * 数据生成主类
  */
 @EventBusSubscriber()
+@SuppressWarnings("all")
 public class FfDatagen {
   @SubscribeEvent
   public static void gatherData(final GatherDataEvent event) throws IOException {

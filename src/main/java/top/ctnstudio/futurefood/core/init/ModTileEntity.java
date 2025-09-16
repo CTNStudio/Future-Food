@@ -23,6 +23,7 @@ public final class ModTileEntity extends AbstractObjectRegister<BlockEntityType<
     super(BuiltInRegistries.BLOCK_ENTITY_TYPE, Registries.BLOCK_ENTITY_TYPE);
   }
 
+  @SuppressWarnings("all")
   @Nonnull
   private static Supplier<BlockEntityType<?>> register(final String name,
                                                        final BlockEntitySupplier<?> blockEntity) {

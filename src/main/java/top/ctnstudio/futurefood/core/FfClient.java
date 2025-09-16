@@ -6,6 +6,7 @@ import net.neoforged.fml.common.Mod;
 
 @Mod(value = FutureFood.ID, dist = Dist.CLIENT)
 public class FfClient {
+  @SuppressWarnings("unused")
   public FfClient(ModContainer container) {
   }
 }

@@ -18,11 +18,12 @@ public interface IObjectRegister<T> {
   ImmutableMap<ResourceLocation, Lazy<T>> copyObjects();
 
   /**
-   * Register an object.
+   * @apiNote Register an object.
    *
-   * @param name
-   * @param supplier
-   * @return
+   * @param name the register name, it will make a ResourceLocation by mod.
+   * @param supplier the object we will register. Never use an object instance without a wrapper,
+   *                 too early to use the data will make registry holder crash.
+   * @return the supplier who is input, or it will make a lazy wrapper.
    */
   @Internal
   Supplier<T> register(String name, Supplier<T> supplier);
@@ -40,7 +41,7 @@ public interface IObjectRegister<T> {
   ResourceKey<? extends Registry<T>> getResourceKey();
 
   /**
-   * Return the raw map in register.
+   * return the raw map in register.
    */
   @Internal
   Map<ResourceLocation, Lazy<T>> getObjectMap();

@@ -16,6 +16,7 @@ import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("unused")
 @Mod(FutureFood.ID)
 public class FutureFood {
   public static final String ID = "futurefood";
@@ -53,9 +54,9 @@ public class FutureFood {
    * Register the objects in mod.
    */
   private void register(final RegisterEvent event) {
-    ModBlock.init(event);
-    ModTileEntity.init(event);
-    ModItem.init(event);
+    ModBlock.INSTANCE.registerObject(event);
+    ModTileEntity.INSTANCE.registerObject(event);
+    ModItem.INSTANCE.registerObject(event);
     ModCreativeModeTab.init(event);
   }
 }
