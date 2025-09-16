@@ -27,10 +27,10 @@ public class FutureFood {
   }
 
   /**
-   * Build the resource location with mod namespace.
+   * 构建一个模组用 {@code ResourceLocation}。
    *
-   * @param name the path for rl.
-   * @return build a ResourceLocation data with mod id for namespace.
+   * @param name 数据路径（名称）。
+   * @return 构建一个以 ModID 为命名空间的 {@code ResourceLocation}。
    */
   @Nonnull
   public static ResourceLocation modRL(final String name) {
@@ -38,12 +38,12 @@ public class FutureFood {
   }
 
   /**
-   * Get the object which was mod register it.
+   * 从注册表提取物件。
    *
-   * @param registry the register, get it from {@code BuiltInRegistries}.
-   * @param name     the data register name.
-   * @param <T>      the type of data, it will auto input by registry.
-   * @return the target data output if it had be registry.
+   * @param registry 由 {@code BuiltInRegistries} 提取的注册表。
+   * @param name     物件名称。
+   * @param <T>      物件的类型，通常会被 {@code registry} 的输入提供自动推断。
+   * @return         如果物件被注册了，则不应该返回 null.
    */
   @CheckForNull
   public static <T> T getModObject(final Registry<T> registry, final String name) {
@@ -51,7 +51,7 @@ public class FutureFood {
   }
 
   /**
-   * Register the objects in mod.
+   * 注册物件。
    */
   private void register(final RegisterEvent event) {
     ModBlock.INSTANCE.registerObject(event);
