@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.gui.tool.blit_nine_sliced;
+package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
 
 /// 切片精灵数据
 public final class SliceSpriteData {

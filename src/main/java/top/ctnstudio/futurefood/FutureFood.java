@@ -9,6 +9,8 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.ctnstudio.futurefood.init.ModBlock;
+import top.ctnstudio.futurefood.init.ModCreativeModeTab;
+import top.ctnstudio.futurefood.init.ModItem;
 import top.ctnstudio.futurefood.init.ModTileEntity;
 
 import javax.annotation.CheckForNull;
@@ -53,5 +55,7 @@ public class FutureFood {
   private void register(final RegisterEvent event) {
     ModBlock.init(event);
     ModTileEntity.init(event);
+    ModItem.init(event);
+    ModCreativeModeTab.init(event);
   }
 }

@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.gui.tool.blit_nine_sliced;
+package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
 
 public class SliceSpriteSliceDataBuilder {
   // 使用 ThreadLocal 缓存 builder 实例
