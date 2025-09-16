@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
+import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 import top.ctnstudio.futurefood.core.FutureFood;
@@ -18,6 +19,8 @@ public final class ModTileEntity extends AbstractObjectRegister<BlockEntityType<
     QedBlockEntity::new);
   public static final Supplier<BlockEntityType<?>> QER = register("quantum_energy_receiver",
     QerBlockEntity::new);
+  public static final Supplier<BlockEntityType<?>> PARTICLE_COLLIDER = register("particle_collider",
+    ParticleColliderBlockEntity::new);
 
   private ModTileEntity() {
     super(BuiltInRegistries.BLOCK_ENTITY_TYPE, Registries.BLOCK_ENTITY_TYPE);

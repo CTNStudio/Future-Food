@@ -7,6 +7,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.util.Lazy;
+import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QerEntityBlock;
 
@@ -19,6 +20,8 @@ public final class ModBlock extends AbstractObjectRegister<Block> {
     INSTANCE.register("quantum_energy_diffuser", QedEntityBlock::new);
   public static final Supplier<Block> QER =
     INSTANCE.register("quantum_energy_receiver", QerEntityBlock::new);
+  public static final Supplier<Block> PARTICLE_COLLIDER =
+    INSTANCE.register("particle_collider", ParticleColliderEntityBlock::new);
 
   private ModBlock() {
     super(BuiltInRegistries.BLOCK, Registries.BLOCK);
