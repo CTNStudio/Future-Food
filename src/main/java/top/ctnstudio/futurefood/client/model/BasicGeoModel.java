@@ -14,7 +14,7 @@ public class BasicGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
 
   @Override
   public ResourceLocation getModelResource(T animatable) {
-    return FutureFood.modRL("models/geo/" + path + ".geo.json");
+    return FutureFood.modRL("geo/" + path + ".geo.json");
   }
 
   @Override

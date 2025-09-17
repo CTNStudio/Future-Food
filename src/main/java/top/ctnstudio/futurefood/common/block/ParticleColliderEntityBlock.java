@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 

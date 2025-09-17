@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import top.ctnstudio.futurefood.client.renderer.BasicGeoBlockRenderer;
@@ -13,10 +14,10 @@ import top.ctnstudio.futurefood.client.renderer.ParticleColliderBlockEntityRende
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 @Mod(value = FutureFood.ID, dist = Dist.CLIENT)
+@EventBusSubscriber
 public class FfClient {
   @SuppressWarnings("unused")
   public FfClient(ModContainer container) {
-    FutureFood.LOGGER.info("FutureFood Client Initialized");
   }
 
   @SubscribeEvent
