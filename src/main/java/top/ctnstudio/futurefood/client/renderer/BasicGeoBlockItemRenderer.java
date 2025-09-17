@@ -1,5 +1,6 @@
 package top.ctnstudio.futurefood.client.renderer;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
@@ -12,7 +13,7 @@ public class BasicGeoBlockItemRenderer<T extends BlockItem & GeoAnimatable> exte
   }
 
   public BasicGeoBlockItemRenderer(Block block) {
-    this(ResourceLocation.parse(block.getDescriptionId()).getPath());
+    this(BuiltInRegistries.BLOCK.getKey(block).getPath());
   }
 
   public BasicGeoBlockItemRenderer(String path) {
