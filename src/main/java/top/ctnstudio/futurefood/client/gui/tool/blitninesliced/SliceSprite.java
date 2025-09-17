@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceLocation;
  */
 @SuppressWarnings("unused")
 public class SliceSprite {
-  private final SliceSpriteData sliceSpriteData;
-  private SliceSpriteSliceData[][] sliceData;
+  private final SliceSpriteData          sliceSpriteData;
+  private       SliceSpriteSliceData[][] sliceData;
 
   public SliceSprite(
     int uWidth, int vHeight,
@@ -36,7 +36,7 @@ public class SliceSprite {
 
   public SliceSprite(SliceSpriteData sliceSpriteData) {
     this.sliceSpriteData = sliceSpriteData;
-    this.sliceData = sliceSpriteData.getSliceData();
+    this.sliceData       = sliceSpriteData.getSliceData();
   }
 
   /**
@@ -50,7 +50,7 @@ public class SliceSprite {
    * 使用九宫格切片方式绘制图像，并支持指定纹理大小
    */
   public void blitNineSliced(ResourceLocation texture, GuiGraphics guiGraphics, int x, int y,
-                             int textureWidth, int textureHeight) {
+    int textureWidth, int textureHeight) {
     int sliceX = x;
     for (SliceSpriteSliceData[] sliceDatum : sliceData) {
       int width = sliceDatum[0].width();

@@ -13,33 +13,33 @@ public class FoodPropertiesBuilder {
    * 食物效果列表构建器。
    * 用于存储食物可能带来的效果（如中毒、治疗等）。
    */
-  private final ImmutableList.Builder<FoodProperties.PossibleEffect> effects =
+  private final ImmutableList.Builder<FoodProperties.PossibleEffect> effects         =
     ImmutableList.builder();
   /**
    * 食物的营养值。
    * 影响玩家饥饿值的恢复量。
    */
-  private int nutrition;
+  private       int                                                  nutrition;
   /**
    * 食物的饱食度。
    * 影响玩家饱和度的恢复量。
    */
-  private float saturation;
+  private       float                                                saturation;
   /**
    * 是否可以始终食用。
    * 如果为true，则玩家即使饥饿值满也可以食用该食物。
    */
-  private boolean canAlwaysEat;
+  private       boolean                                              canAlwaysEat;
   /**
    * 食用所需时间（秒）。
    * 默认为1.6秒，某些快速食用的食物可以设置为更低的值。
    */
-  private float eatSeconds = 1.6F;
+  private       float                                                eatSeconds      = 1.6F;
   /**
    * 食用后转换成的物品栈。
    * 例如，食用后可能会留下容器（如碗、盘子等）。
    */
-  private Optional<ItemStack> usingConvertsTo = Optional.empty();
+  private       Optional<ItemStack>                                  usingConvertsTo = Optional.empty();
 
   public static FoodPropertiesBuilder foodBuilder() {
     return new FoodPropertiesBuilder();
@@ -119,7 +119,7 @@ public class FoodPropertiesBuilder {
    * @return 当前构建器实例，用于链式调用
    */
   public FoodPropertiesBuilder addEffect(java.util.function.Supplier<MobEffectInstance> effectIn,
-                                         float probability) {
+    float probability) {
     this.effects.add(new FoodProperties.PossibleEffect(effectIn, probability));
     return this;
   }

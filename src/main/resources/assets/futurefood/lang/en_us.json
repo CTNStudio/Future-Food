@@ -2,7 +2,6 @@
   "itemGroup.futurefood": "Example Mod Tab",
   "block.futurefood.example_block": "Example Block",
   "item.futurefood.example_item": "Example Item",
-
   "futurefood.configuration.title": "Future Food Configs",
   "futurefood.configuration.section.futurefood.common.toml": "Future Food Configs",
   "futurefood.configuration.section.futurefood.common.toml.title": "Future Food Configs",

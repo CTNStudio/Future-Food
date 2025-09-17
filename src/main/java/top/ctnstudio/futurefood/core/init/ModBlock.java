@@ -23,8 +23,6 @@ public final class ModBlock {
   public static final DeferredBlock<Block> PARTICLE_COLLIDER =
     BLOCKS.register("particle_collider", ParticleColliderEntityBlock::new);
 
-  private ModBlock() {}
-
   public static @NotNull BlockBehaviour.StatePredicate never() {
     return (blockState, blockGetter, blockPos) -> false;
   }

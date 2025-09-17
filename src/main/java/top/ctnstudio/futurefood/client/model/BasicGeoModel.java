@@ -27,9 +27,15 @@ public class BasicGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
     return FutureFood.modRL("animations/" + path + ".json");
   }
 
-  public static class BasicGeoBlockModel<T extends GeoAnimatable> extends BasicGeoModel<T> {
-    public BasicGeoBlockModel(String path) {
+  public static class BlockModel<T extends GeoAnimatable> extends BasicGeoModel<T> {
+    public BlockModel(String path) {
       super("block/" + path);
+    }
+  }
+
+  public static class ItemModel<T extends GeoAnimatable> extends BasicGeoModel<T> {
+    public ItemModel(String path) {
+      super("item/" + path);
     }
   }
 }

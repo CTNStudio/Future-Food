@@ -4,11 +4,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import top.ctnstudio.futurefood.core.FutureFood;
+import top.ctnstudio.futurefood.core.init.ModBlock;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -24,22 +26,30 @@ public class DatagenItemModel extends ItemModelProvider {
 
   @Override
   protected void registerModels() {
+    simpleBlockItem(ModBlock.QED.get());
+    simpleBlockItem(ModBlock.QER.get());
+//    simpleBlockItem(ModBlock.PARTICLE_COLLIDER.get());
   }
 
   private ModelFile.UncheckedModelFile getParent(String name) {
     return new ModelFile.UncheckedModelFile(ResourceLocation.withDefaultNamespace(name));
   }
 
+  private void blockItem(Block block, String parent) {
+    ResourceLocation key = BuiltInRegistries.BLOCK.getKey(block);
+    withExistingParent(Objects.requireNonNull(key).toString(), modLoc("block/" + parent));
+  }
+
   /// 多模型物品
   public void createModelFile(Item item, Map<Float, String> texture,
-                              ResourceLocation... predicates) {
+    ResourceLocation... predicates) {
     var mod = basicItem(item);
     var predicate = predicates[0];
     Iterator<Float> iteratorKey = texture.keySet().iterator();
     Float key;
     String value;
     for (int i = 0; i < texture.size(); i++) {
-      key = iteratorKey.next();
+      key   = iteratorKey.next();
       value = texture.get(key);
       if (predicates.length > 1) {
         predicate = predicates[i];
@@ -51,7 +61,7 @@ public class DatagenItemModel extends ItemModelProvider {
 
   public ModelFile.UncheckedModelFile createModelFile(Item item, String name) {
     return new ModelFile.UncheckedModelFile(getItemResourceLocation(item, name).withPrefix("item" +
-      "/"));
+                                                                                           "/"));
   }
 
   public ItemModelBuilder specialItem(Item item, String name) {
@@ -63,14 +73,14 @@ public class DatagenItemModel extends ItemModelProvider {
   }
 
   public void createModelFile(Item item, Map<Float, String> texture, ModelFile parent,
-                              ResourceLocation... predicates) {
+    ResourceLocation... predicates) {
     var mod = basicItem(item).parent(parent);
     var predicate = predicates[0];
     Iterator<Float> iteratorKey = texture.keySet().iterator();
     Float key;
     String value;
     for (int i = 0; i < texture.size(); i++) {
-      key = iteratorKey.next();
+      key   = iteratorKey.next();
       value = texture.get(key);
       if (predicates.length > 1) {
         predicate = predicates[i];

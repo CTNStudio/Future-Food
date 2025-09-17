@@ -26,13 +26,13 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
   private final String modId;
 
   public DatagenRecipeProvider(PackOutput output,
-                               CompletableFuture<HolderLookup.Provider> registries) {
+    CompletableFuture<HolderLookup.Provider> registries) {
     super(output, registries);
     modId = FutureFood.ID;
   }
 
   public static Criterion<InventoryChangeTrigger.TriggerInstance> has(MinMaxBounds.Ints count,
-                                                                      ItemLike item) {
+    ItemLike item) {
     return RecipeProvider.has(count, item);
   }
 
@@ -53,11 +53,11 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
 
   /// 战斗用品
   protected void armorRecipe(RecipeOutput output,
-                             ItemLike helmet,
-                             ItemLike chestplate,
-                             ItemLike leggings,
-                             ItemLike boots,
-                             Ingredient requires) {
+    ItemLike helmet,
+    ItemLike chestplate,
+    ItemLike leggings,
+    ItemLike boots,
+    Ingredient requires) {
     if (helmet != null) {
       helmetRecipe(output, helmet, requires, "helmet");
     }
@@ -76,7 +76,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建头盔配方
    */
   protected void helmetRecipe(RecipeOutput recipeOutput, ItemLike result,
-                              Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.COMBAT, result);
     RecipeTool.helmetPattern(builder);
@@ -87,7 +87,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建胸甲配方
    */
   protected void chestplateRecipe(RecipeOutput recipeOutput, ItemLike result,
-                                  Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.COMBAT, result);
     RecipeTool.chestplatePattern(builder);
@@ -98,7 +98,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建护腿配方
    */
   protected void leggingsRecipe(RecipeOutput recipeOutput, ItemLike result,
-                                Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.COMBAT, result);
     RecipeTool.leggingsPattern(builder);
@@ -109,7 +109,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建靴子配方
    */
   protected void bootsRecipe(RecipeOutput recipeOutput, ItemLike result,
-                             Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.COMBAT, result);
     RecipeTool.bootsPattern(builder);
@@ -128,7 +128,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建盾牌配方
    */
   protected void shieldRecipe(RecipeOutput recipeOutput, ItemLike result,
-                              Ingredient requires, Ingredient secondaryRequires, String group) {
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.COMBAT, result);
     RecipeTool.shieldPattern(builder);
@@ -140,7 +140,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建剑配方
    */
   protected void swordRecipe(RecipeOutput recipeOutput, ItemLike result,
-                             Ingredient requires, Ingredient secondaryRequires, String group) {
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.COMBAT, result);
     RecipeTool.swordFramePattern(builder);
@@ -154,7 +154,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建斧头配方
    */
   protected void axeRecipe(RecipeOutput recipeOutput, ItemLike result,
-                           Ingredient requires, Ingredient secondaryRequires, String group) {
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.TOOLS, result);
     RecipeTool.axeFramePattern(builder);
@@ -166,7 +166,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建镐类配方
    */
   protected void pickaxeRecipe(RecipeOutput recipeOutput, ItemLike result,
-                               Ingredient requires, Ingredient secondaryRequires, String group) {
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.TOOLS, result);
     RecipeTool.pickaxeFramePattern(builder);
@@ -178,7 +178,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建锹类配方
    */
   protected void shovelRecipe(RecipeOutput recipeOutput, ItemLike result,
-                              Ingredient requires, Ingredient secondaryRequires, String group) {
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.TOOLS, result);
     RecipeTool.shovelFramePattern(builder);
@@ -190,8 +190,8 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建锄类配方
    */
   protected void hoeRecipe(RecipeOutput recipeOutput,
-                           ItemLike result,
-                           Ingredient requires, Ingredient secondaryRequires, String group) {
+    ItemLike result,
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, RecipeCategory.TOOLS, result);
     RecipeTool.hoeFramePattern(builder);
@@ -203,8 +203,8 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建核心框架配方（如末影箱）
    */
   protected void coreFrameRecipe(RecipeOutput recipeOutput, RecipeCategory category,
-                                 ItemLike result,
-                                 Ingredient requires, Ingredient secondaryRequires, String group) {
+    ItemLike result,
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, category, result);
     RecipeTool.coreFramePattern(builder);
@@ -218,8 +218,8 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建环形配方（如箱子）
    */
   protected void circularFrameRecipe(RecipeOutput recipeOutput, RecipeCategory category,
-                                     ItemLike result,
-                                     Ingredient requires, String group) {
+    ItemLike result,
+    Ingredient requires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, category, result);
     RecipeTool.circularFramePattern(builder);
@@ -230,10 +230,10 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建一个解压和压缩的配方
    */
   protected void unpackedPackedRecipes(RecipeOutput recipeOutput,
-                                       RecipeCategory unpackedCategory, ItemLike unpacked,
-                                       String unpackedGroup,
-                                       RecipeCategory packedCategory, ItemLike packed,
-                                       String packedGroup) {
+    RecipeCategory unpackedCategory, ItemLike unpacked,
+    String unpackedGroup,
+    RecipeCategory packedCategory, ItemLike packed,
+    String packedGroup) {
     this.unpackedRecipes(recipeOutput, unpackedCategory, unpacked, Ingredient.of(packed),
       unpackedGroup);
     this.packedRecipes(recipeOutput, packedCategory, packed, Ingredient.of(unpacked), packedGroup);
@@ -243,7 +243,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建解压配方
    */
   private void unpackedRecipes(RecipeOutput recipeOutput, RecipeCategory category, ItemLike result,
-                               Ingredient requires, String recipeGroup) {
+    Ingredient requires, String recipeGroup) {
     ResourceLocation location = getLocation(getItemName(result) + "_unpacked");
     ShapelessBuilder builder = ShapelessBuilder.shaped(location, category, result, 9);
     builder.requires(requires)
@@ -256,7 +256,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 矿物块类型压缩配方
    */
   protected void packedRecipes(RecipeOutput recipeOutput, RecipeCategory category, ItemLike result,
-                               Ingredient requires, String recipeGroup) {
+    Ingredient requires, String recipeGroup) {
     ResourceLocation location = getLocation(getItemName(result) + "_packed");
     ShapedBuilder builder = ShapedBuilder.shaped(location, category, result);
     RecipeTool.fullWrapPattern(builder);
@@ -267,7 +267,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建3x3全包裹式配方（如矿物块）
    */
   protected void fullWrapRecipe(RecipeOutput recipeOutput, RecipeCategory category, ItemLike result,
-                                Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapedBuilder builder = ShapedBuilder.shaped(location, category, result);
     RecipeTool.fullWrapPattern(builder);
@@ -279,7 +279,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    */
   protected void singleRecipe(RecipeOutput recipeOutput, RecipeCategory category, ItemLike result
     , int count,
-                              Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ResourceLocation location = getLocation(getItemName(result));
     ShapelessBuilder builder = ShapelessBuilder.shaped(location, category, result, count);
     builder.requires(requires)
@@ -290,16 +290,16 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
 
   /// 建筑
   private void buildingBlockRecipe(RecipeOutput recipeOutput,
-                                   ItemLike singlePlate,
-                                   ItemLike stair,
-                                   ItemLike fence,
-                                   ItemLike fenceDoor,
-                                   ItemLike trapdoor,
-                                   ItemLike door,
-                                   ItemLike pressurePlate,
-                                   ItemLike button,
-                                   Ingredient requires,
-                                   Ingredient secondaryRequires
+    ItemLike singlePlate,
+    ItemLike stair,
+    ItemLike fence,
+    ItemLike fenceDoor,
+    ItemLike trapdoor,
+    ItemLike door,
+    ItemLike pressurePlate,
+    ItemLike button,
+    Ingredient requires,
+    Ingredient secondaryRequires
   ) {
     if (singlePlate != null) {
       stairRecipe(recipeOutput, singlePlate, requires, "single_plate");
@@ -331,7 +331,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建楼梯配方
    */
   protected void stairRecipe(RecipeOutput recipeOutput, ItemLike result,
-                             Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ShapedBuilder builder = buildingRecipeBuilder(result, 4);
     RecipeTool.stairPattern(builder);
     RecipeTool.requires(builder, Map.of('#', requires), group, recipeOutput);
@@ -341,7 +341,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建栅栏配方
    */
   protected void fenceRecipe(RecipeOutput recipeOutput, ItemLike result,
-                             Ingredient requires, Ingredient secondaryRequires, String group) {
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ShapedBuilder builder = buildingRecipeBuilder(result, 3);
     RecipeTool.fencePattern(builder);
     RecipeTool.requires(builder, Map.of('#', requires, 'O', secondaryRequires), group,
@@ -352,7 +352,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建栅栏门配方
    */
   protected void fenceDoorRecipe(RecipeOutput recipeOutput, ItemLike result,
-                                 Ingredient requires, Ingredient secondaryRequires, String group) {
+    Ingredient requires, Ingredient secondaryRequires, String group) {
     ShapedBuilder builder = buildingRecipeBuilder(result);
     RecipeTool.fenceDoorPattern(builder);
     RecipeTool.requires(builder, Map.of('#', requires, 'O', secondaryRequires), group,
@@ -363,7 +363,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建活板门配方
    */
   protected void trapdoorRecipe(RecipeOutput recipeOutput, ItemLike result,
-                                Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ShapedBuilder builder = buildingRecipeBuilder(result, 2);
     RecipeTool.trapdoorPattern(builder);
     RecipeTool.requires(builder, Map.of('#', requires), group, recipeOutput);
@@ -373,7 +373,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建台阶配方
    */
   protected void singlePlateRecipe(RecipeOutput recipeOutput, ItemLike result,
-                                   Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ShapedBuilder builder = buildingRecipeBuilder(result, 6);
     RecipeTool.singlePlatePattern(builder);
     RecipeTool.requires(builder, Map.of('#', requires), group, recipeOutput);
@@ -388,7 +388,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建门配方
    */
   protected void doorRecipe(RecipeOutput recipeOutput, ItemLike result,
-                            Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ShapedBuilder builder = buildingRecipeBuilder(result, 3);
     RecipeTool.singlePlatePattern(builder);
     RecipeTool.requires(builder, Map.of('#', requires), group, recipeOutput);
@@ -398,7 +398,7 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
    * 创建压力板配方
    */
   protected void pressurePlateRecipe(RecipeOutput recipeOutput, ItemLike result,
-                                     Ingredient requires, String group) {
+    Ingredient requires, String group) {
     ShapedBuilder builder = buildingRecipeBuilder(result);
     RecipeTool.singlePlatePattern(builder);
     RecipeTool.requires(builder, Map.of('#', requires), group, recipeOutput);

@@ -23,7 +23,7 @@ public class DatagenDatapackBuiltinEntries extends DatapackBuiltinEntriesProvide
     });
 
   public DatagenDatapackBuiltinEntries(PackOutput output,
-                                       CompletableFuture<HolderLookup.Provider> registries) {
+    CompletableFuture<HolderLookup.Provider> registries) {
     super(output, registries, BUILDER, Set.of(FutureFood.ID));
   }
 

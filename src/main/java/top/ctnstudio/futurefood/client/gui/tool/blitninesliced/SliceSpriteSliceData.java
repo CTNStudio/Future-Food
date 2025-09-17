@@ -12,7 +12,7 @@ public record SliceSpriteSliceData(int width, int height,
   }
 
   public void blit(ResourceLocation texture, GuiGraphics guiGraphics, int x, int y,
-                   int textureWidth, int textureHeight) {
+    int textureWidth, int textureHeight) {
     guiGraphics.blit(texture, x, y, width, height, uOffset, vOffset, uWidth, vHeight,
       textureWidth, textureHeight);
   }

@@ -23,8 +23,16 @@ public class DatagenI18ZhCn extends LanguageProvider {
   protected void addTranslations() {
     add(ModCreativeModeTab.TAB, "未来食物");
 
-    add(ModBlock.QED, "量子能源扩散器");
-    add(ModBlock.QER, "量子能源接收器");
+    addBlock(ModBlock.QED, "量子能源扩散器");
+    addBlock(ModBlock.QER, "量子能源接收器");
+    addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");
+  }
+
+  /**
+   * 创造模式物品栏名称翻译
+   */
+  public <R, T extends R> void add(DeferredHolder<R, T> itemGroup, String name) {
+    add("itemGroup." + itemGroup.getId().toString().replace(":", "."), name);
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {
@@ -67,12 +75,5 @@ public class DatagenI18ZhCn extends LanguageProvider {
    */
   public void addPlayerDeathMessage(ResourceKey<DamageType> damageType, String name) {
     add("death.attack." + damageType.location().getPath() + ".player", name);
-  }
-
-  /**
-   * 创造模式物品栏名称翻译
-   */
-  public <R, T extends R> void add(DeferredHolder<R, T> itemGroup, String name) {
-    add("itemGroup." + itemGroup.getId().toString().replace(":", "."), name);
   }
 }

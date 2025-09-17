@@ -23,11 +23,11 @@ public class SliceSpriteSliceDataBuilder {
 
   // 添加 reset 方法用于重置 builder 状态
   private void reset() {
-    this.width = 0;
-    this.height = 0;
+    this.width   = 0;
+    this.height  = 0;
     this.uOffset = 0;
     this.vOffset = 0;
-    this.uWidth = 0;
+    this.uWidth  = 0;
     this.vHeight = 0;
   }
 

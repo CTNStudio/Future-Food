@@ -4,15 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-public class ParticleColliderBlockEntity extends BlockEntity implements GeoAnimatable {
-  protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin()
-    .thenPlay("misc.deploy")
-    .thenLoop("misc.idle");
+public class ParticleColliderBlockEntity extends BlockEntity implements GeoBlockEntity {
+  protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
 
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
