@@ -6,6 +6,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import top.ctnstudio.futurefood.core.FutureFood;
@@ -21,18 +22,11 @@ public class DatagenI18ZhCn extends LanguageProvider {
 
   @Override
   protected void addTranslations() {
-    add(ModCreativeModeTab.TAB, "未来食物");
+    add("itemGroup.futurefood", "未来食物");
 
     addBlock(ModBlock.QED, "量子能源扩散器");
     addBlock(ModBlock.QER, "量子能源接收器");
     addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");
-  }
-
-  /**
-   * 创造模式物品栏名称翻译
-   */
-  public <R, T extends R> void add(DeferredHolder<R, T> itemGroup, String name) {
-    add("itemGroup." + itemGroup.getId().toString().replace(":", "."), name);
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {
