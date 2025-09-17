@@ -23,12 +23,14 @@ public class FfClient {
   }
 
   public static <T extends BlockEntity> void registerBlockEntityRenderer(final EntityRenderersEvent.RegisterRenderers event,
-    BlockEntityType<? extends T> blockEntityType, BlockEntityRendererProvider blockEntityRendererProvider) {
+                                                                         BlockEntityType<?
+                                                                           extends T> blockEntityType, BlockEntityRendererProvider blockEntityRendererProvider) {
     event.registerBlockEntityRenderer(blockEntityType, blockEntityRendererProvider);
   }
 
   public static <T extends BlockEntity> void registerBasicBlockEntityRenderer(final EntityRenderersEvent.RegisterRenderers event,
-    BlockEntityType<? extends T> blockEntityType, BasicGeoBlockRenderer blockEntityRendererProvider) {
+                                                                              BlockEntityType<?
+                                                                                extends T> blockEntityType, BasicGeoBlockRenderer blockEntityRendererProvider) {
     event.registerBlockEntityRenderer(blockEntityType, context -> blockEntityRendererProvider);
   }
 }

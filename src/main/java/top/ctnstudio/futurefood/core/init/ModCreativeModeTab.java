@@ -1,34 +1,25 @@
 package top.ctnstudio.futurefood.core.init;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.function.Supplier;
 
-public final class ModCreativeModeTab  {
-  public static void init(final RegisterEvent event) {
-    if (event.getRegistry() != BuiltInRegistries.CREATIVE_MODE_TAB) {
-      return;
-    }
+public final class ModCreativeModeTab {
+  public static final DeferredRegister<CreativeModeTab> TABS =
+    DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, FutureFood.ID);
 
-    final var objects = ModItem.INSTANCE.copyObjects();
-
-    if (objects.isEmpty()) {
-      return;
-    }
-
-    event.register(Registries.CREATIVE_MODE_TAB, FutureFood.modRL("futurefood"), () ->
-      CreativeModeTab.builder()
-        .icon(() -> ModBlock.QED.get().asItem().getDefaultInstance())
-        .title(Component.translatable("itemGroup." + FutureFood.ID))
-        .displayItems((par, output) ->
-          objects.values().stream()
-            .map(Supplier::get)
-            .forEach(output::accept))
-        .build());
-  }
+  public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB =
+    TABS.register("futurefood_tab", () -> CreativeModeTab.builder()
+      .icon(() -> ModItem.QED.get().getDefaultInstance())
+      .title(Component.translatable("itemGroup.futurefood"))
+      .displayItems((pr, out) -> ModItem.ITEMS.getEntries().stream()
+        .map(Supplier::get)
+        .forEach(out::accept))
+      .build()
+    );
 }

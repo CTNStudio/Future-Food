@@ -13,7 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 
 public class ParticleColliderEntityBlock extends BaseEntityBlock {
-  private static final MapCodec<ParticleColliderEntityBlock> CODEC = simpleCodec(ParticleColliderEntityBlock::new);
+  private static final MapCodec<ParticleColliderEntityBlock> CODEC =
+    simpleCodec(ParticleColliderEntityBlock::new);
 
   public ParticleColliderEntityBlock() {
     this(Properties.of()

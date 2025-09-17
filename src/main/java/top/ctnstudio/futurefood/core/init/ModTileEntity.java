@@ -1,37 +1,29 @@
 package top.ctnstudio.futurefood.core.init;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 import top.ctnstudio.futurefood.core.FutureFood;
 
-import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public final class ModTileEntity extends AbstractObjectRegister<BlockEntityType<?>> {
-  public static final ModTileEntity INSTANCE = new ModTileEntity();
+public final class ModTileEntity {
+  public static final DeferredRegister<BlockEntityType<?>> TILES =
+    DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, FutureFood.ID);
 
-  public static final Supplier<BlockEntityType<?>> QED = register("quantum_energy_diffuser", QedBlockEntity::new);
-  public static final Supplier<BlockEntityType<?>> QER = register("quantum_energy_receiver", QerBlockEntity::new);
-  public static final Supplier<BlockEntityType<?>> PARTICLE_COLLIDER = register("particle_collider", ParticleColliderBlockEntity::new);
+  public static final Supplier<BlockEntityType<?>> QED =
+    TILES.register("quantum_energy_diffuser", () ->
+      BlockEntityType.Builder.of(QedBlockEntity::new, ModBlock.QED.get()).build(null));
+  public static final Supplier<BlockEntityType<?>> QER =
+    TILES.register("quantum_energy_receiver", () ->
+      BlockEntityType.Builder.of(QerBlockEntity::new, ModBlock.QER.get()).build(null));
 
-  private ModTileEntity() {
-    super(BuiltInRegistries.BLOCK_ENTITY_TYPE, Registries.BLOCK_ENTITY_TYPE);
-  }
+  public static final Supplier<BlockEntityType<?>> PARTICLE_COLLIDER =
+    TILES.register("particle_collider", () -> BlockEntityType.Builder.of(
+      ParticleColliderBlockEntity::new, ModBlock.PARTICLE_COLLIDER.get()).build(null));
 
-  @SuppressWarnings("all")
-  @Nonnull
-  private static Supplier<BlockEntityType<?>> register(final String name,
-    final BlockEntitySupplier<?> blockEntity) {
-    final Supplier<BlockEntityType<? extends BlockEntity>> dat = () -> {
-      final var block = BuiltInRegistries.BLOCK.get(FutureFood.modRL(name));
-      return BlockEntityType.Builder.of(blockEntity, block).build(null);
-    };
-    return INSTANCE.register(FutureFood.modRL(name), dat);
-  }
+  private ModTileEntity() {}
 }

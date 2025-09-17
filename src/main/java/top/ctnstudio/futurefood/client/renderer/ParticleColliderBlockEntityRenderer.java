@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import top.ctnstudio.futurefood.client.model.ParticleColliderBlockEntityModel;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 
-
 public class ParticleColliderBlockEntityRenderer<T extends ParticleColliderBlockEntity>
   extends BasicGeoBlockRenderer<T> {
   public ParticleColliderBlockEntityRenderer(BlockEntityRendererProvider.Context context) {

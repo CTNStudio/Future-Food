@@ -16,7 +16,6 @@ public class ParticleColliderBlockEntity extends BlockEntity implements GeoAnima
 
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-
   public ParticleColliderBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState);
   }

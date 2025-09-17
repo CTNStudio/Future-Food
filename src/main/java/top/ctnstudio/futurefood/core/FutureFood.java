@@ -23,7 +23,10 @@ public class FutureFood {
   public static final Logger LOGGER = LogManager.getLogger(ID);
 
   public FutureFood(IEventBus modEventBus, ModContainer modContainer) {
-    modEventBus.addListener(this::register);
+    ModItem.ITEMS.register(modEventBus);
+    ModBlock.BLOCKS.register(modEventBus);
+    ModTileEntity.TILES.register(modEventBus);
+    ModCreativeModeTab.TABS.register(modEventBus);
   }
 
   /**
@@ -43,20 +46,10 @@ public class FutureFood {
    * @param registry 由 {@code BuiltInRegistries} 提取的注册表。
    * @param name     物件名称。
    * @param <T>      物件的类型，通常会被 {@code registry} 的输入提供自动推断。
-   * @return         如果物件被注册了，则不应该返回 null.
+   * @return 如果物件被注册了，则不应该返回 null.
    */
   @CheckForNull
   public static <T> T getModObject(final Registry<T> registry, final String name) {
     return registry.get(modRL(name));
-  }
-
-  /**
-   * 注册物件。
-   */
-  private void register(final RegisterEvent event) {
-    ModBlock.INSTANCE.registerObject(event);
-    ModTileEntity.INSTANCE.registerObject(event);
-    ModItem.INSTANCE.registerObject(event);
-    ModCreativeModeTab.init(event);
   }
 }
