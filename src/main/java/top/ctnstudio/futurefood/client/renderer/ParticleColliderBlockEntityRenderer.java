@@ -1,9 +1,6 @@
 package top.ctnstudio.futurefood.client.renderer;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.Block;
 import top.ctnstudio.futurefood.client.model.ParticleColliderBlockEntityModel;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 

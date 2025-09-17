@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public abstract class AbstractObjectRegister<T> implements IObjectRegister<T> {
-  private final Map<ResourceLocation, Lazy<T>> data = Maps.newHashMap();
+  private final Map<ResourceLocation, Supplier<T>> data = Maps.newHashMap();
   private final Registry<T> registry;
   private final ResourceKey<? extends Registry<T>> registryKey;
 
@@ -23,20 +23,20 @@ public abstract class AbstractObjectRegister<T> implements IObjectRegister<T> {
     this.registryKey = registryKey;
   }
   @Override
-  public ImmutableMap<ResourceLocation, Lazy<T>> copyObjects() {
+  public ImmutableMap<ResourceLocation, Supplier<T>> copyObjects() {
     return ImmutableMap.copyOf(this.data);
   }
 
   @Override
   public Supplier<T> register(String name, Supplier<T> supplier) {
     final var lazy = Lazy.lazy(supplier);
-    this.data.put(FutureFood.modRL(name), Lazy.lazy(supplier));
+    this.data.put(FutureFood.modRL(name), lazy);
     return lazy;
   }
 
   public Supplier<T> register(ResourceLocation name, Supplier<T> supplier) {
     final var lazy = Lazy.lazy(supplier);
-    this.data.put(name, Lazy.lazy(supplier));
+    this.data.put(name, lazy);
     return lazy;
   }
 
@@ -51,7 +51,7 @@ public abstract class AbstractObjectRegister<T> implements IObjectRegister<T> {
   }
 
   @Override
-  public Map<ResourceLocation, Lazy<T>> getObjectMap() {
+  public Map<ResourceLocation, Supplier<T>> getObjectMap() {
     return this.data;
   }
 }

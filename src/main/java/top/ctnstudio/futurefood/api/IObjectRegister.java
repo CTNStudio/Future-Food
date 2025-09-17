@@ -5,7 +5,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import org.apache.logging.log4j.util.Lazy;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import java.util.Map;
@@ -15,7 +14,7 @@ public interface IObjectRegister<T> {
   /**
    * 拷贝数据到不可变表。
    */
-  ImmutableMap<ResourceLocation, Lazy<T>> copyObjects();
+  ImmutableMap<ResourceLocation, Supplier<T>> copyObjects();
 
   /**
    * @apiNote 注册数据物件.
@@ -43,13 +42,13 @@ public interface IObjectRegister<T> {
    * 取得物件表。
    */
   @Internal
-  Map<ResourceLocation, Lazy<T>> getObjectMap();
+  Map<ResourceLocation, Supplier<T>> getObjectMap();
 
   /**
    * 任何需要再注册之后继续追加的任务。
    */
   @Internal
-  default void afterRegister(ResourceLocation registerName, Lazy<T> lazy) {
+  default void afterRegister(ResourceLocation registerName, Supplier<T> lazy) {
   }
 
   /**

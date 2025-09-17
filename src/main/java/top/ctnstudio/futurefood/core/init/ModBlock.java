@@ -8,7 +8,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import org.apache.logging.log4j.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
@@ -39,7 +38,7 @@ public final class ModBlock extends AbstractObjectRegister<Block> {
   }
 
   @Override
-  public void afterRegister(ResourceLocation registerName, Lazy<Block> lazy) {
+  public void afterRegister(ResourceLocation registerName, Supplier<Block> lazy) {
     ModItem.INSTANCE.register(registerName, () ->
       new BlockItem(lazy.get(), new Item.Properties()));
   }

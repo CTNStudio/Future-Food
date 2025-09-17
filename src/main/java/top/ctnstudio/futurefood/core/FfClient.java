@@ -8,10 +8,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import top.ctnstudio.futurefood.client.renderer.BasicGeoBlockRenderer;
-import top.ctnstudio.futurefood.client.renderer.ParticleColliderBlockEntityRenderer;
-import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 @Mod(value = FutureFood.ID, dist = Dist.CLIENT)
 public class FfClient {
@@ -21,7 +18,8 @@ public class FfClient {
 
   @SubscribeEvent
   public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-    registerBlockEntityRenderer(event, ModTileEntity.PARTICLE_COLLIDER.get(), ParticleColliderBlockEntityRenderer::new);
+    // registerBlockEntityRenderer(event, ModTileEntity.PARTICLE_COLLIDER.get(),
+    //   ParticleColliderBlockEntityRenderer::new);
   }
 
   public static <T extends BlockEntity> void registerBlockEntityRenderer(final EntityRenderersEvent.RegisterRenderers event,
