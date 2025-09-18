@@ -2,8 +2,11 @@ package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /// 切片精灵片段数据
+@OnlyIn(Dist.CLIENT)
 public record SliceSpriteSliceData(int width, int height,
                                    int uOffset, int vOffset,
                                    int uWidth, int vHeight) {

@@ -1,10 +1,13 @@
 package top.ctnstudio.futurefood.client.model;
 
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 import top.ctnstudio.futurefood.core.FutureFood;
 
+@OnlyIn(Dist.CLIENT)
 public class BasicGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
   public final ResourceLocation modelPath;
   public final ResourceLocation texturePath;

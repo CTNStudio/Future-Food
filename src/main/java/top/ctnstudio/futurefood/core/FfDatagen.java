@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * 数据生成主类
  */
-@EventBusSubscriber()
+@EventBusSubscriber
 @SuppressWarnings("all")
 public class FfDatagen {
   @SubscribeEvent

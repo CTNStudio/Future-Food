@@ -2,6 +2,8 @@ package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * 如果没有特殊需求本工具可以删除来着 工具来自ProjectMoon项目
@@ -10,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
  *
  * @author 尽
  */
+@OnlyIn(Dist.CLIENT)
 @SuppressWarnings("unused")
 public class SliceSprite {
   private final SliceSpriteData          sliceSpriteData;

@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -14,6 +15,7 @@ import top.ctnstudio.futurefood.client.renderer.ParticleColliderBlockEntityRende
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 @Mod(value = FutureFood.ID, dist = Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 @EventBusSubscriber
 public class FfClient {
   @SuppressWarnings("unused")

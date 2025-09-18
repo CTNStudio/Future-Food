@@ -1,22 +1,22 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
+import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-public class ParticleColliderBlockEntity extends BlockEntity implements GeoBlockEntity {
+public class ParticleColliderBlockEntity extends BasicEnergyStorageBlockEntity<ParticleColliderBlockEntity> implements GeoBlockEntity {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
 
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
   public ParticleColliderBlockEntity(BlockPos pos, BlockState blockState) {
-    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState);
+    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModEnergyStorage(102400, 102400, 0));
   }
 
   @Override

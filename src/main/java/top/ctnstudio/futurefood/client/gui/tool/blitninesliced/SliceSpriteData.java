@@ -1,6 +1,10 @@
 package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 /// 切片精灵数据
+@OnlyIn(Dist.CLIENT)
 public final class SliceSpriteData {
 
   /// 切片参数

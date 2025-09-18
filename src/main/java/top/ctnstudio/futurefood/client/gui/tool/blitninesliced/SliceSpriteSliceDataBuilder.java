@@ -1,5 +1,9 @@
 package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class SliceSpriteSliceDataBuilder {
   // 使用 ThreadLocal 缓存 builder 实例
   private static final ThreadLocal<SliceSpriteSliceDataBuilder> BUILDER_THREAD_LOCAL =

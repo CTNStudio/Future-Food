@@ -9,10 +9,8 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
-import top.ctnstudio.futurefood.core.init.ModItem;
 
 import java.util.Iterator;
 import java.util.Map;

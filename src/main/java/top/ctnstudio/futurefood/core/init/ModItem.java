@@ -10,7 +10,6 @@ import top.ctnstudio.futurefood.client.renderer.ParticleColliderBlockItemRendere
 import top.ctnstudio.futurefood.common.item.ModGeoBlockItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 

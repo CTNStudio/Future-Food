@@ -6,12 +6,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.neoforge.common.data.LanguageProvider;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
-import top.ctnstudio.futurefood.core.init.ModCreativeModeTab;
 
 import java.util.function.Supplier;
 

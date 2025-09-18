@@ -1,12 +1,7 @@
 package top.ctnstudio.futurefood.common.block;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.client.particle.FireworkParticles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 
-public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock {
+public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock implements ModEnergyStorageBlock {
   private static final MapCodec<ParticleColliderEntityBlock> CODEC =
     simpleCodec(ParticleColliderEntityBlock::new);
 
