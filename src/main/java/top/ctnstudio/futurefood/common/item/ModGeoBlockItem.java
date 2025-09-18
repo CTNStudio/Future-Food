@@ -14,14 +14,15 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ModGeoBlockItem extends BlockItem implements GeoItem {
-  private final AnimatableInstanceCache                   cache = GeckoLibUtil.createInstanceCache(this);
+  private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
   private final Supplier<BlockEntityWithoutLevelRenderer> defaultRenderer;
 
   public ModGeoBlockItem(Block block, Properties properties) {
     this(block, properties, () -> new BasicGeoBlockItemRenderer<ModGeoBlockItem>(block));
   }
 
-  public ModGeoBlockItem(Block block, Properties properties, Supplier<BlockEntityWithoutLevelRenderer> defaultRenderer) {
+  public ModGeoBlockItem(Block block, Properties properties,
+                         Supplier<BlockEntityWithoutLevelRenderer> defaultRenderer) {
     super(block, properties);
     this.defaultRenderer = defaultRenderer;
   }

@@ -23,7 +23,7 @@ public class EntityItemUtil {
   }
 
   public static void summonLootItems(ServerLevel serverLevel, BlockPos pos,
-    ItemStack... itemStack) {
+                                     ItemStack... itemStack) {
     float x = pos.getX() + 0.5f;
     float y = pos.getY() + 0.5f;
     float z = pos.getZ() + 0.5f;
@@ -31,7 +31,7 @@ public class EntityItemUtil {
   }
 
   public static void summonLootItems(ServerLevel serverLevel, float x, float y, float z,
-    ItemStack... itemStack) {
+                                     ItemStack... itemStack) {
     Arrays.stream(itemStack)
       .filter(stack -> !stack.isEmpty())
       .map(it -> new ItemEntity(serverLevel, x, y, z, it))
@@ -39,7 +39,7 @@ public class EntityItemUtil {
   }
 
   public static void summonLootItems(ServerLevel serverLevel, float x, float y, float z,
-    Item... items) {
+                                     Item... items) {
     ItemStack[] stacks = Arrays.stream(items)
       .map(ItemStack::new)
       .filter(stack -> !stack.isEmpty())

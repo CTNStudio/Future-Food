@@ -18,7 +18,7 @@ public class FfBlockTags extends BlockTagsProvider {
   public static final TagKey<Block> UNLIMITED_RECEPTION = createTag("unlimited_reception");
 
   public FfBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
-    @CheckForNull ExistingFileHelper existingFileHelper) {
+                     @CheckForNull ExistingFileHelper existingFileHelper) {
     super(output, lookupProvider, FutureFood.ID, existingFileHelper);
   }
 

@@ -15,7 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class FfItemTags extends ItemTagsProvider {
   public FfItemTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
-    CompletableFuture<TagLookup<Block>> blockTags, @CheckForNull ExistingFileHelper existingFileHelper) {
+                    CompletableFuture<TagLookup<Block>> blockTags,
+                    @CheckForNull ExistingFileHelper existingFileHelper) {
     super(output, lookupProvider, blockTags, FutureFood.ID, existingFileHelper);
   }
 

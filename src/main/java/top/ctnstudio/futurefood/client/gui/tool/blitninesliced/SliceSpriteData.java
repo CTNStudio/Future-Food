@@ -21,16 +21,16 @@ public final class SliceSpriteData {
     int uOffset, int vOffset,
     int width, int height,
     int left, int top, int right, int bottom) {
-    this.uWidth  = uWidth;
+    this.uWidth = uWidth;
     this.vHeight = vHeight;
-    this.width   = width;
-    this.height  = height;
+    this.width = width;
+    this.height = height;
     this.uOffset = uOffset;
     this.vOffset = vOffset;
-    this.left    = left;
-    this.top     = top;
-    this.right   = right;
-    this.bottom  = bottom;
+    this.left = left;
+    this.top = top;
+    this.right = right;
+    this.bottom = bottom;
   }
 
   public SliceSpriteSliceData[][] getSliceData() {

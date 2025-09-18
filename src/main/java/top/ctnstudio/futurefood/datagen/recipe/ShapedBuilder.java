@@ -29,15 +29,15 @@ import static top.ctnstudio.futurefood.datagen.recipe.DatagenRecipeProvider.getI
  * @author 尽
  */
 public class ShapedBuilder {
-  protected final List<String>               rows             = Lists.newArrayList(); // 配方排版
-  protected final Map<Character, Ingredient> key              = Maps.newLinkedHashMap(); // 配方键
-  protected final Map<String, Criterion<?>>  criteria         = new LinkedHashMap<>(); // 配方条件
-  protected final ResourceLocation           recipesId;
-  protected       RecipeCategory             category         = RecipeCategory.MISC; // 配方分类
-  protected       ItemStack                  resultStack; // 输出物品
+  protected final List<String> rows = Lists.newArrayList(); // 配方排版
+  protected final Map<Character, Ingredient> key = Maps.newLinkedHashMap(); // 配方键
+  protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>(); // 配方条件
+  protected final ResourceLocation recipesId;
+  protected RecipeCategory category = RecipeCategory.MISC; // 配方分类
+  protected ItemStack resultStack; // 输出物品
   @Nullable
-  protected       String                     group; // 配方分组
-  protected       boolean                    showNotification = true; // 是否显示配方获得提示通知
+  protected String group; // 配方分组
+  protected boolean showNotification = true; // 是否显示配方获得提示通知
 
   public ShapedBuilder(ResourceLocation recipesId, RecipeCategory category, ItemLike result) {
     this(recipesId, category);
@@ -52,7 +52,7 @@ public class ShapedBuilder {
    */
   public ShapedBuilder(ResourceLocation recipesId, RecipeCategory category) {
     this.recipesId = recipesId;
-    this.category  = category;
+    this.category = category;
   }
 
   /**
@@ -64,7 +64,7 @@ public class ShapedBuilder {
    * @param count     数量
    */
   public ShapedBuilder(ResourceLocation recipesId, RecipeCategory category,
-    ItemLike result, int count) {
+                       ItemLike result, int count) {
     this(recipesId, category, new ItemStack(result, count));
   }
 
@@ -75,7 +75,7 @@ public class ShapedBuilder {
    * @param resultStack 输出物品堆
    */
   public ShapedBuilder(ResourceLocation recipesId, RecipeCategory category,
-    ItemStack resultStack) {
+                       ItemStack resultStack) {
     this(recipesId, category);
     this.resultStack = resultStack;
   }
@@ -142,7 +142,7 @@ public class ShapedBuilder {
    * @return 新的BuilderShapedRecipe实例
    */
   public static ShapedBuilder shaped(ResourceLocation recipesId, RecipeCategory category,
-    ItemLike result, int count) {
+                                     ItemLike result, int count) {
     return new ShapedBuilder(recipesId, category, result, count);
   }
 
@@ -155,7 +155,7 @@ public class ShapedBuilder {
    * @return 新的BuilderShapedRecipe实例
    */
   public static ShapedBuilder shaped(ResourceLocation recipesId, RecipeCategory category,
-    ItemStack resultStack) {
+                                     ItemStack resultStack) {
     return new ShapedBuilder(recipesId, category, resultStack);
   }
 
@@ -204,13 +204,13 @@ public class ShapedBuilder {
   }
 
   public static void basicBuilder(RecipeOutput output, ItemLike result, RecipeCategory category,
-    Function<ShapedBuilder, ShapedBuilder> additional) {
+                                  Function<ShapedBuilder, ShapedBuilder> additional) {
     basicBuilder(output, result, category, null, additional);
   }
 
   public static void basicBuilder(RecipeOutput output, ItemLike result, RecipeCategory category,
-    String group,
-    Function<ShapedBuilder, ShapedBuilder> additional) {
+                                  String group,
+                                  Function<ShapedBuilder, ShapedBuilder> additional) {
     var builder = ShapedBuilder.shaped(getLocation(getItemName(result)),
       RecipeCategory.MISC, result);
     additional.apply(builder)
@@ -228,7 +228,7 @@ public class ShapedBuilder {
    * @return 新的BuilderShapedRecipe实例
    */
   public static ShapedBuilder shaped(ResourceLocation recipesId, RecipeCategory category,
-    ItemLike result) {
+                                     ItemLike result) {
     return new ShapedBuilder(recipesId, category, result);
   }
 
@@ -417,7 +417,7 @@ public class ShapedBuilder {
       throw new IllegalArgumentException("Symbol '" + symbol + "' is already defined!");
     } else if (symbol == ' ') {
       throw new IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be " +
-                                         "defined");
+        "defined");
     } else {
       this.key.put(symbol, ingredient);
       return this;

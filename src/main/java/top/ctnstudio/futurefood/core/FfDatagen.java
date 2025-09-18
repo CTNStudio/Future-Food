@@ -37,16 +37,22 @@ public class FfDatagen {
 
     // 服务端数据生成
     buildServer(event, generator, new DatagenDatapackBuiltinEntries(output, lookupProvider));
-    FfBlockTags pmBlockTags = buildServer(event, generator, new FfBlockTags(output, lookupProvider, exFileHelper));
-    buildServer(event, generator, new FfItemTags(output, lookupProvider, pmBlockTags.contentsGetter(), exFileHelper));
+    FfBlockTags pmBlockTags = buildServer(event, generator, new FfBlockTags(output,
+      lookupProvider, exFileHelper));
+    buildServer(event, generator, new FfItemTags(output, lookupProvider,
+      pmBlockTags.contentsGetter(), exFileHelper));
     buildServer(event, generator, new FfEntityTags(output, lookupProvider, exFileHelper));
   }
 
-  private static <T extends DataProvider> @NotNull T buildClient(GatherDataEvent event, DataGenerator generator, T provider) {
+  private static <T extends DataProvider> @NotNull T buildClient(GatherDataEvent event,
+                                                                 DataGenerator generator,
+                                                                 T provider) {
     return generator.addProvider(event.includeClient(), provider);
   }
 
-  private static <T extends DataProvider> @NotNull T buildServer(GatherDataEvent event, DataGenerator generator, T provider) {
+  private static <T extends DataProvider> @NotNull T buildServer(GatherDataEvent event,
+                                                                 DataGenerator generator,
+                                                                 T provider) {
     return generator.addProvider(event.includeServer(), provider);
   }
 }

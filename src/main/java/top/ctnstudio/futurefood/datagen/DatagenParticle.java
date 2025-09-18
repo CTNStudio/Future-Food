@@ -23,12 +23,12 @@ public class DatagenParticle extends ParticleDescriptionProvider {
   }
 
   private <p extends ParticleOptions> void createSprite(Supplier<ParticleType<p>> type,
-    String name) {
+                                                        String name) {
     sprite(type.get(), ResourceLocation.fromNamespaceAndPath(FutureFood.ID, name));
   }
 
   private <p extends ParticleOptions> void createSprite(Supplier<ParticleType<p>> type,
-    String... names) {
+                                                        String... names) {
     List<ResourceLocation> list = new ArrayList<>();
     for (String name : names) {
       list.add(getPath(name));

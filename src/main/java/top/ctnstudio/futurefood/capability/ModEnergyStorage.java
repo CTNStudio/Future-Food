@@ -66,7 +66,8 @@ public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage
   @Override
   public void deserializeNBT(HolderLookup.Provider provider, Tag nbt) {
     if (!(nbt instanceof CompoundTag compoundTag)) {
-      throw new IllegalArgumentException("Can not deserialize to an instance that isn't the default implementation");
+      throw new IllegalArgumentException("Can not deserialize to an instance that isn't the " +
+        "default implementation");
     }
     energy = compoundTag.getInt("energy");
     capacity = compoundTag.getInt("capacity");
@@ -77,7 +78,8 @@ public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage
   /**
    * 序列化 NBT
    */
-  public static void serializeNBT(HolderLookup.Provider provider, CompoundTag nbt, IModEnergyStorage storage) {
+  public static void serializeNBT(HolderLookup.Provider provider, CompoundTag nbt,
+                                  IModEnergyStorage storage) {
     nbt.putInt("energy", storage.getEnergyStored());
     nbt.putInt("capacity", storage.getMaxEnergyStored());
     nbt.putInt("maxReceive", storage.getMaxReceive());
@@ -87,7 +89,8 @@ public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage
   /**
    * 反序列化 NBT
    */
-  public static void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt, IModEnergyStorage storage) {
+  public static void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt,
+                                    IModEnergyStorage storage) {
     storage.setEnergy(nbt.getInt("energy"));
     storage.setMaxEnergyStored(nbt.getInt("capacity"));
     storage.setMaxReceive(nbt.getInt("maxReceive"));

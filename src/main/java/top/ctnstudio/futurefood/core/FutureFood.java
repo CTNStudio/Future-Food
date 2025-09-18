@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 @SuppressWarnings("unused")
 @Mod(FutureFood.ID)
 public class FutureFood {
-  public static final String ID     = "futurefood";
+  public static final String ID = "futurefood";
   public static final Logger LOGGER = LogManager.getLogger(ID);
 
   public FutureFood(IEventBus modEventBus, ModContainer modContainer) {

@@ -27,13 +27,13 @@ import java.util.Map;
  * @author 尽
  */
 public class ShapelessBuilder {
-  protected final List<Ingredient>          ingredients = Lists.newArrayList(); // 配方原料
-  protected final Map<String, Criterion<?>> criteria    = Maps.newLinkedHashMap(); // 配方条件
-  protected final ResourceLocation          recipesId;
-  protected       RecipeCategory            category    = RecipeCategory.MISC; // 配方分类
-  protected       ItemStack                 resultStack; // 输出物品
+  protected final List<Ingredient> ingredients = Lists.newArrayList(); // 配方原料
+  protected final Map<String, Criterion<?>> criteria = Maps.newLinkedHashMap(); // 配方条件
+  protected final ResourceLocation recipesId;
+  protected RecipeCategory category = RecipeCategory.MISC; // 配方分类
+  protected ItemStack resultStack; // 输出物品
   @Nullable
-  protected       String                    group; // 配方分组
+  protected String group; // 配方分组
 
   public ShapelessBuilder(ResourceLocation recipesId, RecipeCategory category, ItemLike result) {
     this(recipesId, category);
@@ -42,16 +42,16 @@ public class ShapelessBuilder {
 
   public ShapelessBuilder(ResourceLocation recipesId, RecipeCategory category) {
     this.recipesId = recipesId;
-    this.category  = category;
+    this.category = category;
   }
 
   public ShapelessBuilder(ResourceLocation recipesId, RecipeCategory category,
-    ItemLike result, int count) {
+                          ItemLike result, int count) {
     this(recipesId, category, new ItemStack(result, count));
   }
 
   public ShapelessBuilder(ResourceLocation recipesId, RecipeCategory category,
-    ItemStack resultStack) {
+                          ItemStack resultStack) {
     this(recipesId, category);
     this.resultStack = resultStack;
   }
@@ -82,7 +82,7 @@ public class ShapelessBuilder {
    * @return 新的ShapelessBuilder实例
    */
   public static ShapelessBuilder shaped(ResourceLocation recipesId, RecipeCategory category,
-    ItemLike result) {
+                                        ItemLike result) {
     return new ShapelessBuilder(recipesId, category, result);
   }
 
@@ -107,7 +107,7 @@ public class ShapelessBuilder {
    * @return 新的ShapelessBuilder实例
    */
   public static ShapelessBuilder shaped(ResourceLocation recipesId, RecipeCategory category,
-    ItemLike result, int count) {
+                                        ItemLike result, int count) {
     return new ShapelessBuilder(recipesId, category, result, count);
   }
 
@@ -120,7 +120,7 @@ public class ShapelessBuilder {
    * @return 新的ShapelessBuilder实例
    */
   public static ShapelessBuilder shaped(ResourceLocation recipesId, RecipeCategory category,
-    ItemStack resultStack) {
+                                        ItemStack resultStack) {
     return new ShapelessBuilder(recipesId, category, resultStack);
   }
 

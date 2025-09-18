@@ -27,7 +27,8 @@ public abstract class HorizontalDirectionalEntityBlock extends BaseEntityBlock {
 
   @Override
   public BlockState getStateForPlacement(BlockPlaceContext context) {
-    return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    return this.defaultBlockState().setValue(FACING,
+      context.getHorizontalDirection().getOpposite());
   }
 
   @Override

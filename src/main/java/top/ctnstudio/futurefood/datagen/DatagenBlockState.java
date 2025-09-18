@@ -20,7 +20,8 @@ public class DatagenBlockState extends BlockStateProvider {
   }
 
   public void directionalBlock(@NotNull Block block, int angleOffset) {
-    super.directionalBlock(block, models().getExistingFile(BuiltInRegistries.BLOCK.getKey(block)), angleOffset);
+    super.directionalBlock(block, models().getExistingFile(BuiltInRegistries.BLOCK.getKey(block))
+      , angleOffset);
   }
 
   /*public void specialItem(Item item) {

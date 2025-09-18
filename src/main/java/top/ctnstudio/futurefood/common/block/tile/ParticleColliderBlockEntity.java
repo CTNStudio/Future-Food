@@ -16,7 +16,8 @@ public class ParticleColliderBlockEntity extends BasicEnergyStorageBlockEntity<P
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
   public ParticleColliderBlockEntity(BlockPos pos, BlockState blockState) {
-    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModEnergyStorage(102400, 102400, 0));
+    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModEnergyStorage(102400,
+      102400, 0));
   }
 
   @Override

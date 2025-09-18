@@ -264,7 +264,7 @@ public class RecipeTool {
   }
 
   public static void requires(ShapedBuilder builder, Map<Character, Ingredient> requires,
-    String group, RecipeOutput recipeOutput) {
+                              String group, RecipeOutput recipeOutput) {
     defineRequires(builder, requires)
       .basicUnlockedBy()
       .group(group)
@@ -275,7 +275,7 @@ public class RecipeTool {
    * 附上材料
    */
   public static ShapedBuilder defineRequires(ShapedBuilder builder,
-    Map<Character, Ingredient> requires) {
+                                             Map<Character, Ingredient> requires) {
     requires.forEach(builder::define);
     return builder;
   }

@@ -7,12 +7,13 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import top.ctnstudio.futurefood.api.IEnergyStorager;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 
 import javax.annotation.Nullable;
 
-public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> implements ModEnergyStorageBlock {
+public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> implements IEnergyStorager {
   private static final MapCodec<QerEntityBlock> CODEC = simpleCodec(QerEntityBlock::new);
 
   public QerEntityBlock() {

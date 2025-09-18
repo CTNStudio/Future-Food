@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class FfEntityTags extends EntityTypeTagsProvider {
   public FfEntityTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
-    @CheckForNull ExistingFileHelper existingFileHelper) {
+                      @CheckForNull ExistingFileHelper existingFileHelper) {
     super(output, lookupProvider, FutureFood.ID, existingFileHelper);
   }
 

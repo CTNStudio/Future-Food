@@ -15,12 +15,13 @@ import java.util.function.Supplier;
 
 public final class ModItem {
   public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(FutureFood.ID);
-  public static final DeferredItem<Item> QED               =
+  public static final DeferredItem<Item> QED =
     ITEMS.register("quantum_energy_diffuser", createBlockItem(ModBlock.QED));
-  public static final DeferredItem<Item> QER               =
+  public static final DeferredItem<Item> QER =
     ITEMS.register("quantum_energy_receiver", createBlockItem(ModBlock.QER));
   public static final DeferredItem<Item> PARTICLE_COLLIDER =
-    ITEMS.register("particle_collider", createGeoBlockItem(ModBlock.PARTICLE_COLLIDER, ParticleColliderBlockItemRenderer::new));
+    ITEMS.register("particle_collider", createGeoBlockItem(ModBlock.PARTICLE_COLLIDER,
+      ParticleColliderBlockItemRenderer::new));
 
   private static Supplier<BlockItem> createBlockItem(Supplier<Block> block) {
     return () -> new BlockItem(block.get(), new Item.Properties());
@@ -30,7 +31,8 @@ public final class ModItem {
     return () -> new ModGeoBlockItem(block.get(), new Item.Properties());
   }
 
-  private static Supplier<BlockItem> createGeoBlockItem(Supplier<Block> block, Function<Block, BlockEntityWithoutLevelRenderer> renderer) {
+  private static Supplier<BlockItem> createGeoBlockItem(Supplier<Block> block, Function<Block,
+    BlockEntityWithoutLevelRenderer> renderer) {
     return () -> {
       Block b = block.get();
       return new ModGeoBlockItem(b, new Item.Properties(), () -> renderer.apply(b));

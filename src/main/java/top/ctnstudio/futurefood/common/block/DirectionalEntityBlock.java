@@ -26,7 +26,8 @@ public abstract class DirectionalEntityBlock<T extends BlockEntity> extends Base
 
   @Override
   public BlockState getStateForPlacement(BlockPlaceContext context) {
-    return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+    return this.defaultBlockState().setValue(FACING,
+      context.getNearestLookingDirection().getOpposite());
   }
 
   @Override

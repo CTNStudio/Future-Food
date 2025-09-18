@@ -25,16 +25,19 @@ public class FfClient {
   @SubscribeEvent
   public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
     FutureFood.LOGGER.info("Registering Entity Renderers");
-    registerBlockEntityRenderer(event, ModTileEntity.PARTICLE_COLLIDER.get(), ParticleColliderBlockEntityRenderer::new);
+    registerBlockEntityRenderer(event, ModTileEntity.PARTICLE_COLLIDER.get(),
+      ParticleColliderBlockEntityRenderer::new);
   }
 
   public static <T extends BlockEntity> void registerBlockEntityRenderer(final EntityRenderersEvent.RegisterRenderers event,
-    BlockEntityType<? extends T> blockEntityType, BlockEntityRendererProvider blockEntityRendererProvider) {
+                                                                         BlockEntityType<?
+                                                                           extends T> blockEntityType, BlockEntityRendererProvider blockEntityRendererProvider) {
     event.registerBlockEntityRenderer(blockEntityType, blockEntityRendererProvider);
   }
 
   public static <T extends BlockEntity> void registerBasicBlockEntityRenderer(final EntityRenderersEvent.RegisterRenderers event,
-    BlockEntityType<? extends T> blockEntityType, BasicGeoBlockRenderer blockEntityRendererProvider) {
+                                                                              BlockEntityType<?
+                                                                                extends T> blockEntityType, BasicGeoBlockRenderer blockEntityRendererProvider) {
     event.registerBlockEntityRenderer(blockEntityType, context -> blockEntityRendererProvider);
   }
 }
