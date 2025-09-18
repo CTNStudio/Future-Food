@@ -3,13 +3,16 @@ package top.ctnstudio.futurefood.common.block.tile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.EnergyStorage;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 
-public class BasicEnergyStorageBlockEntity<T extends BlockEntity> extends BlockEntity {
+public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> extends BlockEntity {
   protected final ModEnergyStorage energyStorage;
 
   public BasicEnergyStorageBlockEntity(BlockEntityType<? extends T> type,BlockPos pos, BlockState blockState) {
@@ -31,6 +34,28 @@ public class BasicEnergyStorageBlockEntity<T extends BlockEntity> extends BlockE
   protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
     super.saveAdditional(nbt, registries);
     ModEnergyStorage.deserializeNBT(registries, nbt, energyStorage);
+  }
+
+  @Override
+  public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+    CompoundTag tag = new CompoundTag();
+    saveAdditional(tag, registries);
+    return tag;
+  }
+
+  @Override
+  public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+    super.handleUpdateTag(tag, registries);
+  }
+
+  @Override
+  public Packet<ClientGamePacketListener> getUpdatePacket() {
+    return ClientboundBlockEntityDataPacket.create(this);
+  }
+
+  @Override
+  public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries) {
+    super.onDataPacket(connection, packet, registries);
   }
 
   public ModEnergyStorage getEnergyStorage() {

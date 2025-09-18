@@ -113,6 +113,7 @@ repositories {
 }
 
 dependencies {
+
   implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
   compileOnly "curse.maven:jade-api-${jade_version}"
   implementation "curse.maven:jade-${jade_version}"

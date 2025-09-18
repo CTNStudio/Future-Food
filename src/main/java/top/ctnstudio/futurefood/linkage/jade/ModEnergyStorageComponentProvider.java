@@ -70,7 +70,7 @@ public class ModEnergyStorageComponentProvider<T extends BlockAccessor> implemen
     ClientViewGroup<EnergyView> clientViewGroup = new ClientViewGroup<>(energyViews);
     groups.add(clientViewGroup);
 
-    boolean renderGroup = groups.size() > 1 || groups.getFirst().shouldRenderGroup();
+    boolean renderGroup =  groups.size() > 1 || groups.getFirst().shouldRenderGroup();
     ClientViewGroup.tooltip(
       tooltip, groups, true, (theTooltip, group) -> {
         if (renderGroup) {

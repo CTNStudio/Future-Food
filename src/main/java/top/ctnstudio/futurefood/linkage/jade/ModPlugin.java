@@ -13,11 +13,11 @@ public class ModPlugin implements IWailaPlugin {
 
 	@Override
 	public void register(IWailaCommonRegistration registration) {
-		registration.registerBlockDataProvider(ModEnergyStorageComponentProvider.get(), ModEnergyStorageBlock.class);
+//		registration.registerBlockDataProvider(ModEnergyStorageComponentProvider.get(), ModEnergyStorageBlock.class);
 	}
 
 	@Override
 	public void registerClient(IWailaClientRegistration registration) {
-    registration.registerBlockComponent(ModEnergyStorageComponentProvider.get(), Block.class);
+//    registration.registerBlockComponent(ModEnergyStorageComponentProvider.get(), Block.class);
 	}
 }

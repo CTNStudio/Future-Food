@@ -35,17 +35,6 @@ public final class RegisterCapability {
       (be, side) -> !getOppositeDirection(be, side) ? null : be.getEnergyStorage());
     event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModTileEntity.QER.get(),
       (be, side) -> !getOppositeDirection(be, side) ? null : be.getEnergyStorage());
-//    for (BlockEntityType<? extends BlockEntity> blockEntityType : BuiltInRegistries.BLOCK_ENTITY_TYPE) {
-//      Set<Block> validBlocks = blockEntityType.getValidBlocks();
-//      if (validBlocks.isEmpty()) {
-//        continue;
-//      }
-//      validBlocks.forEach(block -> {
-//        if (block instanceof ModEnergyStorageBlock) event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, blockEntityType,
-//          (be, side) -> !getOppositeDirection(be, side) ?
-//            null : ((BasicEnergyStorageBlockEntity<?>) be).getEnergyStorage());
-//      });
-//    }
   }
 
   /**
@@ -58,8 +47,7 @@ public final class RegisterCapability {
     if (side == null) {
       return false;
     }
-    BlockState bs = be.getBlockState();
-    Optional<Direction> optionalValue = bs.getOptionalValue(QedEntityBlock.FACING);
+    Optional<Direction> optionalValue = be.getBlockState().getOptionalValue(QedEntityBlock.FACING);
     if (optionalValue.isEmpty()) {
       return false;
     }
