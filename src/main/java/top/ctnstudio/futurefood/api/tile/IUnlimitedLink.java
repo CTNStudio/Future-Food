@@ -1,5 +1,6 @@
-package top.ctnstudio.futurefood.api;
+package top.ctnstudio.futurefood.api.tile;
 
+import com.google.common.collect.HashBiMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -9,21 +10,25 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * 无限连接API
  */
 public interface IUnlimitedLink {
   /**
-   * 链接一个方块
+   * 验证方块是否包含能获取能量的 capability
    *
-   * @param pos 要链接的方块位置
-   * @return 是否成功
+   * @return 是否包含能获取能量的 capability
    */
-  boolean linkBlock(BlockPos pos);
+  static boolean verifyEnergyStorage(Level level, BlockPos pos) {
+    if (level == null || pos == null) {
+      return false;
+    }
+    return getEnergyStorageCapabilities(level, pos) != null;
+  }
 
   /**
    * 链接失败
@@ -45,40 +50,52 @@ public interface IUnlimitedLink {
   BlockState getLinkedBlock(BlockPos pos);
 
   /**
-   * 获取方块的可以接收能量的能量接口
+   * 获取方块的能接收能量的能量接口
+   *
+   * @param level 世界
+   * @param pos   方块位置
+   * @return 能接收能量的能量接口
+   */
+  static IEnergyStorage getEnergyStorageCapabilities(Level level, BlockPos pos) {
+    if (level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive i) {
+      return i.getEnergyStorage();
+    }
+    HashBiMap<@Nullable Direction, @Nullable IEnergyStorage> capabilities = getEnergyStorageAllCapabilities(level, pos);
+    return capabilities.values().stream().filter(Objects::nonNull).findAny().orElse(null);
+  }
+
+  /**
+   * 获取方块所有可以接收能量的能量接口
    *
    * @param level 世界
    * @param pos   方块位置
    * @return 能量接口
    */
   @NotNull
-  static IEnergyStorage[] getEnergyStorageCapabilities(Level level, BlockPos pos) {
-    List<IEnergyStorage> capabilities = new ArrayList<>();
+  static HashBiMap<@Nullable Direction, @Nullable IEnergyStorage> getEnergyStorageAllCapabilities(Level level, BlockPos pos) {
+    HashBiMap<Direction, IEnergyStorage> capabilities = HashBiMap.create(7);
     IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
     if (capability != null && capability.canReceive()) {
-      capabilities.add(capability);
+      capabilities.put(null, capability);
     }
     for (Direction direction : Direction.values()) {
       IEnergyStorage capability1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos,
         direction);
       if (capability1 != null && capability1.canReceive()) {
-        capabilities.add(capability1);
+        capabilities.put(direction, capability1);
       }
     }
-    return capabilities.toArray(new IEnergyStorage[0]);
+    return capabilities;
   }
 
   /**
-   * 验证方块是否包含能获取能量的 capability
+   * 链接一个方块
    *
-   * @return 是否包含能获取能量的 capability
+   * @param level
+   * @param pos   要链接的方块位置
+   * @return 是否成功
    */
-  static boolean verifyEnergyStorage(Level level, BlockPos pos) {
-    if (level == null || pos == null) {
-      return false;
-    }
-    return getEnergyStorageCapabilities(level, pos).length != 0;
-  }
+  boolean linkBlock(Level level, BlockPos pos);
 
   /**
    * 序列化链接列表

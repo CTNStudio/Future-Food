@@ -1,6 +1,7 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -13,17 +14,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 
-public abstract class BasicEnergyStorageBlockEntity extends BlockEntity
-  implements IEnergyStorage {
+import javax.annotation.Nullable;
+
+public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implements IEnergyStorage {
   protected final ModEnergyStorage energyStorage;
 
   public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-                                       BlockState blockState) {
+    BlockState blockState) {
     this(type, pos, blockState, new ModEnergyStorage(10240, 1024, 1024));
   }
 
   public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-                                       BlockState blockState, ModEnergyStorage energyStorage) {
+    BlockState blockState, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
   }
@@ -59,11 +61,14 @@ public abstract class BasicEnergyStorageBlockEntity extends BlockEntity
 
   @Override
   public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet,
-                           HolderLookup.Provider registries) {
+    HolderLookup.Provider registries) {
     super.onDataPacket(connection, packet, registries);
   }
 
-  public ModEnergyStorage getEnergyStorage() {
+  /**
+   * 外部能量存储
+   */
+  public IEnergyStorage externalGetEnergyStorage(@Nullable Direction direction) {
     return energyStorage;
   }
 

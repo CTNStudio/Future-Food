@@ -28,6 +28,7 @@ public class FfBlockTags extends BlockTagsProvider {
 
   @Override
   protected void addTags(HolderLookup.Provider capability) {
-    tag(UNLIMITED_RECEPTION).add(ModBlock.PARTICLE_COLLIDER.value(), ModBlock.QER.value());
+    tag(UNLIMITED_RECEPTION)
+            .add(ModBlock.PARTICLE_COLLIDER.value(), ModBlock.QER.value());
   }
 }

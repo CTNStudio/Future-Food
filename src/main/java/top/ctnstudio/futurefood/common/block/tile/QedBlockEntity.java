@@ -1,6 +1,7 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -9,12 +10,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import top.ctnstudio.futurefood.api.IUnlimitedLink;
+import top.ctnstudio.futurefood.api.tile.IUnlimitedLink;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
+
+import static top.ctnstudio.futurefood.capability.RegisterCapability.getOppositeDirection;
 
 public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUnlimitedLink {
   public static final int                     DEFAULT_MAX_REMAINING_TIME = 5;
@@ -68,16 +71,12 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
    */
   public void executeEnergyTransmission(Level blockLevel, BlockPos pos, BlockState bs) {
     linkSet.forEach((bp) -> {
-      BlockState state = getLinkedBlock(bp);
-      IEnergyStorage[] capabilities = IUnlimitedLink.getEnergyStorageCapabilities(blockLevel, bp);
-      if (state == null || capabilities.length == 0) {
+      IEnergyStorage capability = IUnlimitedLink.getEnergyStorageCapabilities(blockLevel, pos);
+      if (capability == null) {
         return;
       }
       int maxReceive = energyStorage.getMaxReceive();
-      for (IEnergyStorage capability : capabilities) {
-        if (capability.receiveEnergy(maxReceive, true) <= 0) {
-          continue;
-        }
+      if (capability.receiveEnergy(maxReceive, true) > 0) {
         capability.receiveEnergy(maxReceive, false);
       }
     });
@@ -104,18 +103,13 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
   }
 
   @Override
-  public boolean linkBlock(BlockPos pos) {
-    if (level == null) {
+  public boolean linkBlock(Level level, BlockPos pos) {
+    if (level == null || this.level == null || this.level.isClientSide || this.level == level) {
       linkFailure(pos);
       return false;
     }
-    BlockState state = getLinkedBlock(pos);
-    if (state == null) {
-      linkFailure(pos);
-      return false;
-    }
-    IEnergyStorage[] capabilities = IUnlimitedLink.getEnergyStorageCapabilities(level, pos);
-    if (capabilities.length == 0) {
+    IEnergyStorage capability = IUnlimitedLink.getEnergyStorageCapabilities(this.level, pos);
+    if (capability == null) {
       linkFailure(pos);
       return false;
     }
@@ -201,5 +195,10 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
 
   public int getMaxRemainingTime() {
     return maxRemainingTime;
+  }
+
+  @Override
+  public IEnergyStorage externalGetEnergyStorage(@org.jetbrains.annotations.Nullable Direction direction) {
+    return !getOppositeDirection(this, direction) ? null : super.externalGetEnergyStorage(direction);
   }
 }

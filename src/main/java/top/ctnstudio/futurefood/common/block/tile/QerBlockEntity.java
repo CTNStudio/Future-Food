@@ -1,12 +1,31 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
+import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-public class QerBlockEntity extends BasicEnergyStorageBlockEntity {
+import static top.ctnstudio.futurefood.capability.RegisterCapability.getOppositeDirection;
+
+public class QerBlockEntity extends BasicEnergyStorageBlockEntity implements IUnlimitedEntityReceive {
   public QerBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.QER.get(), pos, blockState, new ModEnergyStorage(20480, 4096, 4096));
+  }
+
+  @Override
+  public IEnergyStorage externalGetEnergyStorage(@Nullable Direction direction) {
+    return !getOppositeDirection(this, direction) ? null : super.externalGetEnergyStorage(direction);
+  }
+
+  /**
+   * 能量存储
+   */
+  @Override
+  public IEnergyStorage getEnergyStorage() {
+    return energyStorage;
   }
 }

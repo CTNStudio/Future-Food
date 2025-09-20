@@ -6,11 +6,11 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import top.ctnstudio.futurefood.api.IModEnergyStorage;
+import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 
-public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock implements IModEnergyStorage {
+public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock implements IEntityStorageBlock {
   private static final MapCodec<ParticleColliderEntityBlock> CODEC =
     simpleCodec(ParticleColliderEntityBlock::new);
 

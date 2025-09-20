@@ -20,7 +20,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import top.ctnstudio.futurefood.api.IModEnergyStorage;
+import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
+import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.api.tile.IUnlimitedLink;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
@@ -33,7 +35,7 @@ import java.util.Optional;
 
 import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
-public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IModEnergyStorage {
+public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IEntityStorageBlock {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
 
   public QedEntityBlock() {
@@ -47,7 +49,10 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
 
   @Override
   public void setPlacedBy(Level level, BlockPos pos, BlockState state,
-                          @Nullable LivingEntity placer, ItemStack stack) {
+    @Nullable LivingEntity placer, ItemStack stack) {
+    if (level.isClientSide) {
+      return;
+    }
     buildUnlimitedLinks(level, pos, state);
   }
 
@@ -61,17 +66,25 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
       .forEach(pos1 -> blockStateMap.put(pos1, level.getBlockState(pos1)));
     QedBlockEntity blockEntity = getBlockEntity(level, pos);
     blockStateMap.entrySet().stream()
-      .filter(entry -> entry.getValue().is(FfBlockTags.UNLIMITED_RECEPTION))
-      .forEach(entry -> blockEntity.linkBlock(entry.getKey()));
+      .filter(entry -> isLinkable(level, entry.getKey(), entry.getValue()))
+      .forEach(entry -> linkBlock(level, entry.getKey(), blockEntity));
   }
 
   public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {
     Optional<QedBlockEntity> blockEntity = getBlockEntityFromLevel(level, pos,
-        ModTileEntity.QED.get());
+      ModTileEntity.QED.get());
     if (blockEntity.isEmpty()) {
       throw new IllegalStateException("QedBlockEntity not found at " + pos);
     }
     return blockEntity.get();
+  }
+
+  public boolean isLinkable(Level level, BlockPos pos, BlockState state) {
+    return state.is(FfBlockTags.UNLIMITED_RECEPTION) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
+  }
+
+  public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLink i) {
+    return i.linkBlock(level, pos);
   }
 
   private QedEntityBlock(Properties properties) {
@@ -101,7 +114,7 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
 
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-                                                                BlockEntityType<T> type) {
+    BlockEntityType<T> type) {
     return type == ModTileEntity.QED.get() ? QedBlockEntity::tick : null;
   }
 
