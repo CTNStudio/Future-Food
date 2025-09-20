@@ -32,3 +32,6 @@ type = "required"
 versionRange = "${geckolib_version}"
 ordering = "NONE"
 side = "BOTH"
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"
