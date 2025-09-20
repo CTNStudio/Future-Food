@@ -1,5 +1,8 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -15,35 +18,38 @@ import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nullable;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 
 import static top.ctnstudio.futurefood.capability.RegisterCapability.getOppositeDirection;
 
 public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUnlimitedLink {
-  public static final int                     DEFAULT_MAX_REMAINING_TIME = 5;
+  public static final Table<Integer, Integer, Integer> CACHES = HashBasedTable.create();
+  public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   /**
    * 剩余传递计时
    */
-  private             int                     remainingTime;
+  private int remainingTime;
   /**
    * 最大传递计时
    */
-  private             int                     maxRemainingTime; // 使用变量以方便后续做升级
-  // Fixme - 这个大概是多余的，数据传递靠记录器相对不靠谱，可能需要用 KT Tree 之类的算法
+  private int maxRemainingTime; // 使用变量以方便后续做升级
   /**
    * 链接哈希集合
    */
-  private final       LinkedHashSet<BlockPos> linkSet;
+  private final HashSet<BlockPos> linkSet;
 
   public QedBlockEntity(BlockEntityType<? extends QedBlockEntity> type, BlockPos pos, BlockState blockState, ModEnergyStorage energyStorage, int maxRemainingTime) {
     super(type, pos, blockState, energyStorage);
-    linkSet               = new LinkedHashSet<>();
+    this.linkSet = Sets.newHashSet();
     this.maxRemainingTime = maxRemainingTime;
   }
 
   public QedBlockEntity(BlockPos pos, BlockState blockState) {
     this(ModTileEntity.QED.get(), pos, blockState,
-      new ModEnergyStorage(20480, 4096, 4096), DEFAULT_MAX_REMAINING_TIME);
+      new ModEnergyStorage(20480, 4096, 4096),
+      DEFAULT_MAX_REMAINING_TIME);
+
+    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
   public static <T extends BlockEntity> void tick(Level level, BlockPos pos,
@@ -92,6 +98,9 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
     } else {
       maxRemainingTime = nbt.getInt("maxRemainingTime");
     }
+
+    final var pos = this.getBlockPos();
+    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
   @Override
@@ -203,5 +212,17 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
       return energyStorage;
     }
     return !getOppositeDirection(this, direction) ? null : super.externalGetEnergyStorage(direction);
+  }
+
+  @Override
+  public void onLoad() {
+    final var pos = this.getBlockPos();
+    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
+  }
+
+  @Override
+  public void onChunkUnloaded() {
+    final var pos = this.getBlockPos();
+    CACHES.remove(pos.getY(), pos.getX());
   }
 }

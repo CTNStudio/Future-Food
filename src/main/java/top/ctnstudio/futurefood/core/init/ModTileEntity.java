@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
@@ -26,9 +27,15 @@ public final class ModTileEntity {
     register("particle_collider", ParticleColliderBlockEntity::new, ModBlock.PARTICLE_COLLIDER);
 
   @SafeVarargs
-  private static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(String name,
-                                                                                                         BlockEntityType.BlockEntitySupplier<T> factory, Supplier<Block>... validBlocks) {
+  private static <T extends BlockEntity>
+  DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(String name,
+                                                                  BlockEntitySupplier<T> factory,
+                                                                  Supplier<Block>... validBlocks) {
     return TILES.register(name, () -> BlockEntityType.Builder.of(factory,
-      Arrays.stream(validBlocks).map(Supplier::get).toList().toArray(new Block[0])).build(null));
+      Arrays.stream(validBlocks)
+        .map(Supplier::get)
+        .toList()
+        .toArray(new Block[0]))
+      .build(null));
   }
 }

@@ -9,9 +9,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -27,6 +26,7 @@ public interface IUnlimitedLink {
     if (level == null || pos == null) {
       return false;
     }
+
     return getEnergyStorageCapabilities(level, pos) != null;
   }
 
@@ -60,7 +60,7 @@ public interface IUnlimitedLink {
     if (level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive i) {
       return i.getEnergyStorage();
     }
-    HashBiMap<@Nullable Direction, @Nullable IEnergyStorage> capabilities = getEnergyStorageAllCapabilities(level, pos);
+    final var capabilities = getEnergyStorageAllCapabilities(level, pos);
     return capabilities.values().stream().filter(Objects::nonNull).findAny().orElse(null);
   }
 
@@ -71,8 +71,8 @@ public interface IUnlimitedLink {
    * @param pos   方块位置
    * @return 能量接口
    */
-  @NotNull
-  static HashBiMap<@Nullable Direction, @Nullable IEnergyStorage> getEnergyStorageAllCapabilities(Level level, BlockPos pos) {
+  @Nonnull
+  static HashBiMap<Direction, IEnergyStorage> getEnergyStorageAllCapabilities(Level level, BlockPos pos) {
     HashBiMap<Direction, IEnergyStorage> capabilities = HashBiMap.create(7);
     IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
     if (capability != null && capability.canReceive()) {

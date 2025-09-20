@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -20,12 +19,13 @@ public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implemen
   protected final ModEnergyStorage energyStorage;
 
   public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-    BlockState blockState) {
-    this(type, pos, blockState, new ModEnergyStorage(10240, 1024, 1024));
+                                       BlockState blockState) {
+    this(type, pos, blockState,
+      new ModEnergyStorage(10240, 1024, 1024));
   }
 
   public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-    BlockState blockState, ModEnergyStorage energyStorage) {
+                                       BlockState blockState, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
   }
@@ -50,19 +50,8 @@ public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implemen
   }
 
   @Override
-  public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
-    super.handleUpdateTag(tag, registries);
-  }
-
-  @Override
   public Packet<ClientGamePacketListener> getUpdatePacket() {
     return ClientboundBlockEntityDataPacket.create(this);
-  }
-
-  @Override
-  public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet,
-    HolderLookup.Provider registries) {
-    super.onDataPacket(connection, packet, registries);
   }
 
   /**
