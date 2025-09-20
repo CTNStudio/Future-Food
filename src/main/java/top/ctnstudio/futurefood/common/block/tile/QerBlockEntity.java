@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-public class QerBlockEntity extends BasicEnergyStorageBlockEntity<QerBlockEntity> {
+public class QerBlockEntity extends BasicEnergyStorageBlockEntity {
   public QerBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.QER.get(), pos, blockState, new ModEnergyStorage(20480, 4096, 4096));
   }

@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import top.ctnstudio.futurefood.api.IEnergyStorager;
+import top.ctnstudio.futurefood.api.IModEnergyStorage;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
@@ -33,7 +33,7 @@ import java.util.Optional;
 
 import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
-public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IEnergyStorager {
+public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IModEnergyStorage {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
 
   public QedEntityBlock() {
@@ -107,7 +107,7 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
 
   @Override
   protected boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-    return adjacentBlockState.is(this) ? true : super.skipRendering(state, adjacentBlockState, side);
+    return adjacentBlockState.is(this) || super.skipRendering(state, adjacentBlockState, side);
   }
 
   @Override

@@ -12,13 +12,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import top.ctnstudio.futurefood.api.IEnergyStorager;
+import top.ctnstudio.futurefood.api.IModEnergyStorage;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 
 import javax.annotation.Nullable;
 
-public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> implements IEnergyStorager {
+public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> implements IModEnergyStorage {
   private static final MapCodec<QerEntityBlock> CODEC = simpleCodec(QerEntityBlock::new);
 
   public QerEntityBlock() {
@@ -57,7 +57,7 @@ public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> imple
 
   @Override
   protected boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-    return adjacentBlockState.is(this) ? true : super.skipRendering(state, adjacentBlockState, side);
+    return adjacentBlockState.is(this) || super.skipRendering(state, adjacentBlockState, side);
   }
 
   @Override

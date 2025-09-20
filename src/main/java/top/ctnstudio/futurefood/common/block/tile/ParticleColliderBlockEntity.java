@@ -10,7 +10,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-public class ParticleColliderBlockEntity extends BasicEnergyStorageBlockEntity<ParticleColliderBlockEntity> implements GeoBlockEntity {
+public class ParticleColliderBlockEntity extends BasicEnergyStorageBlockEntity implements GeoBlockEntity {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
 
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

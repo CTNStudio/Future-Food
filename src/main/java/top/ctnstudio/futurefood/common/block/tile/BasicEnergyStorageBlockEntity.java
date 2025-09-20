@@ -13,16 +13,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 
-public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> extends BlockEntity
+public abstract class BasicEnergyStorageBlockEntity extends BlockEntity
   implements IEnergyStorage {
   protected final ModEnergyStorage energyStorage;
 
-  public BasicEnergyStorageBlockEntity(BlockEntityType<? extends T> type, BlockPos pos,
+  public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
                                        BlockState blockState) {
     this(type, pos, blockState, new ModEnergyStorage(10240, 1024, 1024));
   }
 
-  public BasicEnergyStorageBlockEntity(BlockEntityType<? extends T> type, BlockPos pos,
+  public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
                                        BlockState blockState, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
@@ -67,8 +67,6 @@ public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> exten
     return energyStorage;
   }
 
-  // TODO 下面的方法补全一下
-
   /**
    * 接受能量
    *
@@ -78,7 +76,7 @@ public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> exten
    */
   @Override
   public int receiveEnergy(int value, boolean test) {
-    return 0;
+    return energyStorage.receiveEnergy(value, test);
   }
 
   /**
@@ -90,7 +88,7 @@ public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> exten
    */
   @Override
   public int extractEnergy(int value, boolean test) {
-    return 0;
+    return energyStorage.extractEnergy(value, test);
   }
 
   /**
@@ -98,7 +96,7 @@ public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> exten
    */
   @Override
   public int getEnergyStored() {
-    return 0;
+    return energyStorage.getEnergyStored();
   }
 
   /**
@@ -106,7 +104,7 @@ public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> exten
    */
   @Override
   public int getMaxEnergyStored() {
-    return 0;
+    return energyStorage.getMaxEnergyStored();
   }
 
   /**
@@ -114,7 +112,7 @@ public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> exten
    */
   @Override
   public boolean canExtract() {
-    return this.getEnergyStored() > 0;
+    return energyStorage.canExtract();
   }
 
   /**
@@ -122,6 +120,6 @@ public abstract class BasicEnergyStorageBlockEntity<T extends BlockEntity> exten
    */
   @Override
   public boolean canReceive() {
-    return this.getEnergyStored() < this.getMaxEnergyStored();
+    return energyStorage.canReceive();
   }
 }

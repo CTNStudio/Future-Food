@@ -1,49 +1,85 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.api.IUnlimitedLink;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nullable;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
-public class QedBlockEntity extends BasicEnergyStorageBlockEntity<QedBlockEntity> implements IUnlimitedLink {
-
+public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUnlimitedLink {
+  public static final int                     DEFAULT_MAX_REMAINING_TIME = 5;
+  /**
+   * 剩余传递计时
+   */
+  private             int                     remainingTime;
+  /**
+   * 最大传递计时
+   */
+  private             int                     maxRemainingTime; // 使用变量以方便后续做升级
   // Fixme - 这个大概是多余的，数据传递靠记录器相对不靠谱，可能需要用 KT Tree 之类的算法
-  private final LinkedHashMap<BlockPos, IEnergyStorage> linkList; // 链接列表
+  /**
+   * 链接哈希集合
+   */
+  private final       LinkedHashSet<BlockPos> linkSet;
 
-  public QedBlockEntity(BlockPos pos, BlockState blockState) {
-    super(ModTileEntity.QED.get(), pos, blockState, new ModEnergyStorage(20480, 4096, 4096));
-    linkList = new LinkedHashMap<>();
+  public QedBlockEntity(BlockEntityType<? extends QedBlockEntity> type, BlockPos pos, BlockState blockState, ModEnergyStorage energyStorage, int maxRemainingTime) {
+    super(type, pos, blockState, energyStorage);
+    linkSet               = new LinkedHashSet<>();
+    this.maxRemainingTime = maxRemainingTime;
   }
 
-  public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos,
-                                                  BlockState blockState, T blockEntity) {
+  public QedBlockEntity(BlockPos pos, BlockState blockState) {
+    this(ModTileEntity.QED.get(), pos, blockState,
+      new ModEnergyStorage(20480, 4096, 4096), DEFAULT_MAX_REMAINING_TIME);
+  }
+
+  public static <T extends BlockEntity> void tick(Level level, BlockPos pos,
+    BlockState bs, T blockEntity) {
     if (level == null) {
       return;
     }
     QedBlockEntity be = (QedBlockEntity) blockEntity;
-    // 移除无效的链接
-    be.linkList.entrySet().removeIf(entry -> {
-      BlockState bs = be.getLinkedBlock(entry.getKey());
-      if (bs == null || bs.isEmpty()) {
-        return true;
-      }
-      BlockPos bp = entry.getKey();
-      return bp == null;
-    });
-    be.linkList.forEach((bp, bs) -> {
+    int time = be.getRemainingTime(); // 使用方法方便重写逻辑
+    if (time > 0) {
+      return;
+    } else {
+      be.resetRemainingTime();
+    }
+    be.executeEnergyTransmission(level, pos, bs);
+    be.remainingTime--;
+  }
 
+  /**
+   * 执行能量传递
+   *
+   * @param blockLevel 方块的世界
+   * @param pos        当前方块的位置
+   * @param bs         当方块的方块状态
+   */
+  public void executeEnergyTransmission(Level blockLevel, BlockPos pos, BlockState bs) {
+    linkSet.forEach((bp) -> {
+      BlockState state = getLinkedBlock(bp);
+      IEnergyStorage[] capabilities = IUnlimitedLink.getEnergyStorageCapabilities(blockLevel, bp);
+      if (state == null || capabilities.length == 0) {
+        return;
+      }
+      int maxReceive = energyStorage.getMaxReceive();
+      for (IEnergyStorage capability : capabilities) {
+        if (capability.receiveEnergy(maxReceive, true) <= 0) {
+          continue;
+        }
+        capability.receiveEnergy(maxReceive, false);
+      }
     });
   }
 
@@ -51,17 +87,25 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity<QedBlockEntity
   protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
     super.loadAdditional(nbt, registries);
     serializeLinkedListNBT(registries, nbt);
+    remainingTime = nbt.getInt("remainingTime");
+    if (!nbt.contains("maxRemainingTime")) {
+      maxRemainingTime = DEFAULT_MAX_REMAINING_TIME;
+    } else {
+      maxRemainingTime = nbt.getInt("maxRemainingTime");
+    }
   }
 
   @Override
   protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
     super.saveAdditional(nbt, registries);
     deserializeLinkedListNBT(registries, nbt);
+    nbt.putInt("remainingTime", remainingTime);
+    nbt.putInt("maxRemainingTime", maxRemainingTime);
   }
 
   @Override
   public boolean linkBlock(BlockPos pos) {
-    if (pos == null || level == null) {
+    if (level == null) {
       linkFailure(pos);
       return false;
     }
@@ -70,12 +114,12 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity<QedBlockEntity
       linkFailure(pos);
       return false;
     }
-    IEnergyStorage capability = getEnergyStorage(level, pos);
-    if (capability == null) {
+    IEnergyStorage[] capabilities = IUnlimitedLink.getEnergyStorageCapabilities(level, pos);
+    if (capabilities.length == 0) {
       linkFailure(pos);
       return false;
     }
-    linkList.put(pos, capability);
+    linkSet.add(pos);
     return true;
   }
 
@@ -86,20 +130,17 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity<QedBlockEntity
 
   @Override
   public void removeLink(BlockPos pos) {
-    if (pos == null) {
-      return;
-    }
-    linkList.remove(pos);
+    linkSet.remove(pos);
   }
 
   @Nullable
   @Override
   public BlockState getLinkedBlock(BlockPos pos) {
-    if (level == null || pos == null) {
+    if (level == null) {
       return null;
     }
     BlockState blockState = level.getBlockState(pos);
-    if (blockState == null || blockState.isEmpty()) {
+    if (blockState.isEmpty()) {
       return null;
     }
     return blockState;
@@ -111,11 +152,8 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity<QedBlockEntity
       return;
     }
     ListTag tags = new ListTag();
-    linkList.forEach(
-      (pos, es) -> {
-        if (pos == null || es == null) {
-          return;
-        }
+    linkSet.forEach(
+      (pos) -> {
         BlockState state = getLinkedBlock(pos);
         if (state == null) {
           return;
@@ -132,7 +170,7 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity<QedBlockEntity
     if (level == null || nbt.isEmpty()) {
       return;
     }
-    ListTag tags = nbt.getList("linkList", 10);
+    ListTag tags = nbt.getList("linkList", DEFAULT_MAX_REMAINING_TIME);
     if (tags.isEmpty()) {
       return;
     }
@@ -140,44 +178,28 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity<QedBlockEntity
       if (!(tag instanceof CompoundTag compoundTag)) {
         return;
       }
-      int[] pos = compoundTag.getIntArray("pos");
-      BlockPos blockPos = new BlockPos(pos[0], pos[1], pos[2]);
-      BlockState state = getLinkedBlock(blockPos);
+      int[] posNbtArray = compoundTag.getIntArray("pos");
+      BlockPos pos = new BlockPos(posNbtArray[0], posNbtArray[1], posNbtArray[2]);
+      BlockState state = getLinkedBlock(pos);
       if (state == null) {
         return;
       }
-      IEnergyStorage capability = getEnergyStorage(level, blockPos);
-      if (capability == null) {
-        return;
-      }
-      linkList.put(blockPos, capability);
+      linkSet.add(pos);
     });
   }
 
-  /**
-   * 验证方块是否包含能获取能量的 capability
-   *
-   * @return 是否包含能获取能量的 capability
-   */
-  public static boolean verifyEnergyStorage(Level level, BlockPos pos) {
-    if (level == null || pos == null) {
-      return false;
-    }
-    return getEnergyStorage(level, pos) != null;
+  public int getRemainingTime() {
+    return remainingTime;
   }
 
-  public static IEnergyStorage getEnergyStorage(Level level, BlockPos pos) {
-    IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
-    if (capability != null) {
-      return capability;
-    }
-    for (Direction direction : Direction.values()) {
-      IEnergyStorage capability1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos,
-        direction);
-      if (capability1 != null) {
-        return capability1;
-      }
-    }
-    return null;
+  /**
+   * 重置传递时间
+   */
+  public void resetRemainingTime() {
+    remainingTime = maxRemainingTime;
+  }
+
+  public int getMaxRemainingTime() {
+    return maxRemainingTime;
   }
 }

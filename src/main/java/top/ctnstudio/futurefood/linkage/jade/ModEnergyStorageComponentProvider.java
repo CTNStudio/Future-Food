@@ -28,8 +28,7 @@ public class ModEnergyStorageComponentProvider<T extends BlockAccessor> implemen
   @Override
   public void appendServerData(CompoundTag data, BlockAccessor accessor) {
     CompoundTag tag = new CompoundTag();
-    BasicEnergyStorageBlockEntity<?> blockEntity =
-      (BasicEnergyStorageBlockEntity<?>) accessor.getBlockEntity();
+    BasicEnergyStorageBlockEntity blockEntity = (BasicEnergyStorageBlockEntity) accessor.getBlockEntity();
     ModEnergyStorage energyStorage = blockEntity.getEnergyStorage();
     int maxExtract = energyStorage.getMaxExtract();
     if (maxExtract == 0) {
