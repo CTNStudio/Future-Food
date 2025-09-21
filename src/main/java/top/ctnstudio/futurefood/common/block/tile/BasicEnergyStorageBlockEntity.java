@@ -15,7 +15,8 @@ import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 
 import javax.annotation.Nullable;
 
-public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implements IEnergyStorage {
+public abstract class BasicEnergyStorageBlockEntity extends BlockEntity
+  implements IEnergyStorage/*, CapabilityConstructor<IEnergyStorage>*/ {
   protected final ModEnergyStorage energyStorage;
 
   public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -60,6 +61,8 @@ public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implemen
   public IEnergyStorage externalGetEnergyStorage(@Nullable Direction direction) {
     return energyStorage;
   }
+
+
 
   /**
    * 接受能量
@@ -116,4 +119,9 @@ public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implemen
   public boolean canReceive() {
     return energyStorage.canReceive();
   }
+
+//  @Override
+//  public IEnergyStorage create(ResourceLocation name, Class<?> typeClass, Class<?> contextClass) {
+//    return null;
+//  }
 }
