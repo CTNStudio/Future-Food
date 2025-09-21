@@ -10,12 +10,14 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.CapabilityRegistry.CapabilityConstructor;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 
 import javax.annotation.Nullable;
 
-public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implements IEnergyStorage {
+public abstract class BasicEnergyStorageBlockEntity extends BlockEntity
+  implements IEnergyStorage, CapabilityConstructor {
   protected final ModEnergyStorage energyStorage;
 
   public BasicEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -60,6 +62,8 @@ public abstract class BasicEnergyStorageBlockEntity extends BlockEntity implemen
   public IEnergyStorage externalGetEnergyStorage(@Nullable Direction direction) {
     return energyStorage;
   }
+
+
 
   /**
    * 接受能量

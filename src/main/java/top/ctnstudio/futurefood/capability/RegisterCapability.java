@@ -21,9 +21,10 @@ public final class RegisterCapability {
     ModTileEntity.TILES.getEntries().forEach(entry -> {
       Block validBlock = entry.get().getValidBlocks().stream().iterator().next();
       BlockEntity blockEntity = entry.get().create(BlockPos.ZERO, validBlock.defaultBlockState());
-      if (blockEntity instanceof BasicEnergyStorageBlockEntity energyStorage) {
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, entry.get(), (be, d) ->
-          energyStorage.externalGetEnergyStorage(d));
+      if (blockEntity instanceof BasicEnergyStorageBlockEntity energyStorage){
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, entry.get(),
+          (be, d) ->
+            ((BasicEnergyStorageBlockEntity) be).externalGetEnergyStorage(d));
       }
     });
   }

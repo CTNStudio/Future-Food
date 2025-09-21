@@ -10,7 +10,8 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 
-public class QEDProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+public final class QEDProvider
+  implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
   static final QEDProvider INSTANCE = new QEDProvider();
 
   @Override

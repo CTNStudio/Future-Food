@@ -1,5 +1,6 @@
 package top.ctnstudio.futurefood.event;
 
+import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
@@ -10,6 +11,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 @EventBusSubscriber
 public final class ModBlockEvent {
@@ -53,8 +60,28 @@ public final class ModBlockEvent {
       return;
     }
 
+    final Set<Integer> posYSet = Sets.newHashSet();
 
+    for (int y = -5; y <= 5; y++) {
+      final int iY = pos.getY() + y;
+      if (QedBlockEntity.CACHES.containsRow(y)) {
+        posYSet.add(iY);
+      }
+    }
 
-    // TODO
+    if (posYSet.isEmpty()) {
+      return;
+    }
+
+    final var set = QedBlockEntity.CACHES.rowMap().entrySet();
+    for (Entry<Integer, Map<Integer, Integer>> it : set) {
+      if (posYSet.contains(it.getKey())) {
+        // TODO
+      }
+    }
+  }
+
+  private static void checkPos(final LevelAccessor world, final BlockPos pos, final BlockPos state) {
+
   }
 }
