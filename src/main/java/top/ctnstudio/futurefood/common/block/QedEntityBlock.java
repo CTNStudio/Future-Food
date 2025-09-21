@@ -60,7 +60,8 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
    * 建立无限链接
    */
   public void buildUnlimitedLinks(Level level, BlockPos pos, BlockState state) {
-    AABB aabb = AABB.of(BoundingBox.fromCorners(pos.offset(5, 5, 5), pos.offset(-5, -5, -5)));
+    BoundingBox mutableBox = BoundingBox.fromCorners(pos.offset(5, 5, 5), pos.offset(-5, -5, -5));
+    AABB aabb = AABB.of(mutableBox);
     Map<BlockPos, BlockState> blockStateMap = new HashMap<>();
     BlockPos.betweenClosedStream(aabb)
       .forEach(pos1 -> blockStateMap.put(pos1, level.getBlockState(pos1)));
@@ -80,7 +81,7 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
   }
 
   public boolean isLinkable(Level level, BlockPos pos, BlockState state) {
-    return state.is(FfBlockTags.UNLIMITED_RECEPTION) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
+    return state.is(FfBlockTags.UNLIMITED_LAUNCH) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
   }
 
   public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLink i) {

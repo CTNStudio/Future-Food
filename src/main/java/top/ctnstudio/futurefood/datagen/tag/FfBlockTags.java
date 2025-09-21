@@ -15,7 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class FfBlockTags extends BlockTagsProvider {
 
-  public static final TagKey<Block> UNLIMITED_RECEPTION = createTag("unlimited_reception");
+  public static final TagKey<Block> UNLIMITED_RECEIVE = createTag("unlimited_receive");
+  public static final TagKey<Block> UNLIMITED_LAUNCH = createTag("unlimited_launch");
 
   public FfBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                      @CheckForNull ExistingFileHelper existingFileHelper) {
@@ -28,7 +29,8 @@ public class FfBlockTags extends BlockTagsProvider {
 
   @Override
   protected void addTags(HolderLookup.Provider capability) {
-    tag(UNLIMITED_RECEPTION)
-            .add(ModBlock.PARTICLE_COLLIDER.value(), ModBlock.QER.value());
+    tag(UNLIMITED_RECEIVE).add(ModBlock.PARTICLE_COLLIDER.get(),
+      ModBlock.QER.get());
+    tag(UNLIMITED_LAUNCH).add(ModBlock.QED.get());
   }
 }

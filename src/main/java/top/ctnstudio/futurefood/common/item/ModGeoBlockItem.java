@@ -8,7 +8,7 @@ import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import top.ctnstudio.futurefood.client.renderer.BasicGeoBlockItemRenderer;
+import top.ctnstudio.futurefood.client.renderer.item.BasicGeoBlockItemRenderer;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

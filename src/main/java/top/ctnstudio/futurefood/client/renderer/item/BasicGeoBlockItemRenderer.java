@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.renderer;
+package top.ctnstudio.futurefood.client.renderer.item;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;

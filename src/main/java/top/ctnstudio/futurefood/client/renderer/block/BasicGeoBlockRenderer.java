@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.renderer;
+package top.ctnstudio.futurefood.client.renderer.block;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;

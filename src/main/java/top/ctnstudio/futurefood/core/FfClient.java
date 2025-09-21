@@ -10,8 +10,8 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import top.ctnstudio.futurefood.client.renderer.BasicGeoBlockRenderer;
-import top.ctnstudio.futurefood.client.renderer.ParticleColliderBlockEntityRenderer;
+import top.ctnstudio.futurefood.client.renderer.block.BasicGeoBlockRenderer;
+import top.ctnstudio.futurefood.client.renderer.block.ParticleColliderBlockEntityRenderer;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 @Mod(value = FutureFood.ID, dist = Dist.CLIENT)

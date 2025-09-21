@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.renderer;
+package top.ctnstudio.futurefood.client.renderer.item;
 
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
