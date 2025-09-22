@@ -1,11 +1,11 @@
 package top.ctnstudio.futurefood.client.gui.widget.energy;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageWidget;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 public class EnergyBar extends ImageWidget.Sprite {
@@ -42,25 +42,24 @@ public class EnergyBar extends ImageWidget.Sprite {
   }
 
   @Override
-  @Nullable
-  public Tooltip getTooltip() {
-    return Tooltip.create(Component.translatable(TOOLTIP, this.energy, this.maxEnergy));
-  }
-
-  @Override
   public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    if (this.maxEnergy <= 0) {
-      return;
+    if (isFocused()) {
+      Minecraft minecraft = Minecraft.getInstance();
+      MutableComponent translatable = Component.translatable(TOOLTIP, this.energy, this.maxEnergy);
+      guiGraphics.renderTooltip(minecraft.font, translatable, mouseX, mouseY);
     }
+// TODO
+//    if (this.maxEnergy > 0) {
     int energy = Math.max(0, this.energy);
     int maxEnergy = Math.min(energy, this.maxEnergy);
-    int height = (maxEnergy / this.maxEnergy) * this.getHeight();
-    int yPosition = this.getHeight() - height;
+    int height = /*(maxEnergy / this.maxEnergy) * */this.getHeight();
+    int yPosition = this.getHeight()/* - height*/;
     guiGraphics.blitSprite(this.sprite,
       this.getWidth(), height,
       0, 0,
-      this.getX(), this.getY() + yPosition,
+      this.getX(), this.getY()/* + yPosition*/,
       this.getWidth(), height);
+//    }
   }
 
   public ResourceLocation getTexture() {

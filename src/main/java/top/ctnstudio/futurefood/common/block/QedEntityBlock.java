@@ -3,6 +3,7 @@ package top.ctnstudio.futurefood.common.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -91,6 +92,13 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
     blockStateMap.entrySet().stream()
       .filter(entry -> isLinkable(level, entry.getKey(), entry.getValue()))
       .forEach(entry -> linkBlock(level, entry.getKey(), blockEntity));
+  }
+
+  @Override
+  protected void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack, boolean dropExperience) {
+    // TODO 将物品丢弃异常
+    getBlockEntity(level, pos).clearContent();
+    super.spawnAfterBreak(state, level, pos, stack, dropExperience);
   }
 
   public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {

@@ -6,7 +6,6 @@ import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.energy.EnergyStorage;
 
 public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage {
-
   public ModEnergyStorage(int capacity) {
     super(capacity);
   }
@@ -75,25 +74,25 @@ public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage
     maxExtract = compoundTag.getInt("maxExtract");
   }
 
-  /**
-   * 序列化 NBT
-   */
-  public static void serializeNBT(HolderLookup.Provider provider, CompoundTag nbt,
-                                  IModEnergyStorage storage) {
-    nbt.putInt("energy", storage.getEnergyStored());
-    nbt.putInt("capacity", storage.getMaxEnergyStored());
-    nbt.putInt("maxReceive", storage.getMaxReceive());
-    nbt.putInt("maxExtract", storage.getMaxExtract());
-  }
-
-  /**
-   * 反序列化 NBT
-   */
-  public static void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt,
-                                    IModEnergyStorage storage) {
-    storage.setEnergy(nbt.getInt("energy"));
-    storage.setMaxEnergyStored(nbt.getInt("capacity"));
-    storage.setMaxReceive(nbt.getInt("maxReceive"));
-    storage.setMaxExtract(nbt.getInt("maxExtract"));
-  }
+//  /**
+//   * 序列化 NBT
+//   */
+//  public static void serializeNBT(HolderLookup.Provider provider, CompoundTag nbt,
+//                                  IModEnergyStorage storage) {
+//    nbt.putInt("energy", storage.getEnergyStored());
+//    nbt.putInt("capacity", storage.getMaxEnergyStored());
+//    nbt.putInt("maxReceive", storage.getMaxReceive());
+//    nbt.putInt("maxExtract", storage.getMaxExtract());
+//  }
+//
+//  /**
+//   * 反序列化 NBT
+//   */
+//  public static void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt,
+//                                    IModEnergyStorage storage) {
+//    storage.setEnergy(nbt.getInt("energy"));
+//    storage.setMaxEnergyStored(nbt.getInt("capacity"));
+//    storage.setMaxReceive(nbt.getInt("maxReceive"));
+//    storage.setMaxExtract(nbt.getInt("maxExtract"));
+//  }
 }

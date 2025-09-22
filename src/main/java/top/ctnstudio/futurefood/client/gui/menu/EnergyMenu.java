@@ -43,22 +43,21 @@ public class EnergyMenu extends AbstractContainerMenu {
   protected void addSlot(Inventory container, IItemHandler dataInventory, EnergyData energyData, @Nullable ContainerData data) {
     int slots = dataInventory.getSlots();
     if (slots == 1) {
-      addSlot(new EnergyInputSlot(container, maxSlot++, 7, 57));
+      addSlot(new EnergyInputSlot(dataInventory, maxSlot++, 8, 58));
     } else if (slots > 1) {
-      addOtherSlot(container, dataInventory, data, slots);
+      addOtherSlot(dataInventory, data, slots);
     }
     // 物品栏
     for (int l = 0; l < 3; l++) {
       for (int j1 = 0; j1 < 9; j1++) {
-        this.addSlot(new Slot(container, maxSlot++,
-          8 + j1 * 18, 84 + l * 18));
+        this.addSlot(new Slot(container, j1 + (l + 1) * 9, 8 + j1 * 18, 84 + l * 18));
       }
     }
     // 快捷栏
     for (int i1 = 0; i1 < 9; i1++) {
-      this.addSlot(new Slot(container, maxSlot++,
-        8 + i1 * 18, 142));
+      this.addSlot(new Slot(container, i1, 8 + i1 * 18, 142));
     }
+
     if (energyData.getCount() > 0) {
       addDataSlots(energyData);
       this.energyData = energyData;
@@ -67,7 +66,7 @@ public class EnergyMenu extends AbstractContainerMenu {
     }
   }
 
-  protected void addOtherSlot(Inventory container, IItemHandler dataInventory, ContainerData data, int slots) {
+  protected void addOtherSlot(IItemHandler dataInventory, ContainerData data, int slots) {
     for (int i = 0; i < slots; i++) {
     }
   }

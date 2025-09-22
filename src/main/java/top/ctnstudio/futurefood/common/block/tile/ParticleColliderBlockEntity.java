@@ -2,8 +2,6 @@ package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
@@ -14,13 +12,10 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
-import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity implements GeoBlockEntity, IUnlimitedEntityReceive {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
-  public static final String GUI_NAME = FutureFood.ID + ".particle_collider.gui.name";
-  private static final MutableComponent DISPLAY_NAME = Component.translatable(GUI_NAME);
 
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -44,11 +39,6 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity implem
   }
 
   @Override
-  public double getTick(Object object) {
-    return 0;
-  }
-
-  @Override
   public IEnergyStorage externalGetEnergyStorage(@Nullable Direction direction) {
     return super.externalGetEnergyStorage(direction);
   }
@@ -59,10 +49,5 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity implem
   @Override
   public IEnergyStorage getEnergyStorage() {
     return energyStorage;
-  }
-
-  @Override
-  public Component getDisplayName() {
-    return DISPLAY_NAME;
   }
 }

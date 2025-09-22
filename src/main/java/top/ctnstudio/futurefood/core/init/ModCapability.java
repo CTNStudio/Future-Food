@@ -6,7 +6,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.tile.EnergyStorageBlockEntity;
@@ -21,9 +22,10 @@ public final class ModCapability {
       Block validBlock = entry.get().getValidBlocks().stream().iterator().next();
       BlockEntity blockEntity = entry.get().create(BlockPos.ZERO, validBlock.defaultBlockState());
       if (blockEntity instanceof EnergyStorageBlockEntity) {
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, entry.get(),
-          (be, d) ->
-            ((EnergyStorageBlockEntity) be).externalGetEnergyStorage(d));
+        event.registerBlockEntity(EnergyStorage.BLOCK, entry.get(), (be1, d) ->
+          ((EnergyStorageBlockEntity) be1).externalGetEnergyStorage(d));
+        event.registerBlockEntity(ItemHandler.BLOCK, entry.get(), (be1, d) ->
+          ((EnergyStorageBlockEntity) be1).externalGetItemHandler(d));
       }
     });
   }
