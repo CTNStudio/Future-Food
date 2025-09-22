@@ -9,7 +9,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
-import top.ctnstudio.futurefood.common.block.tile.BasicEnergyStorageBlockEntity;
+import top.ctnstudio.futurefood.common.block.tile.EnergyStorageBlockEntity;
 
 import java.util.Optional;
 
@@ -20,10 +20,10 @@ public final class ModCapability {
     ModTileEntity.TILES.getEntries().forEach(entry -> {
       Block validBlock = entry.get().getValidBlocks().stream().iterator().next();
       BlockEntity blockEntity = entry.get().create(BlockPos.ZERO, validBlock.defaultBlockState());
-      if (blockEntity instanceof BasicEnergyStorageBlockEntity) {
+      if (blockEntity instanceof EnergyStorageBlockEntity) {
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, entry.get(),
           (be, d) ->
-            ((BasicEnergyStorageBlockEntity) be).externalGetEnergyStorage(d));
+            ((EnergyStorageBlockEntity) be).externalGetEnergyStorage(d));
       }
     });
   }

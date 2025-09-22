@@ -9,18 +9,19 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 public class EnergyBar extends ImageWidget.Sprite {
-  public static final String TOOLTIP = "futurefood.gui.energy.tooltip";
+  public static final String TOOLTIP = FutureFood.ID + ".gui.energy.tooltip";
   public static final ResourceLocation TEXTURE = FutureFood.modRL("energy_bar");
   private int energy;
   private int maxEnergy;
 
-  public EnergyBar(int x, int y, int width, int height, ResourceLocation sprite, int maxEnergy) {
+  public EnergyBar(int x, int y, int width, int height, ResourceLocation sprite, int energy, int maxEnergy) {
     super(x, y, width, height, sprite);
+    this.energy = energy;
     this.maxEnergy = maxEnergy;
   }
 
-  public EnergyBar(int x, int y, int maxEnergy) {
-    this(x, y, 12, 39, TEXTURE, maxEnergy);
+  public EnergyBar(int x, int y, int energy, int maxEnergy) {
+    this(x, y, 12, 39, TEXTURE, energy, maxEnergy);
   }
 
   public void setMaxEnergy(int maxEnergy) {
@@ -28,7 +29,12 @@ public class EnergyBar extends ImageWidget.Sprite {
   }
 
   public void setEnergy(int energy) {
-    this.energy = Math.min(energy, maxEnergy);
+    this.energy = energy;
+  }
+
+  public void setEnergy(int energy, int maxEnergy) {
+    this.energy = energy;
+    this.maxEnergy = maxEnergy;
   }
 
   public int getEnergy() {
@@ -43,7 +49,12 @@ public class EnergyBar extends ImageWidget.Sprite {
 
   @Override
   public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    int height = (energy / maxEnergy) * this.getHeight();
+    if (this.maxEnergy <= 0) {
+      return;
+    }
+    int energy = Math.max(0, this.energy);
+    int maxEnergy = Math.min(energy, this.maxEnergy);
+    int height = (maxEnergy / this.maxEnergy) * this.getHeight();
     int yPosition = this.getHeight() - height;
     guiGraphics.blitSprite(this.sprite,
       this.getWidth(), height,

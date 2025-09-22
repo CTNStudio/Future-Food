@@ -49,10 +49,7 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
     return RenderShape.ENTITYBLOCK_ANIMATED;
   }
 
-  on
-
   @Override
-
   protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
     return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
   }

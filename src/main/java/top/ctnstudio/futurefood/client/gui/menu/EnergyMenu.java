@@ -3,21 +3,49 @@ package top.ctnstudio.futurefood.client.gui.menu;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyInputSlot;
 
-import static top.ctnstudio.futurefood.core.init.ModMenu.Basic_Energy_Menu;
+import static top.ctnstudio.futurefood.core.init.ModMenu.ENERGY_MENU;
 
-public class BasicEnergyMenu extends AbstractContainerMenu {
+@OnlyIn(Dist.CLIENT)
+public class EnergyMenu extends AbstractContainerMenu {
   private final Inventory container;
   protected int maxSlot;
+  private EnergyData energyData;
 
-  public BasicEnergyMenu(int containerId, Inventory container) {
-    super(Basic_Energy_Menu.get(), containerId);
+  public EnergyMenu(int containerId, Inventory container) {
+    this(containerId, container, new ItemStackHandler(1), new EnergyData(0, 0), null);
+  }
+
+  public EnergyMenu(int containerId, Inventory container, int energy, int maxEnergy) {
+    this(containerId, container, new ItemStackHandler(1), new EnergyData(energy, maxEnergy), null);
+  }
+
+  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, int energy, int maxEnergy) {
+    this(containerId, container, dataInventory, new EnergyData(energy, maxEnergy), null);
+  }
+
+  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData, @Nullable ContainerData data) {
+    super(ENERGY_MENU.get(), containerId);
     this.container = container;
-    addSlot(new EnergyInputSlot(container, maxSlot++, 7, 57));
+    addSlot(container, dataInventory, energyData, data);
+  }
+
+  protected void addSlot(Inventory container, IItemHandler dataInventory, EnergyData energyData, @Nullable ContainerData data) {
+    int slots = dataInventory.getSlots();
+    if (slots == 1) {
+      addSlot(new EnergyInputSlot(container, maxSlot++, 7, 57));
+    } else if (slots > 1) {
+      addOtherSlot(container, dataInventory, data, slots);
+    }
     // 物品栏
     for (int l = 0; l < 3; l++) {
       for (int j1 = 0; j1 < 9; j1++) {
@@ -29,6 +57,17 @@ public class BasicEnergyMenu extends AbstractContainerMenu {
     for (int i1 = 0; i1 < 9; i1++) {
       this.addSlot(new Slot(container, maxSlot++,
         8 + i1 * 18, 142));
+    }
+    if (energyData.getCount() > 0) {
+      addDataSlots(energyData);
+      this.energyData = energyData;
+    } else if (data != null && data.getCount() > 0) {
+      addDataSlots(data);
+    }
+  }
+
+  protected void addOtherSlot(Inventory container, IItemHandler dataInventory, ContainerData data, int slots) {
+    for (int i = 0; i < slots; i++) {
     }
   }
 
@@ -113,5 +152,61 @@ public class BasicEnergyMenu extends AbstractContainerMenu {
 
   public int getMaxSlot() {
     return maxSlot;
+  }
+
+  public EnergyData getEnergyData() {
+    return energyData;
+  }
+
+  public void setEnergyData(EnergyData energyData) {
+    this.energyData = energyData;
+  }
+
+  public static final class EnergyData implements ContainerData {
+    private int energy;
+    private int maxEnergy;
+
+    public EnergyData(int energy, int maxEnergy) {
+      this.energy = energy;
+      this.maxEnergy = maxEnergy;
+    }
+
+    @Override
+    public int get(int index) {
+      return switch (index) {
+        case 0 -> energy;
+        case 1 -> maxEnergy;
+        default -> 0;
+      };
+    }
+
+    @Override
+    public void set(int index, int value) {
+      switch (index) {
+        case 0 -> energy = value;
+        case 1 -> maxEnergy = value;
+      }
+    }
+
+    @Override
+    public int getCount() {
+      return 2;
+    }
+
+    public int getMaxEnergy() {
+      return maxEnergy;
+    }
+
+    public void setMaxEnergy(int maxEnergy) {
+      this.maxEnergy = maxEnergy;
+    }
+
+    public int getEnergy() {
+      return energy;
+    }
+
+    public void setEnergy(int energy) {
+      this.energy = energy;
+    }
   }
 }

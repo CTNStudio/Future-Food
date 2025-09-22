@@ -3,7 +3,10 @@ package top.ctnstudio.futurefood.common.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -17,10 +20,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.api.tile.IUnlimitedLink;
@@ -29,7 +34,6 @@ import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,6 +54,19 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
 
   public QedEntityBlock(Properties properties) {
     super(properties);
+  }
+
+//  @Override
+//  protected @org.jetbrains.annotations.Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+//    return super.getMenuProvider(state, level, pos);
+//  }
+
+  @Override
+  protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+      serverPlayer.openMenu(state.getMenuProvider(level, pos));
+    }
+    return InteractionResult.sidedSuccess(level.isClientSide);
   }
 
   @Override

@@ -9,12 +9,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.api.tile.IUnlimitedLink;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
+import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nonnull;
@@ -24,9 +27,11 @@ import java.util.Queue;
 
 import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
 
-public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUnlimitedLink {
+public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimitedLink {
   public static final Table<Integer, Integer, Integer> CACHES = HashBasedTable.create();
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
+  public static final String GUI_NAME = FutureFood.ID + ".quantum_energy_diffuser.gui.name";
+  private static final MutableComponent DISPLAY_NAME = Component.translatable(GUI_NAME);
   /**
    * 剩余传递计时
    */
@@ -55,6 +60,11 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
       DEFAULT_MAX_REMAINING_TIME);
 
     CACHES.put(pos.getY(), pos.getX(), pos.getZ());
+  }
+
+  @Override
+  public Component getDisplayName() {
+    return DISPLAY_NAME;
   }
 
   public static void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs,
@@ -100,9 +110,9 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
   }
 
   @Override
-  protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
-    super.loadAdditional(nbt, registries);
-    serializeLinkedListNBT(registries, nbt);
+  protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+    super.loadAdditional(nbt, provider);
+    serializeLinkedListNBT(provider, nbt);
     remainingTime = nbt.getInt("remainingTime");
     if (!nbt.contains("maxRemainingTime")) {
       maxRemainingTime = DEFAULT_MAX_REMAINING_TIME;
@@ -115,9 +125,9 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
   }
 
   @Override
-  protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
-    super.saveAdditional(nbt, registries);
-    deserializeLinkedListNBT(registries, nbt);
+  protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+    super.saveAdditional(nbt, provider);
+    deserializeLinkedListNBT(provider, nbt);
     nbt.putInt("remainingTime", remainingTime);
     nbt.putInt("maxRemainingTime", maxRemainingTime);
   }

@@ -10,13 +10,16 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import top.ctnstudio.futurefood.client.gui.screen.EnergyScreen;
 import top.ctnstudio.futurefood.client.renderer.block.BasicGeoBlockRenderer;
 import top.ctnstudio.futurefood.client.renderer.block.ParticleColliderBlockEntityRenderer;
+import top.ctnstudio.futurefood.core.init.ModMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 @Mod(value = FutureFood.ID, dist = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber
+@EventBusSubscriber(modid = FutureFood.ID, value = Dist.CLIENT)
 public class FfClient {
   @SuppressWarnings("unused")
   public FfClient(ModContainer container) {
@@ -29,15 +32,20 @@ public class FfClient {
       ParticleColliderBlockEntityRenderer::new);
   }
 
-  public static <T extends BlockEntity> void registerBlockEntityRenderer(final EntityRenderersEvent.RegisterRenderers event,
-                                                                         BlockEntityType<?
-                                                                           extends T> blockEntityType, BlockEntityRendererProvider blockEntityRendererProvider) {
+  @SubscribeEvent
+  public static void registerScreens(RegisterMenuScreensEvent event) {
+    event.register(ModMenu.ENERGY_MENU.get(), EnergyScreen::new);
+  }
+
+  private static <T extends BlockEntity> void registerBlockEntityRenderer(
+    final EntityRenderersEvent.RegisterRenderers event, BlockEntityType<? extends T> blockEntityType,
+    BlockEntityRendererProvider blockEntityRendererProvider) {
     event.registerBlockEntityRenderer(blockEntityType, blockEntityRendererProvider);
   }
 
-  public static <T extends BlockEntity> void registerBasicBlockEntityRenderer(final EntityRenderersEvent.RegisterRenderers event,
-                                                                              BlockEntityType<?
-                                                                                extends T> blockEntityType, BasicGeoBlockRenderer blockEntityRendererProvider) {
+  private static <T extends BlockEntity> void registerBasicBlockEntityRenderer(
+    final EntityRenderersEvent.RegisterRenderers event, BlockEntityType<? extends T> blockEntityType,
+    BasicGeoBlockRenderer blockEntityRendererProvider) {
     event.registerBlockEntityRenderer(blockEntityType, context -> blockEntityRendererProvider);
   }
 }

@@ -7,6 +7,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
+import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
+import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModItem;
@@ -24,8 +27,11 @@ public class DatagenI18ZhCn extends LanguageProvider {
     add("futurefood.gui.energy.tooltip", "能量存储：%d/%d");
     addItem(ModItem.CYBER_WRENCH, "赛博扳手");
     addBlock(ModBlock.QED, "量子能源扩散器");
+    add(QedBlockEntity.GUI_NAME, "量子能源扩散器");
     addBlock(ModBlock.QER, "量子能源接收器");
+    add(QerBlockEntity.GUI_NAME, "量子能源接收器");
     addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");
+    add(ParticleColliderBlockEntity.GUI_NAME, "粒子对撞器");
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {
