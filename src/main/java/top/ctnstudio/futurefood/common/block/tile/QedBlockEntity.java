@@ -20,7 +20,7 @@ import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 
-import static top.ctnstudio.futurefood.capability.RegisterCapability.getOppositeDirection;
+import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
 
 public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUnlimitedLink {
   public static final Table<Integer, Integer, Integer> CACHES = HashBasedTable.create();

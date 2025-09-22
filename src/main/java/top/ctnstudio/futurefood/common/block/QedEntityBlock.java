@@ -10,6 +10,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -35,7 +36,7 @@ import java.util.Optional;
 
 import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
-public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IEntityStorageBlock {
+public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
 
   public QedEntityBlock() {
@@ -47,13 +48,17 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
       .isViewBlocking(ModBlock.never()));
   }
 
+  public QedEntityBlock(Properties properties) {
+    super(properties);
+  }
+
   @Override
   public void setPlacedBy(Level level, BlockPos pos, BlockState state,
     @Nullable LivingEntity placer, ItemStack stack) {
-    if (level.isClientSide) {
-      return;
-    }
-    buildUnlimitedLinks(level, pos, state);
+//    if (level.isClientSide) {
+//      return;
+//    }
+//    buildUnlimitedLinks(level, pos, state);
   }
 
   /**
@@ -86,10 +91,6 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
 
   public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLink i) {
     return i.linkBlock(level, pos);
-  }
-
-  private QedEntityBlock(Properties properties) {
-    super(properties);
   }
 
   @Override

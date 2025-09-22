@@ -11,6 +11,7 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
+import top.ctnstudio.futurefood.core.init.ModItem;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class DatagenItemModel extends ItemModelProvider {
   protected void registerModels() {
     simpleBlockItem(ModBlock.QED.get());
     simpleBlockItem(ModBlock.QER.get());
+    handheldItem(ModItem.CYBER_WRENCH.get());
   }
 
   private ModelFile.UncheckedModelFile getParent(String name) {
@@ -59,8 +61,8 @@ public class DatagenItemModel extends ItemModelProvider {
   }
 
   public ModelFile.UncheckedModelFile createModelFile(Item item, String name) {
-    return new ModelFile.UncheckedModelFile(getItemResourceLocation(item, name).withPrefix("item" +
-      "/"));
+    return new ModelFile.UncheckedModelFile(getItemResourceLocation(item, name)
+      .withPrefix("item" + "/"));
   }
 
   public ItemModelBuilder specialItem(Item item, String name) {

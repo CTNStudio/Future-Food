@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.capability;
+package top.ctnstudio.futurefood.core.init;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,12 +10,11 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.tile.BasicEnergyStorageBlockEntity;
-import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import java.util.Optional;
 
 @EventBusSubscriber
-public final class RegisterCapability {
+public final class ModCapability {
   @SubscribeEvent
   public static void register(final RegisterCapabilitiesEvent event) {
     ModTileEntity.TILES.getEntries().forEach(entry -> {

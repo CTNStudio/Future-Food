@@ -11,17 +11,17 @@ import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QerEntityBlock;
 import top.ctnstudio.futurefood.core.FutureFood;
 
+import java.util.function.Supplier;
+
 public final class ModBlock {
   public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(FutureFood.ID);
 
   public static final DeferredBlock<Block> QED =
-    BLOCKS.register("quantum_energy_diffuser", QedEntityBlock::new);
-
+    register("quantum_energy_diffuser", QedEntityBlock::new);
   public static final DeferredBlock<Block> QER =
-    BLOCKS.register("quantum_energy_receiver", QerEntityBlock::new);
-
+    register("quantum_energy_receiver", QerEntityBlock::new);
   public static final DeferredBlock<Block> PARTICLE_COLLIDER =
-    BLOCKS.register("particle_collider", ParticleColliderEntityBlock::new);
+    register("particle_collider", ParticleColliderEntityBlock::new);
 
   public static @NotNull BlockBehaviour.StatePredicate never() {
     return (blockState, blockGetter, blockPos) -> false;
@@ -29,5 +29,9 @@ public final class ModBlock {
 
   public static @NotNull BlockBehaviour.StateArgumentPredicate<EntityType<?>> argumentNever() {
     return (state, level, pos, value) -> false;
+  }
+
+  private static DeferredBlock<Block> register(final String name, final Supplier<? extends Block> sup) {
+    return BLOCKS.register(name, sup);
   }
 }

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
+import top.ctnstudio.futurefood.core.init.ModItem;
 
 import java.util.function.Supplier;
 
@@ -20,7 +21,8 @@ public class DatagenI18ZhCn extends LanguageProvider {
   @Override
   protected void addTranslations() {
     add("itemGroup.futurefood", "未来食物");
-
+    add("futurefood.gui.energy.tooltip", "能量存储：%d/%d");
+    addItem(ModItem.CYBER_WRENCH, "赛博扳手");
     addBlock(ModBlock.QED, "量子能源扩散器");
     addBlock(ModBlock.QER, "量子能源接收器");
     addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");

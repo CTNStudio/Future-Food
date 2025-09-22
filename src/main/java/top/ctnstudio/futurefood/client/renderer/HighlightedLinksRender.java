@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
@@ -23,20 +22,24 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
+/**
+ * 高亮无限链接渲染
+ */
 @OnlyIn(Dist.CLIENT)
-
 @EventBusSubscriber
-public class Render {
+public class HighlightedLinksRender {
   @SubscribeEvent
   public static void renderLevelStageEvent(RenderLevelStageEvent event) {
+    if (true) {
+      return;
+    }
+
     Stage stage = event.getStage();
 
     if (stage != Stage.AFTER_TRIPWIRE_BLOCKS) {
