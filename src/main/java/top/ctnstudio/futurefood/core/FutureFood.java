@@ -7,10 +7,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.ctnstudio.futurefood.core.init.ModBlock;
-import top.ctnstudio.futurefood.core.init.ModCreativeModeTab;
-import top.ctnstudio.futurefood.core.init.ModItem;
-import top.ctnstudio.futurefood.core.init.ModTileEntity;
+import top.ctnstudio.futurefood.core.init.*;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -26,6 +23,7 @@ public class FutureFood {
     ModBlock.BLOCKS.register(modEventBus);
     ModTileEntity.TILES.register(modEventBus);
     ModCreativeModeTab.TABS.register(modEventBus);
+    ModMenu.MENU.register(modEventBus);
   }
 
   /**

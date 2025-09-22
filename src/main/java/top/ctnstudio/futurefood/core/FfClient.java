@@ -11,6 +11,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
 import top.ctnstudio.futurefood.client.gui.screen.EnergyScreen;
 import top.ctnstudio.futurefood.client.renderer.block.BasicGeoBlockRenderer;
 import top.ctnstudio.futurefood.client.renderer.block.ParticleColliderBlockEntityRenderer;

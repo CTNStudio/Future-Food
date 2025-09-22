@@ -1,5 +1,6 @@
 package top.ctnstudio.futurefood.client.gui.menu;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,7 +22,7 @@ public class EnergyMenu extends AbstractContainerMenu {
   protected int maxSlot;
   private EnergyData energyData;
 
-  public EnergyMenu(int containerId, Inventory container) {
+  public EnergyMenu(int containerId, Inventory container, FriendlyByteBuf buf) {
     this(containerId, container, new ItemStackHandler(1), new EnergyData(0, 0), null);
   }
 
