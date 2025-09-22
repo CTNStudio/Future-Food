@@ -13,10 +13,6 @@ import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 @EventBusSubscriber
 public final class ModBlockEvent {
   @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -60,8 +56,8 @@ public final class ModBlockEvent {
     }
 
     final AABB aabb = AABB.encapsulatingFullBlocks(
-        pos.offset(-5, -5, -5),
-        pos.offset(5, 5, 5));
+      pos.offset(-5, -5, -5),
+      pos.offset(5, 5, 5));
 
     BlockPos.betweenClosedStream(aabb).forEach((pos1) -> {
       final var tile = world.getBlockEntity(pos1);

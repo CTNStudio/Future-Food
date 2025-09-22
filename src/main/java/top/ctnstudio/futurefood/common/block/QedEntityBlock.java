@@ -49,7 +49,7 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
 
   @Override
   public void setPlacedBy(Level level, BlockPos pos, BlockState state,
-    @Nullable LivingEntity placer, ItemStack stack) {
+                          @Nullable LivingEntity placer, ItemStack stack) {
     if (level.isClientSide) {
       return;
     }
@@ -115,8 +115,8 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
 
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-    BlockEntityType<T> type) {
-    return type == ModTileEntity.QED.get() ? QedBlockEntity::tick : null;
+                                                                BlockEntityType<T> type) {
+    return createTickerHelper(type, ModTileEntity.QED.get(), QedBlockEntity::tick);
   }
 
   @Override
@@ -125,17 +125,20 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
   }
 
   @Override
-  protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_, BlockPos p_308956_, CollisionContext p_309006_) {
+  protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_,
+                                      BlockPos p_308956_, CollisionContext p_309006_) {
     return Shapes.empty();
   }
 
   @Override
-  protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_, BlockPos p_308918_) {
+  protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_,
+                                     BlockPos p_308918_) {
     return 1.0F;
   }
 
   @Override
-  protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_, BlockPos p_309097_) {
+  protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_,
+                                           BlockPos p_309097_) {
     return true;
   }
 

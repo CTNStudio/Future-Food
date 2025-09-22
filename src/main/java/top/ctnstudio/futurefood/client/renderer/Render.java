@@ -9,14 +9,12 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -99,26 +97,36 @@ public class Render {
         VertexConsumer consumer = buffer.getBuffer(type);
         final var poseIn = pose.last().pose();
 
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f), (float) (vec.z - 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f),
+            (float) (vec.z - 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f), (float) (vec.z - 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f),
+            (float) (vec.z - 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f), (float) (vec.z + 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f),
+            (float) (vec.z + 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f), (float) (vec.z + 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f),
+            (float) (vec.z + 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f), (float) (vec.z - 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f),
+            (float) (vec.z - 0.5f))
           .setColor(red, green, blue, alpha);
 
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f), (float) (vec.z - 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f),
+            (float) (vec.z - 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f), (float) (vec.z - 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f),
+            (float) (vec.z - 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f), (float) (vec.z + 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f),
+            (float) (vec.z + 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f), (float) (vec.z + 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f),
+            (float) (vec.z + 0.5f))
           .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f), (float) (vec.z - 0.5f))
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f),
+            (float) (vec.z - 0.5f))
           .setColor(red, green, blue, alpha);
 
 //        LevelRenderer.renderVoxelShape(pose, consumer, Shapes.block(),

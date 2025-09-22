@@ -62,8 +62,6 @@ public abstract class BasicEnergyStorageBlockEntity extends BlockEntity
     return energyStorage;
   }
 
-
-
   /**
    * 接受能量
    *

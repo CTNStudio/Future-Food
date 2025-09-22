@@ -41,7 +41,9 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
   private final HashSet<BlockPos> linkSet;
   private final Queue<BlockPos> cacheData = Queues.newArrayDeque();
 
-  public QedBlockEntity(BlockEntityType<? extends QedBlockEntity> type, BlockPos pos, BlockState blockState, ModEnergyStorage energyStorage, int maxRemainingTime) {
+  public QedBlockEntity(BlockEntityType<? extends QedBlockEntity> type, BlockPos pos,
+                        BlockState blockState, ModEnergyStorage energyStorage,
+                        int maxRemainingTime) {
     super(type, pos, blockState, energyStorage);
     this.linkSet = Sets.newHashSet();
     this.maxRemainingTime = maxRemainingTime;
@@ -224,7 +226,8 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
     if (direction == null) {
       return energyStorage;
     }
-    return !getOppositeDirection(this, direction) ? null : super.externalGetEnergyStorage(direction);
+    return !getOppositeDirection(this, direction) ? null :
+      super.externalGetEnergyStorage(direction);
   }
 
   @Override

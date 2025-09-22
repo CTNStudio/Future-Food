@@ -32,10 +32,10 @@ public final class ModTileEntity {
                                                                   BlockEntitySupplier<T> factory,
                                                                   Supplier<Block>... validBlocks) {
     return TILES.register(name, () -> BlockEntityType.Builder.of(factory,
-      Arrays.stream(validBlocks)
-        .map(Supplier::get)
-        .toList()
-        .toArray(new Block[0]))
+        Arrays.stream(validBlocks)
+          .map(Supplier::get)
+          .toList()
+          .toArray(new Block[0]))
       .build(null));
   }
 }
