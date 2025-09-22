@@ -23,7 +23,8 @@ public final class ModItem {
   public static final DeferredItem<Item> QER =
     ITEMS.register("quantum_energy_receiver", createBlockItem(ModBlock.QER));
   public static final DeferredItem<Item> PARTICLE_COLLIDER =
-    ITEMS.register("particle_collider", createGeoBlockItem(ModBlock.PARTICLE_COLLIDER, ParticleColliderBlockItemRenderer::new));
+    ITEMS.register("particle_collider", createGeoBlockItem(ModBlock.PARTICLE_COLLIDER,
+      ParticleColliderBlockItemRenderer::new));
 
   private static Supplier<BlockItem> createBlockItem(Supplier<Block> block) {
     return () -> new BlockItem(block.get(), new Item.Properties());

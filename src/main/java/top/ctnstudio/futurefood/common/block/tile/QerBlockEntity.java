@@ -21,7 +21,8 @@ public class QerBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
     if (direction == null) {
       return energyStorage;
     }
-    return !getOppositeDirection(this, direction) ? null : super.externalGetEnergyStorage(direction);
+    return !getOppositeDirection(this, direction) ? null :
+      super.externalGetEnergyStorage(direction);
   }
 
   /**

@@ -62,17 +62,20 @@ public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> imple
   }
 
   @Override
-  protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_, BlockPos p_308956_, CollisionContext p_309006_) {
+  protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_,
+                                      BlockPos p_308956_, CollisionContext p_309006_) {
     return Shapes.empty();
   }
 
   @Override
-  protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_, BlockPos p_308918_) {
+  protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_,
+                                     BlockPos p_308918_) {
     return 1.0F;
   }
 
   @Override
-  protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_, BlockPos p_309097_) {
+  protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_,
+                                           BlockPos p_309097_) {
     return true;
   }
 }

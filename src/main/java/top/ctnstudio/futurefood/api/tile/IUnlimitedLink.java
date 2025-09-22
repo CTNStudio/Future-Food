@@ -32,18 +32,21 @@ public interface IUnlimitedLink {
 
   /**
    * 链接失败
+   *
    * @param pos 链接失败的方块位置
    */
   void linkFailure(BlockPos pos);
 
   /**
    * 移除一个链接
+   *
    * @param pos 要移除的链接方块位置
    */
   void removeLink(BlockPos pos);
 
   /**
    * 获取一个链接的方块
+   *
    * @param pos 要获取的链接方块位置
    * @return 链接的方块
    */
@@ -72,7 +75,8 @@ public interface IUnlimitedLink {
    * @return 能量接口
    */
   @Nonnull
-  static HashBiMap<Direction, IEnergyStorage> getEnergyStorageAllCapabilities(Level level, BlockPos pos) {
+  static HashBiMap<Direction, IEnergyStorage> getEnergyStorageAllCapabilities(Level level,
+                                                                              BlockPos pos) {
     HashBiMap<Direction, IEnergyStorage> capabilities = HashBiMap.create(7);
     IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
     if (capability != null && capability.canReceive()) {
@@ -99,15 +103,17 @@ public interface IUnlimitedLink {
 
   /**
    * 序列化链接列表
+   *
    * @param provider 注册表
-   * @param nbt NBT
+   * @param nbt      NBT
    */
   void serializeLinkedListNBT(HolderLookup.Provider provider, CompoundTag nbt);
 
   /**
    * 反序列化链接列表
+   *
    * @param provider 注册表
-   * @param nbt NBT
+   * @param nbt      NBT
    */
   void deserializeLinkedListNBT(HolderLookup.Provider provider, CompoundTag nbt);
 }
