@@ -1,6 +1,7 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -17,8 +17,10 @@ import top.ctnstudio.futurefood.api.tile.IUnlimitedLink;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
+import java.util.Queue;
 
 import static top.ctnstudio.futurefood.capability.RegisterCapability.getOppositeDirection;
 
@@ -37,6 +39,7 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
    * 链接哈希集合
    */
   private final HashSet<BlockPos> linkSet;
+  private final Queue<BlockPos> cacheData = Queues.newArrayDeque();
 
   public QedBlockEntity(BlockEntityType<? extends QedBlockEntity> type, BlockPos pos, BlockState blockState, ModEnergyStorage energyStorage, int maxRemainingTime) {
     super(type, pos, blockState, energyStorage);
@@ -52,20 +55,26 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
     CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
-  public static <T extends BlockEntity> void tick(Level level, BlockPos pos,
-    BlockState bs, T blockEntity) {
-    if (level == null) {
-      return;
+  public static void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs,
+                          @Nonnull QedBlockEntity tile) {
+    if (!tile.cacheData.isEmpty()) {
+      for (BlockPos cache : tile.cacheData) {
+        if (level.getBlockEntity(cache) instanceof IEnergyStorage) {
+          tile.linkBlock(level, cache);
+        } else {
+          tile.removeLink(pos);
+        }
+      }
     }
-    QedBlockEntity be = (QedBlockEntity) blockEntity;
-    int time = be.getRemainingTime(); // 使用方法方便重写逻辑
+
+    int time = tile.getRemainingTime(); // 使用方法方便重写逻辑
     if (time > 0) {
       return;
     } else {
-      be.resetRemainingTime();
+      tile.resetRemainingTime();
     }
-    be.executeEnergyTransmission(level, pos, bs);
-    be.remainingTime--;
+    tile.executeEnergyTransmission(level, pos, bs);
+    tile.remainingTime--;
   }
 
   /**
@@ -124,6 +133,10 @@ public class QedBlockEntity extends BasicEnergyStorageBlockEntity implements IUn
     }
     linkSet.add(pos);
     return true;
+  }
+
+  public void addLinkCache(BlockPos pos) {
+    this.cacheData.add(pos);
   }
 
   @Override

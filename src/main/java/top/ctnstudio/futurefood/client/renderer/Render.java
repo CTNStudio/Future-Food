@@ -14,22 +14,20 @@ import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
+import top.ctnstudio.futurefood.core.init.ModBlock;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @OnlyIn(Dist.CLIENT)
 
@@ -62,9 +60,11 @@ public class Render {
     final AABB aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10),
       playerPos.offset(-10, -10, -10));
 
+    // final List<BlockPos> blockPosList = BlockPos.betweenClosedStream(aabb).filter(
+    //   pos -> frustum.isVisible(new AABB(pos))
+    //     && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_LAUNCH)).toList();
     final List<BlockPos> blockPosList = BlockPos.betweenClosedStream(aabb).filter(
-      pos -> frustum.isVisible(new AABB(pos))
-        && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_LAUNCH)).toList();
+      pos -> level.getBlockState(pos).is(ModBlock.QED)).toList();
     if (blockPosList.isEmpty()) {
       return;
     }
@@ -75,7 +75,6 @@ public class Render {
     RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
     PoseStack pose = event.getPoseStack();
-    pose.pushPose();
     {
       final Camera camera = event.getCamera();
       final Vec3 cameraV3 = camera.getPosition().reverse();
@@ -92,17 +91,45 @@ public class Render {
 //      PoseStack pose = new PoseStack();
 //      Matrix4f matrix4f = pose.last().pose();
 
-        Vec3 vec = blockPos.getCenter();
+        final Vec3 vec = blockPos.getCenter();
+        final double f = 0.5;
 
 //      renderFilledBox(pose, buffer, aabb1, red, green, blue, alpha);
-        final var type = RenderType.debugFilledBox();
+        final var type = RenderType.lines();
         VertexConsumer consumer = buffer.getBuffer(type);
-        LevelRenderer.addChainedFilledBoxVertices(
-          pose, consumer,
-          vec.x - 0.5 - x, vec.y - 0.5 - y, vec.z - 0.5 - z,
-          vec.x + 0.5 + x, vec.y + 0.5 + y, vec.z + 0.5 + z,
-          red, green, blue, alpha
-        );
+        final var poseIn = pose.last().pose();
+
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f), (float) (vec.z - 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f), (float) (vec.z - 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f), (float) (vec.z + 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f), (float) (vec.z + 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f), (float) (vec.z - 0.5f))
+          .setColor(red, green, blue, alpha);
+
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f), (float) (vec.z - 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f), (float) (vec.z - 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f), (float) (vec.z + 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f), (float) (vec.z + 0.5f))
+          .setColor(red, green, blue, alpha);
+        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f), (float) (vec.z - 0.5f))
+          .setColor(red, green, blue, alpha);
+
+//        LevelRenderer.renderVoxelShape(pose, consumer, Shapes.block(),
+//          vec.x - 13, vec.y - 13, vec.z - 13,
+//          red, green, blue, alpha, true);
+//        LevelRenderer.addChainedFilledBoxVertices(
+//          pose, consumer,
+//          vec.x - f + 1, vec.y - f + 1, vec.z - f + 1,
+//          vec.x + f + 1, vec.y + f + 1, vec.z + f + 1,
+//          red, green, blue, alpha
+//        );
         buffer.endBatch(type);
       }
     }
