@@ -3,13 +3,10 @@ package top.ctnstudio.futurefood.core;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.ctnstudio.futurefood.client.gui.screen.EnergyScreen;
 import top.ctnstudio.futurefood.core.init.*;
 
 import javax.annotation.CheckForNull;

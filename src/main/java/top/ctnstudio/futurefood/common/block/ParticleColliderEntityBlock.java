@@ -19,7 +19,8 @@ import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 
-public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock implements IEntityStorageBlock, SimpleWaterloggedBlock {
+public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock
+  implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<ParticleColliderEntityBlock> CODEC =
     simpleCodec(ParticleColliderEntityBlock::new);
 

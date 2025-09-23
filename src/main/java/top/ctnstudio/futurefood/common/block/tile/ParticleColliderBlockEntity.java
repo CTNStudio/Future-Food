@@ -10,11 +10,12 @@ import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity implements GeoBlockEntity, IUnlimitedEntityReceive {
+public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity
+  implements GeoBlockEntity, IUnlimitedEntityReceive {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
 
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

@@ -61,7 +61,7 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
-    energyData = new EnergyData(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
+    energyData = new EnergyData(this.energyStorage);
   }
 
   /**
@@ -124,8 +124,6 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     if (!player.isAlive()) {
       return null;
     }
-    energyData.set(0, energyStorage.getEnergyStored());
-    energyData.set(1, energyStorage.getMaxEnergyStored());
     return new EnergyMenu(containerId, playerInventory, itemHandler, energyData);
   }
 
@@ -134,11 +132,10 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     if (!(menu instanceof EnergyMenu energyMenu)) {
       return;
     }
+
     ContainerData energyData = energyMenu.getEnergyData();
-    int energy = energyStorage.getEnergyStored();
-    int maxEnergy = energyStorage.getMaxEnergyStored();
-    energyData.set(0, energy);
-    energyData.set(1, maxEnergy);
+    int energy = energyData.get(0);
+    int maxEnergy = energyData.get(1);
     buffer.writeInt(energy).writeInt(maxEnergy);
   }
 

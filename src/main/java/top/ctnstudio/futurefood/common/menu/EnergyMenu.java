@@ -8,11 +8,10 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
+import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyInputSlot;
 
 import static top.ctnstudio.futurefood.core.init.ModMenu.ENERGY_MENU;
@@ -174,19 +173,17 @@ public class EnergyMenu extends AbstractContainerMenu {
   }
 
   public static final class EnergyData implements ContainerData {
-    private int energy;
-    private int maxEnergy;
+    final ModEnergyStorage energyStorage;
 
-    public EnergyData(int energy, int maxEnergy) {
-      this.energy = energy;
-      this.maxEnergy = maxEnergy;
+    public EnergyData(ModEnergyStorage energyStorage) {
+      this.energyStorage = energyStorage;
     }
 
     @Override
     public int get(int index) {
       return switch (index) {
-        case 0 -> energy;
-        case 1 -> maxEnergy;
+        case 0 -> this.energyStorage.getEnergyStored();
+        case 1 -> this.energyStorage.getMaxEnergyStored();
         default -> 0;
       };
     }
@@ -194,8 +191,8 @@ public class EnergyMenu extends AbstractContainerMenu {
     @Override
     public void set(int index, int value) {
       switch (index) {
-        case 0 -> energy = value;
-        case 1 -> maxEnergy = value;
+        case 0 -> energyStorage.setEnergy(value);
+        case 1 -> energyStorage.setMaxEnergyStored(value);
       }
     }
 
