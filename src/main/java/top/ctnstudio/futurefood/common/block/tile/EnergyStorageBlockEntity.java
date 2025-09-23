@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -15,6 +16,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,6 +29,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
+import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import javax.annotation.Nonnull;
@@ -39,6 +42,7 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE = () -> new ModEnergyStorage(10240, 1024, 1024);
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
+  protected final EnergyData energyData;
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
     BlockState blockState) {
@@ -56,6 +60,7 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
+    energyData = new EnergyData(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
   }
 
   /**
@@ -66,13 +71,9 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super.loadAdditional(nbt, provider);
     if (nbt.contains("energyStorage")) {
       energyStorage.deserializeNBT(provider, nbt.getCompound("energyStorage"));
-    } else {
-      energyStorage.setEnergy(0);
     }
     if (nbt.contains("items")) {
       itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
-    } else {
-      itemHandler.setSize(1);
     }
   }
 
@@ -114,12 +115,26 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   @Override
-  public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+  public @Nullable EnergyMenu createMenu(int containerId, Inventory playerInventory, Player player) {
     if (!player.isAlive()) {
       return null;
     }
-    return new EnergyMenu(containerId, playerInventory, itemHandler,
-      energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
+    energyData.set(0, energyStorage.getEnergyStored());
+    energyData.set(1, energyStorage.getMaxEnergyStored());
+    return new EnergyMenu(containerId, playerInventory, itemHandler, energyData);
+  }
+
+  @Override
+  public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
+    if (!(menu instanceof EnergyMenu energyMenu)) {
+      return;
+    }
+    ContainerData energyData = energyMenu.getEnergyData();
+    int energy = energyStorage.getEnergyStored();
+    int maxEnergy = energyStorage.getMaxEnergyStored();
+    energyData.set(0, energy);
+    energyData.set(1, maxEnergy);
+    buffer.writeInt(energy).writeInt(maxEnergy);
   }
 
   /**
@@ -209,6 +224,7 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
-
   }
+
+
 }

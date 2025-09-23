@@ -7,19 +7,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
 import top.ctnstudio.futurefood.core.FutureFood;
 
+//todo
 public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   public static final ResourceLocation DEFAULT_BG = FutureFood.modRL("textures/gui/container/energy.png");
   public static final ResourceLocation ENERGY_ICON = FutureFood.modRL("energy_icon");
   private final ResourceLocation textureBg;
   protected EnergyBar listener;
-
+  private int energy;
+  private int maxEnergy;
   public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title, ResourceLocation textureBg) {
     super(menu, playerInventory, title);
     this.textureBg = textureBg;
+    energy = menu.getEnergy();
+    maxEnergy = menu.getMaxEnergy();
   }
 
   public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title) {
@@ -29,9 +32,10 @@ public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   @Override
   protected void init() {
     super.init();
-    EnergyData energyData = getMenu().getEnergyData();
-    EnergyBar listener = new EnergyBar(1, 14, energyData.getEnergy(), energyData.getMaxEnergy());
-    addWidget(listener);
+    energy = menu.getEnergy();
+    maxEnergy = menu.getMaxEnergy();
+    this.listener = new EnergyBar(leftPos + 1, topPos + 14, energy, maxEnergy);
+    addRenderableWidget(listener);
   }
 
   @Override
@@ -51,9 +55,10 @@ public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   @Override
   protected void containerTick() {
     super.containerTick();
-    EnergyData energyData = getMenu().getEnergyData();
+    energy = menu.getEnergy();
+    maxEnergy = menu.getMaxEnergy();
     if (listener != null) {
-      listener.setEnergy(energyData.getEnergy(), energyData.getMaxEnergy());
+      listener.setEnergy(energy, maxEnergy);
     }
   }
 }

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -20,27 +21,23 @@ import static top.ctnstudio.futurefood.core.init.ModMenu.ENERGY_MENU;
 public class EnergyMenu extends AbstractContainerMenu {
   private final Inventory container;
   protected int maxSlot;
-  private EnergyData energyData;
+  private ContainerData energyData;
 
   public EnergyMenu(int containerId, Inventory container, FriendlyByteBuf buf) {
-    this(containerId, container, new ItemStackHandler(1), new EnergyData(0, 0), null);
+    this(containerId, container, new ItemStackHandler(1), new SimpleContainerData(2), null);
   }
 
-  public EnergyMenu(int containerId, Inventory container, int energy, int maxEnergy) {
-    this(containerId, container, new ItemStackHandler(1), new EnergyData(energy, maxEnergy), null);
+  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData) {
+    this(containerId, container, dataInventory, energyData, null);
   }
 
-  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, int energy, int maxEnergy) {
-    this(containerId, container, dataInventory, new EnergyData(energy, maxEnergy), null);
-  }
-
-  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData, @Nullable ContainerData data) {
+  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data) {
     super(ENERGY_MENU.get(), containerId);
     this.container = container;
     addSlot(container, dataInventory, energyData, data);
   }
 
-  protected void addSlot(Inventory container, IItemHandler dataInventory, EnergyData energyData, @Nullable ContainerData data) {
+  protected void addSlot(Inventory container, IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data) {
     int slots = dataInventory.getSlots();
     if (slots == 1) {
       addSlot(new EnergyInputSlot(dataInventory, maxSlot++, 8, 58));
@@ -118,6 +115,11 @@ public class EnergyMenu extends AbstractContainerMenu {
     return itemstack;
   }
 
+  @Override
+  public void sendAllDataToRemote() {
+    super.sendAllDataToRemote();
+  }
+
   /**
    * 物品移动逻辑
    *
@@ -154,12 +156,20 @@ public class EnergyMenu extends AbstractContainerMenu {
     return maxSlot;
   }
 
-  public EnergyData getEnergyData() {
-    return energyData;
+  public int getEnergy() {
+    return energyData.get(0);
+  }
+
+  public int getMaxEnergy() {
+    return energyData.get(1);
   }
 
   public void setEnergyData(EnergyData energyData) {
     this.energyData = energyData;
+  }
+
+  public ContainerData getEnergyData() {
+    return energyData;
   }
 
   public static final class EnergyData implements ContainerData {
@@ -191,22 +201,6 @@ public class EnergyMenu extends AbstractContainerMenu {
     @Override
     public int getCount() {
       return 2;
-    }
-
-    public int getMaxEnergy() {
-      return maxEnergy;
-    }
-
-    public void setMaxEnergy(int maxEnergy) {
-      this.maxEnergy = maxEnergy;
-    }
-
-    public int getEnergy() {
-      return energy;
-    }
-
-    public void setEnergy(int energy) {
-      this.energy = energy;
     }
   }
 }

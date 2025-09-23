@@ -21,7 +21,7 @@ public class DatagenI18ZhCn extends LanguageProvider {
   @Override
   protected void addTranslations() {
     add("itemGroup.futurefood", "未来食物");
-    add("futurefood.gui.energy.tooltip", "能量存储：%d/%d");
+    add("futurefood.gui.energy.tooltip", "能量存储：%s/%s");
     addItem(ModItem.CYBER_WRENCH, "赛博扳手");
     addBlock(ModBlock.QED, "量子能源扩散器");
     addBlock(ModBlock.QER, "量子能源接收器");

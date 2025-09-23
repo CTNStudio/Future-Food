@@ -6,9 +6,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
@@ -21,7 +23,6 @@ import java.util.Queue;
 
 import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
 
-// todo
 public class QedBlockEntity extends EnergyStorageBlockEntity {
   public static final Table<Integer, Integer, Integer> CACHES = HashBasedTable.create();
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
@@ -63,7 +64,16 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
 
   @Override
   public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
-    int time = getRemainingTime(); // 使用方法方便重写逻辑
+    if (level.isClientSide) {
+      return;
+    }
+    // 使用方法方便重写逻辑
+    int time = getRemainingTime();
+
+    // 提取物品方块的能量
+    extractItemEnergy();
+
+    //  这玩意是？
     Queue<BlockPos> cacheData = linkStorage.getCacheData();
     if (!cacheData.isEmpty()) {
       for (BlockPos cache : cacheData) {
@@ -74,11 +84,36 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
         }
       }
     }
+
     if (time <= 0) {
       executeEnergyTransmission(level, pos, bs);
       resetRemainingTime();
     }
     remainingTime--;
+  }
+
+  public void extractItemEnergy() {
+    if (!energyStorage.canReceive()) {
+      return;
+    }
+    ItemStack stack = itemHandler.getStackInSlot(0);
+    if (stack.isEmpty()) {
+      return;
+    }
+    IEnergyStorage capability = stack.getCapability(EnergyStorage.ITEM);
+    if (capability == null || !capability.canExtract()) {
+      return;
+    }
+    int extractEnergyValue = energyStorage.getMaxReceive();
+    int simulateExtractEnergy = capability.extractEnergy(extractEnergyValue, true);
+    if (simulateExtractEnergy <= 0) {
+      return;
+    }
+    int simulateReceiveEnergy = energyStorage.receiveEnergy(simulateExtractEnergy, true);
+    if (simulateReceiveEnergy <= 0) {
+      return;
+    }
+    energyStorage.receiveEnergy(capability.extractEnergy(extractEnergyValue, false), false);
   }
 
   /**

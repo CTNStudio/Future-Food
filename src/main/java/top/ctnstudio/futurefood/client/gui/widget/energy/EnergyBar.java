@@ -8,6 +8,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import top.ctnstudio.futurefood.core.FutureFood;
 
+import static top.ctnstudio.futurefood.util.TextUtil.getDigitalText;
+
 public class EnergyBar extends ImageWidget.Sprite {
   public static final String TOOLTIP = FutureFood.ID + ".gui.energy.tooltip";
   public static final ResourceLocation TEXTURE = FutureFood.modRL("energy_bar");
@@ -43,23 +45,23 @@ public class EnergyBar extends ImageWidget.Sprite {
 
   @Override
   public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    if (isFocused()) {
+    if (isHovered()) {
       Minecraft minecraft = Minecraft.getInstance();
-      MutableComponent translatable = Component.translatable(TOOLTIP, this.energy, this.maxEnergy);
+      String energyText = getDigitalText(energy);
+      String maxEnergyText = getDigitalText(maxEnergy);
+      MutableComponent translatable = Component.translatable(TOOLTIP, energyText + "FE", maxEnergyText + "FE");
       guiGraphics.renderTooltip(minecraft.font, translatable, mouseX, mouseY);
     }
-// TODO
-//    if (this.maxEnergy > 0) {
-    int energy = Math.max(0, this.energy);
-    int maxEnergy = Math.min(energy, this.maxEnergy);
-    int height = /*(maxEnergy / this.maxEnergy) * */this.getHeight();
-    int yPosition = this.getHeight()/* - height*/;
-    guiGraphics.blitSprite(this.sprite,
-      this.getWidth(), height,
-      0, 0,
-      this.getX(), this.getY()/* + yPosition*/,
-      this.getWidth(), height);
-//    }
+    if (this.maxEnergy > 0) {
+      int energy = Math.max(0, this.energy);
+      int height = (int) ((Math.min(energy, this.maxEnergy) / (float) this.maxEnergy) * this.getHeight());
+      int yPosition = this.getHeight() - height;
+      guiGraphics.blitSprite(this.sprite,
+        this.getWidth(), this.getHeight(),
+        0, yPosition,
+        this.getX(), this.getY() + yPosition,
+        this.getWidth(), height);
+    }
   }
 
   public ResourceLocation getTexture() {
