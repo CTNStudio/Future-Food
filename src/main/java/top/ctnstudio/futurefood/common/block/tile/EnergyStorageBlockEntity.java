@@ -27,11 +27,9 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
-import top.ctnstudio.futurefood.capability.ModEnergyStorage;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import javax.annotation.Nonnull;
@@ -63,6 +61,7 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
+    energyData = new EnergyData(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
   }
 
   /**

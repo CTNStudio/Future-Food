@@ -1,7 +1,5 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
@@ -12,10 +10,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.TileEntityUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nonnull;
@@ -48,8 +46,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     this(ModTileEntity.QED.get(), pos, blockState,
       new ModEnergyStorage(20480, 4096, 4096),
       DEFAULT_MAX_REMAINING_TIME);
-
-    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
   @Override
@@ -138,7 +134,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     }
 
     final var pos = this.getBlockPos();
-    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
   @Override
@@ -176,13 +171,11 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
   @Override
   public void onLoad() {
     final var pos = this.getBlockPos();
-    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
   @Override
   public void onChunkUnloaded() {
     final var pos = this.getBlockPos();
-    CACHES.remove(pos.getY(), pos.getX());
   }
 
   public UnlimitedLinkStorage getUnlimitedStorage() {

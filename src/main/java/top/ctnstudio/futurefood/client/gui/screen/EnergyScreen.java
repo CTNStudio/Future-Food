@@ -6,10 +6,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 //todo
