@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.capability;
+package top.ctnstudio.futurefood.api.capability;
 
 import net.neoforged.neoforge.energy.IEnergyStorage;
 

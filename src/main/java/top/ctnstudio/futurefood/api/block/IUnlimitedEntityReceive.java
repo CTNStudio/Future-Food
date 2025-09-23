@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.api.tile;
+package top.ctnstudio.futurefood.api.block;
 
 import net.neoforged.neoforge.energy.IEnergyStorage;
 

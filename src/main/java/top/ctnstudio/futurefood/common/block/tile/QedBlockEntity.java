@@ -12,9 +12,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import top.ctnstudio.futurefood.capability.IUnlimitedLinkStorage;
-import top.ctnstudio.futurefood.capability.ModEnergyStorage;
-import top.ctnstudio.futurefood.capability.UnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.api.adapter.TileEntityUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,6 @@ import java.util.Queue;
 import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
 
 public class QedBlockEntity extends EnergyStorageBlockEntity {
-  public static final Table<Integer, Integer, Integer> CACHES = HashBasedTable.create();
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   /**
    * 剩余传递计时
@@ -41,17 +41,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
                         int maxRemainingTime) {
     super(type, pos, blockState, energyStorage);
     this.maxRemainingTime = maxRemainingTime;
-    linkStorage = new UnlimitedLinkStorage() {
-      @Override
-      public @Nullable Level getLevel() {
-        return QedBlockEntity.this.getLevel();
-      }
-
-      @Override
-      public void linkFailure(BlockPos pos) {
-
-      }
-    };
+    linkStorage = new TileEntityUnlimitedLinkStorage(this);
   }
 
   public QedBlockEntity(BlockPos pos, BlockState blockState) {

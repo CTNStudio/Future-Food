@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.capability;
+package top.ctnstudio.futurefood.api.capability;
 
 import com.google.common.collect.HashBiMap;
 import net.minecraft.core.BlockPos;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,20 +31,6 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
 
     return getEnergyStorageCapabilities(level, pos) != null;
   }
-
-  /**
-   * 链接失败
-   *
-   * @param pos 链接失败的方块位置
-   */
-  void linkFailure(BlockPos pos);
-
-  /**
-   * 移除一个链接
-   *
-   * @param pos 要移除的链接方块位置
-   */
-  void removeLink(BlockPos pos);
 
   /**
    * 获取方块的能接收能量的能量接口
@@ -85,6 +71,20 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
     }
     return capabilities;
   }
+
+  /**
+   * 链接失败
+   *
+   * @param pos 链接失败的方块位置
+   */
+  void linkFailure(BlockPos pos);
+
+  /**
+   * 移除一个链接
+   *
+   * @param pos 要移除的链接方块位置
+   */
+  boolean removeLink(BlockPos pos);
 
   /**
    * 链接一个方块

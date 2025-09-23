@@ -30,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
 import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu.EnergyData;
+import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import javax.annotation.Nonnull;
@@ -39,7 +41,8 @@ import java.util.function.Supplier;
 
 public abstract class EnergyStorageBlockEntity extends BlockEntity
   implements Container, MenuProvider {
-  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE = () -> new ModEnergyStorage(10240, 1024, 1024);
+  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE
+    = () -> new ModEnergyStorage(10240, 1024, 1024);
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
   protected final EnergyData energyData;
@@ -60,7 +63,6 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
-    energyData = new EnergyData(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
   }
 
   /**
@@ -71,9 +73,13 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super.loadAdditional(nbt, provider);
     if (nbt.contains("energyStorage")) {
       energyStorage.deserializeNBT(provider, nbt.getCompound("energyStorage"));
+    } else {
+      energyStorage.setEnergy(0);
     }
     if (nbt.contains("items")) {
       itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
+    } else {
+      itemHandler.setSize(1);
     }
   }
 
@@ -225,6 +231,4 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
 
   public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
   }
-
-
 }
