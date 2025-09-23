@@ -3,6 +3,7 @@ package top.ctnstudio.futurefood.common.block.tile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,19 +29,21 @@ import top.ctnstudio.futurefood.capability.ModEnergyStorage;
 import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class EnergyStorageBlockEntity extends BlockEntity
   implements Container, MenuProvider {
-  public static final ModEnergyStorage DEFAULT_ENERGY_STORAGE = new ModEnergyStorage(10240, 1024, 1024);
+  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE = () -> new ModEnergyStorage(10240, 1024, 1024);
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
     BlockState blockState) {
     this(type, pos, blockState, new ItemStackHandler(1),
-      DEFAULT_ENERGY_STORAGE);
+      DEFAULT_ENERGY_STORAGE.get());
   }
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -54,16 +58,12 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     this.itemHandler = itemHandler;
   }
 
+  /**
+   * 加载数据
+   */
   @Override
   protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
     super.loadAdditional(nbt, provider);
-    nbt.put("energyStorage", energyStorage.serializeNBT(provider));
-    nbt.put("items", itemHandler.serializeNBT(provider));
-  }
-
-  @Override
-  protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
-    super.saveAdditional(nbt, provider);
     if (nbt.contains("energyStorage")) {
       energyStorage.deserializeNBT(provider, nbt.getCompound("energyStorage"));
     } else {
@@ -76,16 +76,41 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     }
   }
 
+  /**
+   * 保存数据
+   */
   @Override
-  public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-    CompoundTag tag = new CompoundTag();
-    saveAdditional(tag, registries);
+  protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+    super.saveAdditional(nbt, provider);
+    nbt.put("energyStorage", energyStorage.serializeNBT(provider));
+    nbt.put("items", itemHandler.serializeNBT(provider));
+  }
+
+  /**
+   * 获取更新nbt
+   */
+  @Override
+  public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+    CompoundTag tag = super.getUpdateTag(provider);
+    saveAdditional(tag, provider);
     return tag;
   }
 
+  /**
+   * 获取更新数据包
+   */
   @Override
   public Packet<ClientGamePacketListener> getUpdatePacket() {
     return ClientboundBlockEntityDataPacket.create(this);
+  }
+
+  /**
+   * 处理接收的数据
+   */
+  @Override
+  public void handleUpdateTag(CompoundTag tag, Provider provider) {
+    super.handleUpdateTag(tag, provider);
+    loadAdditional(tag, provider);
   }
 
   @Override
@@ -181,5 +206,9 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   @Override
   public Component getDisplayName() {
     return getBlockState().getBlock().getName();
+  }
+
+  public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
+
   }
 }

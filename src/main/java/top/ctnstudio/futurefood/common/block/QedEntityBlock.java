@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
-import top.ctnstudio.futurefood.api.tile.IUnlimitedLink;
+import top.ctnstudio.futurefood.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
@@ -91,7 +91,7 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
     QedBlockEntity blockEntity = getBlockEntity(level, pos);
     blockStateMap.entrySet().stream()
       .filter(entry -> isLinkable(level, entry.getKey(), entry.getValue()))
-      .forEach(entry -> linkBlock(level, entry.getKey(), blockEntity));
+      .forEach(entry -> linkBlock(level, entry.getKey(), blockEntity.getUnlimitedStorage()));
   }
 
   @Override
@@ -114,8 +114,8 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
     return state.is(FfBlockTags.UNLIMITED_LAUNCH) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
   }
 
-  public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLink i) {
-    return i.linkBlock(level, pos);
+  public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLinkStorage linkStorage) {
+    return linkStorage.linkBlock(level, pos);
   }
 
   @Override
@@ -142,7 +142,7 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
                                                                 BlockEntityType<T> type) {
-    return createTickerHelper(type, ModTileEntity.QED.get(), QedBlockEntity::tick);
+    return createTickerHelper(type, ModTileEntity.QED.get(), (l, bp, bs, be) -> be.tick(level, bp, bs));
   }
 
   @Override
@@ -151,20 +151,20 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
   }
 
   @Override
-  protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_,
-                                      BlockPos p_308956_, CollisionContext p_309006_) {
+  protected VoxelShape getVisualShape(BlockState state, BlockGetter getter,
+    BlockPos pos, CollisionContext context) {
     return Shapes.empty();
   }
 
   @Override
-  protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_,
-                                     BlockPos p_308918_) {
+  protected float getShadeBrightness(BlockState blockState, BlockGetter getter,
+    BlockPos pos) {
     return 1.0F;
   }
 
   @Override
-  protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_,
-                                           BlockPos p_309097_) {
+  protected boolean propagatesSkylightDown(BlockState state, BlockGetter getter,
+    BlockPos pos) {
     return true;
   }
 

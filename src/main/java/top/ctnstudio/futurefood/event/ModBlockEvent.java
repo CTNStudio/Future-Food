@@ -62,7 +62,7 @@ public final class ModBlockEvent {
     BlockPos.betweenClosedStream(aabb).forEach((pos1) -> {
       final var tile = world.getBlockEntity(pos1);
       if (tile instanceof QedBlockEntity qed) {
-        qed.addLinkCache(pos);
+        qed.getUnlimitedStorage().addLinkCache(pos);
       }
     });
   }

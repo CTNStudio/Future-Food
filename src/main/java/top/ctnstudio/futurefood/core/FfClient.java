@@ -1,6 +1,13 @@
 package top.ctnstudio.futurefood.core;
 
+import com.mojang.datafixers.util.Function3;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
@@ -11,7 +18,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
 import top.ctnstudio.futurefood.client.gui.screen.EnergyScreen;
 import top.ctnstudio.futurefood.client.renderer.block.BasicGeoBlockRenderer;
 import top.ctnstudio.futurefood.client.renderer.block.ParticleColliderBlockEntityRenderer;
@@ -35,7 +41,13 @@ public class FfClient {
 
   @SubscribeEvent
   public static void registerScreens(RegisterMenuScreensEvent event) {
-    event.register(ModMenu.ENERGY_MENU.get(), EnergyScreen::new);
+    registerScreen(event, ModMenu.ENERGY_MENU.get(), EnergyScreen::new);
+  }
+
+  private static <M extends AbstractContainerMenu, E extends Screen & MenuAccess<M>> void registerScreen(
+    RegisterMenuScreensEvent event,
+    MenuType<M> menuType, Function3<M, Inventory, Component, E> screenConstructor) {
+    event.register(menuType, screenConstructor::apply);
   }
 
   private static <T extends BlockEntity> void registerBlockEntityRenderer(

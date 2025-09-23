@@ -1,31 +1,28 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Queues;
-import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import top.ctnstudio.futurefood.api.tile.IUnlimitedLink;
+import top.ctnstudio.futurefood.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.capability.ModEnergyStorage;
+import top.ctnstudio.futurefood.capability.UnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
 import java.util.Queue;
 
 import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
 
 // todo
-public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimitedLink {
+public class QedBlockEntity extends EnergyStorageBlockEntity {
   public static final Table<Integer, Integer, Integer> CACHES = HashBasedTable.create();
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   /**
@@ -36,18 +33,24 @@ public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimit
    * 最大传递计时
    */
   private int maxRemainingTime; // 使用变量以方便后续做升级
-  /**
-   * 链接哈希集合
-   */
-  private final HashSet<BlockPos> linkSet;
-  private final Queue<BlockPos> cacheData = Queues.newArrayDeque();
+  protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
 
   public QedBlockEntity(BlockEntityType<? extends QedBlockEntity> type, BlockPos pos,
                         BlockState blockState, ModEnergyStorage energyStorage,
                         int maxRemainingTime) {
     super(type, pos, blockState, energyStorage);
-    this.linkSet = Sets.newHashSet();
     this.maxRemainingTime = maxRemainingTime;
+    linkStorage = new UnlimitedLinkStorage() {
+      @Override
+      public @Nullable Level getLevel() {
+        return QedBlockEntity.this.getLevel();
+      }
+
+      @Override
+      public void linkFailure(BlockPos pos) {
+
+      }
+    };
   }
 
   public QedBlockEntity(BlockPos pos, BlockState blockState) {
@@ -58,24 +61,24 @@ public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimit
     CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
-  public static void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs,
-                          @Nonnull QedBlockEntity tile) {
-    if (!tile.cacheData.isEmpty()) {
-      for (BlockPos cache : tile.cacheData) {
+  @Override
+  public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
+    int time = getRemainingTime(); // 使用方法方便重写逻辑
+    Queue<BlockPos> cacheData = linkStorage.getCacheData();
+    if (!cacheData.isEmpty()) {
+      for (BlockPos cache : cacheData) {
         if (level.getBlockEntity(cache) instanceof IEnergyStorage) {
-          tile.linkBlock(level, cache);
+          linkStorage.linkBlock(level, cache);
         } else {
-          tile.removeLink(pos);
+          linkStorage.removeLink(pos);
         }
       }
     }
-
-    int time = tile.getRemainingTime(); // 使用方法方便重写逻辑
     if (time <= 0) {
-      tile.executeEnergyTransmission(level, pos, bs);
-      tile.resetRemainingTime();
+      executeEnergyTransmission(level, pos, bs);
+      resetRemainingTime();
     }
-    tile.remainingTime--;
+    remainingTime--;
   }
 
   /**
@@ -86,8 +89,8 @@ public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimit
    * @param bs         当方块的方块状态
    */
   public void executeEnergyTransmission(Level blockLevel, BlockPos pos, BlockState bs) {
-    linkSet.forEach((bp) -> {
-      IEnergyStorage capability = IUnlimitedLink.getEnergyStorageCapabilities(blockLevel, pos);
+    linkStorage.getLinkSet().forEach((bp) -> {
+      IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(blockLevel, pos);
       if (capability == null) {
         return;
       }
@@ -99,9 +102,9 @@ public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimit
   }
 
   @Override
-  protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+  protected void loadAdditional(CompoundTag nbt, Provider provider) {
     super.loadAdditional(nbt, provider);
-    serializeLinkedListNBT(provider, nbt);
+    linkStorage.deserializeNBT(provider, nbt);
     remainingTime = nbt.getInt("remainingTime");
     if (!nbt.contains("maxRemainingTime")) {
       maxRemainingTime = DEFAULT_MAX_REMAINING_TIME;
@@ -114,95 +117,11 @@ public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimit
   }
 
   @Override
-  protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+  protected void saveAdditional(CompoundTag nbt, Provider provider) {
     super.saveAdditional(nbt, provider);
-    deserializeLinkedListNBT(provider, nbt);
+    linkStorage.serializeNBT(provider);
     nbt.putInt("remainingTime", remainingTime);
     nbt.putInt("maxRemainingTime", maxRemainingTime);
-  }
-
-  @Override
-  public boolean linkBlock(Level level, BlockPos pos) {
-    if (level == null || this.level == null || this.level.isClientSide || this.level == level) {
-      linkFailure(pos);
-      return false;
-    }
-    IEnergyStorage capability = IUnlimitedLink.getEnergyStorageCapabilities(this.level, pos);
-    if (capability == null) {
-      linkFailure(pos);
-      return false;
-    }
-    linkSet.add(pos);
-    return true;
-  }
-
-  public void addLinkCache(BlockPos pos) {
-    this.cacheData.add(pos);
-  }
-
-  @Override
-  public void linkFailure(BlockPos pos) {
-
-  }
-
-  @Override
-  public void removeLink(BlockPos pos) {
-    linkSet.remove(pos);
-  }
-
-  @Nullable
-  @Override
-  public BlockState getLinkedBlock(BlockPos pos) {
-    if (level == null) {
-      return null;
-    }
-    BlockState blockState = level.getBlockState(pos);
-    if (blockState.isEmpty()) {
-      return null;
-    }
-    return blockState;
-  }
-
-  @Override
-  public void serializeLinkedListNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-    if (nbt == null || level != null) {
-      return;
-    }
-    ListTag tags = new ListTag();
-    linkSet.forEach(
-      (pos) -> {
-        BlockState state = getLinkedBlock(pos);
-        if (state == null) {
-          return;
-        }
-        CompoundTag tag = new CompoundTag();
-        tag.putIntArray("pos", new int[]{pos.getX(), pos.getY(), pos.getZ()});
-      }
-    );
-    nbt.put("linkList", tags);
-  }
-
-  @Override
-  public void deserializeLinkedListNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-    if (level == null || nbt.isEmpty()) {
-      return;
-    }
-    ListTag tags = nbt.getList("linkList", DEFAULT_MAX_REMAINING_TIME);
-    if (tags.isEmpty()) {
-      return;
-    }
-    tags.forEach(tag -> {
-      if (!(tag instanceof CompoundTag compoundTag)) {
-        return;
-      }
-      int[] posNbtArray = compoundTag.getIntArray("pos");
-      BlockPos pos = new BlockPos(posNbtArray[0], posNbtArray[1], posNbtArray[2]);
-      BlockState state = getLinkedBlock(pos);
-      if (state == null) {
-        return;
-      }
-      linkSet.add(pos);
-    });
   }
 
   public int getRemainingTime() {
@@ -239,5 +158,9 @@ public class QedBlockEntity extends EnergyStorageBlockEntity implements IUnlimit
   public void onChunkUnloaded() {
     final var pos = this.getBlockPos();
     CACHES.remove(pos.getY(), pos.getX());
+  }
+
+  public UnlimitedLinkStorage getUnlimitedStorage() {
+    return linkStorage;
   }
 }
