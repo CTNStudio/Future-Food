@@ -25,8 +25,8 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
-import top.ctnstudio.futurefood.capability.ModEnergyStorage;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
+import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import javax.annotation.Nonnull;
@@ -36,7 +36,8 @@ import java.util.function.Supplier;
 
 public abstract class EnergyStorageBlockEntity extends BlockEntity
   implements Container, MenuProvider {
-  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE = () -> new ModEnergyStorage(10240, 1024, 1024);
+  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE
+    = () -> new ModEnergyStorage(10240, 1024, 1024);
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
 

@@ -1,5 +1,6 @@
-package top.ctnstudio.futurefood.capability;
+package top.ctnstudio.futurefood.api.adapter;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
@@ -7,24 +8,94 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.core.FutureFood;
 
-import javax.annotation.Nullable;
-import java.util.HashSet;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.Queue;
+import java.util.Set;
 
 public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
   /**
    * 链接哈希集合
    */
-  private final HashSet<BlockPos> linkSet;
+  private final Set<BlockPos> linkSet;
+
+  /**
+   * 变更缓存，用于从变更事件中提交需要检查更新的坐标。
+   *
+   * @see top.ctnstudio.futurefood.event.ModBlockEvent
+   */
   private final Queue<BlockPos> cacheData;
 
   public UnlimitedLinkStorage() {
     this.linkSet = Sets.newHashSet();
     this.cacheData = Queues.newArrayDeque();
+  }
+
+  /**
+   * 从变更缓存向链接目标添加或删除数据。
+   */
+  public final void tick() {
+    final Level world = this.getLevel();
+    if (Objects.isNull(world) || world.isClientSide) {
+      return;
+    }
+
+    Queue<BlockPos> cacheData = this.getCacheData();
+
+    while(!cacheData.isEmpty()) {
+      final BlockPos cache = cacheData.poll();
+      var flag = world.getBlockEntity(cache) instanceof IEnergyStorage;
+      flag = flag
+        ? this.linkBlock(world, cache)
+        : this.removeLink(cache);
+
+      if (!flag) {
+        FutureFood.LOGGER.warn("Something warn in block pos {} ", cache);
+      }
+    }
+  }
+
+  public final void addLinkCache(BlockPos pos) {
+    this.cacheData.add(pos);
+  }
+
+  @Override
+  public final boolean removeLink(BlockPos pos) {
+    return linkSet.remove(pos);
+  }
+
+  @Nonnull
+  public final Set<BlockPos> getLinkSet() {
+    return ImmutableSet.copyOf(linkSet);
+  }
+
+  @Nonnull
+  public final Queue<BlockPos> getCacheData() {
+    return cacheData;
+  }
+
+  /**
+   * 获取一个链接的方块
+   *
+   * @param pos 要获取的链接方块位置
+   * @return 链接的方块
+   */
+  @CheckForNull
+  public BlockState getLinkedBlock(BlockPos pos) {
+    if (Objects.isNull(this.getLevel())) {
+      return null;
+    }
+
+    BlockState blockState = getLevel().getBlockState(pos);
+    return !blockState.isEmpty() ? blockState : null;
   }
 
   @Override
@@ -70,59 +141,19 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
   }
 
   @Override
-  @Nullable
-  public abstract Level getLevel();
-
-  @Override
   public boolean linkBlock(Level level, BlockPos pos) {
     if (level == null || level.isClientSide) {
       linkFailure(pos);
       return false;
     }
+
     IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(level, pos);
     if (capability == null) {
       linkFailure(pos);
       return false;
     }
+
     linkSet.add(pos);
     return true;
-  }
-
-  public void addLinkCache(BlockPos pos) {
-    this.cacheData.add(pos);
-  }
-
-  @Override
-  public abstract void linkFailure(BlockPos pos);
-
-  /**
-   * 获取一个链接的方块
-   *
-   * @param pos 要获取的链接方块位置
-   * @return 链接的方块
-   */
-  @Nullable
-  public BlockState getLinkedBlock(BlockPos pos) {
-    if (getLevel() == null) {
-      return null;
-    }
-    BlockState blockState = getLevel().getBlockState(pos);
-    if (blockState.isEmpty()) {
-      return null;
-    }
-    return blockState;
-  }
-
-  @Override
-  public void removeLink(BlockPos pos) {
-    linkSet.remove(pos);
-  }
-
-  public HashSet<BlockPos> getLinkSet() {
-    return linkSet;
-  }
-
-  public Queue<BlockPos> getCacheData() {
-    return cacheData;
   }
 }

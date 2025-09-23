@@ -28,12 +28,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
-import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
-import top.ctnstudio.futurefood.capability.IUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
+import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -95,10 +96,11 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
   }
 
   @Override
-  protected void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack, boolean dropExperience) {
-    // TODO 将物品丢弃异常
-    getBlockEntity(level, pos).clearContent();
-    super.spawnAfterBreak(state, level, pos, stack, dropExperience);
+  protected void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack,
+                                 boolean dropExperience) {
+    final var tile = getBlockEntity(level, pos);
+    EntityItemUtil.summonLootItems(level, pos, tile.getEnergyItemStack().copy());
+    tile.clearContent();
   }
 
   public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {

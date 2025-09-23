@@ -10,9 +10,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import top.ctnstudio.futurefood.capability.IUnlimitedLinkStorage;
-import top.ctnstudio.futurefood.capability.ModEnergyStorage;
-import top.ctnstudio.futurefood.capability.UnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.api.adapter.TileEntityUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nonnull;
@@ -23,7 +24,6 @@ import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirect
 
 // todo
 public class QedBlockEntity extends EnergyStorageBlockEntity {
-  public static final Table<Integer, Integer, Integer> CACHES = HashBasedTable.create();
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   /**
    * 剩余传递计时
@@ -40,45 +40,13 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
                         int maxRemainingTime) {
     super(type, pos, blockState, energyStorage);
     this.maxRemainingTime = maxRemainingTime;
-    linkStorage = new UnlimitedLinkStorage() {
-      @Override
-      public @Nullable Level getLevel() {
-        return QedBlockEntity.this.getLevel();
-      }
-
-      @Override
-      public void linkFailure(BlockPos pos) {
-
-      }
-    };
+    linkStorage = new TileEntityUnlimitedLinkStorage(this);
   }
 
   public QedBlockEntity(BlockPos pos, BlockState blockState) {
     this(ModTileEntity.QED.get(), pos, blockState,
       new ModEnergyStorage(20480, 4096, 4096),
       DEFAULT_MAX_REMAINING_TIME);
-
-    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
-  }
-
-  @Override
-  public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
-    int time = getRemainingTime(); // 使用方法方便重写逻辑
-    Queue<BlockPos> cacheData = linkStorage.getCacheData();
-    if (!cacheData.isEmpty()) {
-      for (BlockPos cache : cacheData) {
-        if (level.getBlockEntity(cache) instanceof IEnergyStorage) {
-          linkStorage.linkBlock(level, cache);
-        } else {
-          linkStorage.removeLink(pos);
-        }
-      }
-    }
-    if (time <= 0) {
-      executeEnergyTransmission(level, pos, bs);
-      resetRemainingTime();
-    }
-    remainingTime--;
   }
 
   /**
@@ -101,6 +69,37 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     });
   }
 
+  /**
+   * 重置传递时间
+   */
+  public void resetRemainingTime() {
+    remainingTime = maxRemainingTime;
+  }
+
+  public int getMaxRemainingTime() {
+    return maxRemainingTime;
+  }
+
+  public int getRemainingTime() {
+    return remainingTime;
+  }
+
+  public UnlimitedLinkStorage getUnlimitedStorage() {
+    return linkStorage;
+  }
+
+  @Override
+  public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
+    this.linkStorage.tick();
+
+    int time = getRemainingTime(); // 使用方法方便重写逻辑
+    if (time-- <= 0) {
+      executeEnergyTransmission(level, pos, bs);
+      resetRemainingTime();
+    }
+    this.remainingTime = time;
+  }
+
   @Override
   protected void loadAdditional(CompoundTag nbt, Provider provider) {
     super.loadAdditional(nbt, provider);
@@ -113,7 +112,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     }
 
     final var pos = this.getBlockPos();
-    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
   }
 
   @Override
@@ -122,21 +120,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     linkStorage.serializeNBT(provider);
     nbt.putInt("remainingTime", remainingTime);
     nbt.putInt("maxRemainingTime", maxRemainingTime);
-  }
-
-  public int getRemainingTime() {
-    return remainingTime;
-  }
-
-  /**
-   * 重置传递时间
-   */
-  public void resetRemainingTime() {
-    remainingTime = maxRemainingTime;
-  }
-
-  public int getMaxRemainingTime() {
-    return maxRemainingTime;
   }
 
   @Override
@@ -148,19 +131,4 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
       super.externalGetEnergyStorage(direction);
   }
 
-  @Override
-  public void onLoad() {
-    final var pos = this.getBlockPos();
-    CACHES.put(pos.getY(), pos.getX(), pos.getZ());
-  }
-
-  @Override
-  public void onChunkUnloaded() {
-    final var pos = this.getBlockPos();
-    CACHES.remove(pos.getY(), pos.getX());
-  }
-
-  public UnlimitedLinkStorage getUnlimitedStorage() {
-    return linkStorage;
-  }
 }

@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.gui.menu;
+package top.ctnstudio.futurefood.common.menu;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,7 +16,8 @@ import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyInputSlot;
 
 import static top.ctnstudio.futurefood.core.init.ModMenu.ENERGY_MENU;
 
-@OnlyIn(Dist.CLIENT)
+// Menu 是一段魔法代理，但绝对不是仅客户端的。它在服务端处理数据，然后以数据结构同步给客户端的 Screen。
+// @OnlyIn(Dist.CLIENT)
 public class EnergyMenu extends AbstractContainerMenu {
   private final Inventory container;
   protected int maxSlot;

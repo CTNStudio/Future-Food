@@ -6,8 +6,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu.EnergyData;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
 import top.ctnstudio.futurefood.core.FutureFood;
 
@@ -35,17 +35,18 @@ public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   }
 
   @Override
-  public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    super.render(guiGraphics, mouseX, mouseY, partialTick);
-    renderTooltip(guiGraphics, mouseX, mouseY);
-  }
-
-  @Override
   protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
     PoseStack pose = guiGraphics.pose();
     pose.pushPose();
     guiGraphics.blit(textureBg, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
     pose.popPose();
+  }
+
+  @Override
+  public void render(GuiGraphics gg, int mouseX, int mouseY, float partialTick) {
+    super.renderBackground(gg, mouseX, mouseY, partialTick);
+    super.render(gg, mouseX, mouseY, partialTick);
+    this.renderTooltip(gg, mouseX, mouseY);
   }
 
   @Override

@@ -1,9 +1,13 @@
-package top.ctnstudio.futurefood.capability;
+package top.ctnstudio.futurefood.api.adapter;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.energy.EnergyStorage;
+import top.ctnstudio.futurefood.api.capability.IModEnergyStorage;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage {
   public ModEnergyStorage(int capacity) {
@@ -23,36 +27,39 @@ public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage
   }
 
   @Override
-  public void setEnergy(int energy) {
+  public void setEnergy(@Nonnegative int energy) {
     this.energy = energy;
   }
 
   @Override
-  public void setMaxEnergyStored(int capacity) {
+  public void setMaxEnergyStored(@Nonnegative int capacity) {
     this.capacity = capacity;
   }
 
   @Override
-  public void setMaxExtract(int maxExtract) {
+  public void setMaxExtract(@Nonnegative int maxExtract) {
     this.maxExtract = maxExtract;
   }
 
   @Override
-  public void setMaxReceive(int maxReceive) {
+  public void setMaxReceive(@Nonnegative int maxReceive) {
     this.maxReceive = maxReceive;
   }
 
   @Override
+  @Nonnegative
   public int getMaxExtract() {
     return maxExtract;
   }
 
   @Override
+  @Nonnegative
   public int getMaxReceive() {
     return maxReceive;
   }
 
   @Override
+  @Nonnull
   public Tag serializeNBT(HolderLookup.Provider provider) {
     CompoundTag nbt = new CompoundTag(4);
     nbt.putInt("energy", energy);

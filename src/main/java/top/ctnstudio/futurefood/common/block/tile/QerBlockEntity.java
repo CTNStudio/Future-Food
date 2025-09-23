@@ -5,8 +5,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
-import top.ctnstudio.futurefood.api.tile.IUnlimitedEntityReceive;
-import top.ctnstudio.futurefood.capability.ModEnergyStorage;
+import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
