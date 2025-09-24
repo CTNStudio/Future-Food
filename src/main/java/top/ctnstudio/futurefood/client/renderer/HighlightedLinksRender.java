@@ -1,25 +1,27 @@
 package top.ctnstudio.futurefood.client.renderer;
 
-import com.google.common.collect.Sets;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexMultiConsumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 import net.neoforged.neoforge.common.Tags;
-import org.checkerframework.checker.units.qual.A;
-import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import java.util.Set;
 
-import static net.minecraft.client.renderer.debug.DebugRenderer.renderFilledBox;
+import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_RECEIVE;
 
 /**
  * 高亮无限链接渲染
@@ -27,32 +29,13 @@ import static net.minecraft.client.renderer.debug.DebugRenderer.renderFilledBox;
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber
 public class HighlightedLinksRender {
-  //  private static final List<BlockPos> highlightBlockPosList = new ArrayList<>();
   private static final float red = 0F;
   private static final float green = 0.5F;
   private static final float blue = 0F;
   private static final float alpha = 0.5F;
 
   @SubscribeEvent
-  public static void tick(ClientTickEvent.Pre event) {
-//    var minecraft = Minecraft.getInstance();
-//    var player = minecraft.player;
-//    var level = minecraft.level;
-//    if (level == null || player == null || !player.isAlive() ||
-//        !player.getMainHandItem().is(Tags.Items.TOOLS_WRENCH)) {
-//      return;
-//    }
-//    highlightBlockPosList.clear();
-//    var playerPos = player.getOnPos();
-//    var aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10), playerPos.offset(-10, -10, -10));
-//    highlightBlockPosList.addAll(BlockPos.betweenClosedStream(aabb)
-//      .filter(pos -> level.getBlockState(pos).is(FfBlockTags.UNLIMITED_LAUNCH))
-//      .toList());
-  }
-
-  @SubscribeEvent
   public static void renderLevelStageEvent(RenderLevelStageEvent event) {
-//    testLayerDraw
     var stage = event.getStage();
     if (stage != Stage.AFTER_TRIPWIRE_BLOCKS) {
       return;
@@ -61,54 +44,64 @@ public class HighlightedLinksRender {
     var minecraft = Minecraft.getInstance();
     var level = minecraft.level;
     var player = minecraft.player;
-    if (level == null || player == null || !player.isAlive() ||
-        !player.getMainHandItem().is(Tags.Items.TOOLS_WRENCH)) {
+    if (level == null || player == null || !player.isAlive() || (
+      !player.getMainHandItem().is(Tags.Items.TOOLS_WRENCH) &&
+      !player.getItemInHand(InteractionHand.OFF_HAND).is(Tags.Items.TOOLS_WRENCH))) {
       return;
     }
     var playerPos = player.getOnPos();
-//    var aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10), playerPos.offset(-10, -10, -10));
     var frustum = event.getFrustum();
 
-//    final Set<BlockPos> blockPosList =  BlockPos.betweenClosedStream(aabb)
-//      .filter(pos -> frustum.isVisible(new AABB(pos))
-//        && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_RECEIVE))
-//      .collect(Collectors.toSet());
-
-    final Set<BlockPos> blockPosList = Sets.newHashSet();
-    for (int x = -10; x <= 10; x++) for (int y = -10; y <= 10; y++) for (int z = -10; z <= 10; z++) {
-      BlockPos pos = playerPos.offset(x, y, z);
-      if (frustum.isVisible(new AABB(pos))
-        && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_RECEIVE)) {
-        blockPosList.add(pos);
+    final Set<BlockPos> blockPosList;
+    blockPosList = ModUtil.rangePos(playerPos, 10, pos -> {
+      if (!frustum.isVisible(new AABB(pos))) {
+        return false;
       }
+      BlockState blockState = level.getBlockState(pos);
+      return !blockState.isEmpty() && blockState.is(UNLIMITED_RECEIVE);
+    });
+    if (blockPosList.isEmpty()) {
+      return;
     }
 
+    RenderSystem.disableDepthTest();
+    RenderSystem.enableBlend();
+    RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
     var buffer = minecraft.renderBuffers().bufferSource();
     var pose = event.getPoseStack();
+    pose.pushPose();
 
-    var cameraPos = event.getCamera().getPosition();
+    Camera camera = event.getCamera();
+    var cameraPos = camera.getPosition();
+
     for (BlockPos blockPos : blockPosList) {
       pose.pushPose();
 
-      pose.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-
+      var blockCenterPos = blockPos.getCenter();
+      double x = -cameraPos.x + blockCenterPos.x;
+      double y = -cameraPos.y + blockCenterPos.y;
+      double z = -cameraPos.z + blockCenterPos.z;
+      pose.translate(x, y, z);
+      pose.mulPose(camera.rotation());
       pose.pushPose();
-      var blockPosCenter = blockPos.getCenter();
-//      pose.translate(vec.x - cameraPos.x, vec.y - cameraPos.y, vec.z - cameraPos.z);
-//      var distance = player.distanceToSqr(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 
-      renderFilledBox(pose, buffer, new AABB(blockPos), red, green, blue, alpha);
+      pose.translate(-0.5, -0.5, 0);
 
+      var consumer = VertexMultiConsumer.create(buffer.getBuffer(RenderType.lineStrip()));
+      var matrix4f = pose.last().pose();
+      float p = 0;
+      float p1 = 1f;
+      // TODO 未完成
+      consumer.addVertex(matrix4f, p, p, 0).setColor(red, green, blue, alpha).setNormal(0, 0, 0);
+      consumer.addVertex(matrix4f, p1, p, 0).setColor(red, green, blue, alpha).setNormal(0, 0, 0);
+      consumer.addVertex(matrix4f, p1, p1, 0).setColor(red, green, blue, alpha).setNormal(0, 0, 0);
+      consumer.addVertex(matrix4f, p, p1, 0).setColor(red, green, blue, alpha).setNormal(0, 0, 0);
+      consumer.addVertex(matrix4f, p, p, 0).setColor(red, green, blue, alpha).setNormal(0, 0, 0);
       pose.popPose();
 
       pose.popPose();
-      String blockText = String.format("block: x%.2f y%.2f z%.2f", blockPosCenter.x, blockPosCenter.y, blockPosCenter.z);
-      String cameraText = String.format("camera: x%.2f y%.2f z%.2f", cameraPos.x, cameraPos.y, cameraPos.z);
-      MutableComponent literal = Component.literal(blockText).append(" ").append(cameraText);
-      minecraft.gui.setOverlayMessage(literal, true);
-
-      buffer.endLastBatch();
     }
+    pose.popPose();
     buffer.endBatch();
   }
 }

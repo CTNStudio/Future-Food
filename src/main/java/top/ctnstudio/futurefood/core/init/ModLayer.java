@@ -10,21 +10,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import top.ctnstudio.futurefood.client.gui.layers.TestLayerDraw;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.function.Supplier;
 
-import static net.neoforged.neoforge.client.gui.VanillaGuiLayers.SELECTED_ITEM_NAME;
-
 @EventBusSubscriber
 public class ModLayer {
   public static final ResourceLocation TEST_LAYER = FutureFood.modRL("test_layer");
-  public static Supplier<TestLayerDraw> testLayerDraw;
+//  public static Supplier<TestLayerDraw> testLayerDraw; 暂时完成了他的使命
 
   @SubscribeEvent
   public static void registerGuiLayersEvent(RegisterGuiLayersEvent event) {
-    testLayerDraw = register(event, SELECTED_ITEM_NAME, TEST_LAYER, TestLayerDraw::new);
+//    testLayerDraw = register(event, SELECTED_ITEM_NAME, TEST_LAYER, TestLayerDraw::new);
   }
 
   private static <T extends LayeredDraw.Layer> Supplier<T> register(RegisterGuiLayersEvent event, ResourceLocation other,
