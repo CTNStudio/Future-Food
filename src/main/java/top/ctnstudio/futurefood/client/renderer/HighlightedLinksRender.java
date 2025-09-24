@@ -1,31 +1,24 @@
 package top.ctnstudio.futurefood.client.renderer;
 
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
-import org.lwjgl.opengl.GL11;
-import top.ctnstudio.futurefood.core.init.ModBlock;
+import net.neoforged.neoforge.common.Tags;
+import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import static net.minecraft.client.renderer.debug.DebugRenderer.renderFilledBox;
 
 /**
  * 高亮无限链接渲染
@@ -33,124 +26,80 @@ import java.util.Objects;
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber
 public class HighlightedLinksRender {
+  //  private static final List<BlockPos> highlightBlockPosList = new ArrayList<>();
+  private static final float red = 0F;
+  private static final float green = 0.5F;
+  private static final float blue = 0F;
+  private static final float alpha = 0.5F;
+
+  @SubscribeEvent
+  public static void tick(ClientTickEvent.Pre event) {
+//    var minecraft = Minecraft.getInstance();
+//    var player = minecraft.player;
+//    var level = minecraft.level;
+//    if (level == null || player == null || !player.isAlive() ||
+//        !player.getMainHandItem().is(Tags.Items.TOOLS_WRENCH)) {
+//      return;
+//    }
+//    highlightBlockPosList.clear();
+//    var playerPos = player.getOnPos();
+//    var aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10), playerPos.offset(-10, -10, -10));
+//    highlightBlockPosList.addAll(BlockPos.betweenClosedStream(aabb)
+//      .filter(pos -> level.getBlockState(pos).is(FfBlockTags.UNLIMITED_LAUNCH))
+//      .toList());
+  }
+
   @SubscribeEvent
   public static void renderLevelStageEvent(RenderLevelStageEvent event) {
-    if (true) {
-      return;
-    }
-
-    Stage stage = event.getStage();
-
+//    testLayerDraw
+    var stage = event.getStage();
     if (stage != Stage.AFTER_TRIPWIRE_BLOCKS) {
       return;
     }
 
-//    if (stage != Stage.AFTER_TRIPWIRE_BLOCKS && stage != Stage.AFTER_TRANSLUCENT_BLOCKS &&
-//        stage != Stage.AFTER_BLOCK_ENTITIES && stage != Stage.AFTER_CUTOUT_BLOCKS &&
-//        stage != Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS && stage != Stage.AFTER_SOLID_BLOCKS) {
-//      return;
-//    }
-
-    Minecraft minecraft = Minecraft.getInstance();
-    ClientLevel level = minecraft.level;
-    LocalPlayer player = minecraft.player;
-    if (Objects.isNull(player) || Objects.isNull(level) || !player.isAlive()) {
+    var minecraft = Minecraft.getInstance();
+    var level = minecraft.level;
+    var player = minecraft.player;
+    if (level == null || player == null || !player.isAlive() ||
+        !player.getMainHandItem().is(Tags.Items.TOOLS_WRENCH)) {
       return;
     }
+    var playerPos = player.getOnPos();
+    var aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10), playerPos.offset(-10, -10, -10));
+    var frustum = event.getFrustum();
+    List<BlockPos> blockPosList = new ArrayList<>();
+    BlockPos.betweenClosedStream(aabb).filter(pos -> {
+      var pos1 = pos;
+      return frustum.isVisible(new AABB(pos)) && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_RECEIVE);
+    });/*.forEach(pos -> {
+    });*/
 
-    final BufferSource buffer = minecraft.renderBuffers().bufferSource();
-    final Frustum frustum = event.getFrustum();
-    final BlockPos playerPos = player.getOnPos();
-    final AABB aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10),
-      playerPos.offset(-10, -10, -10));
+    var buffer = minecraft.renderBuffers().bufferSource();
+    var pose = event.getPoseStack();
 
-    // final List<BlockPos> blockPosList = BlockPos.betweenClosedStream(aabb).filter(
-    //   pos -> frustum.isVisible(new AABB(pos))
-    //     && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_LAUNCH)).toList();
-    final List<BlockPos> blockPosList = BlockPos.betweenClosedStream(aabb).filter(
-      pos -> level.getBlockState(pos).is(ModBlock.QED)).toList();
-    if (blockPosList.isEmpty()) {
-      return;
+    var cameraPos = event.getCamera().getPosition();
+    for (BlockPos blockPos : blockPosList) {
+      pose.pushPose();
+
+      pose.translate(-cameraPos.x - 11, -cameraPos.y - 11, -cameraPos.z - 11);
+
+      pose.pushPose();
+      var blockPosCenter = blockPos.getCenter();
+//      pose.translate(vec.x - cameraPos.x, vec.y - cameraPos.y, vec.z - cameraPos.z);
+//      var distance = player.distanceToSqr(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+
+      renderFilledBox(pose, buffer, new AABB(blockPos), red, green, blue, alpha);
+
+      pose.popPose();
+
+      pose.popPose();
+      String blockText = String.format("block: x%.2f y%.2f z%.2f", blockPosCenter.x, blockPosCenter.y, blockPosCenter.z);
+      String cameraText = String.format("camera: x%.2f y%.2f z%.2f", cameraPos.x, cameraPos.y, cameraPos.z);
+      MutableComponent literal = Component.literal(blockText).append(" ").append(cameraText);
+      minecraft.gui.setOverlayMessage(literal, true);
+
+      buffer.endLastBatch();
     }
-
-    GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    RenderSystem.enableBlend();
-    RenderSystem.disableDepthTest();
-    RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-
-    PoseStack pose = event.getPoseStack();
-    {
-      final Camera camera = event.getCamera();
-      final Vec3 cameraV3 = camera.getPosition().reverse();
-      final double x = cameraV3.x();
-      final double y = cameraV3.y();
-      final double z = cameraV3.z();
-
-      for (BlockPos blockPos : blockPosList) {
-        final float red = 0F;
-        final float green = 0.5F;
-        final float blue = 0F;
-        final float alpha = 0.5F;
-//      pose.translate(centerV3.x, centerV3.y, centerV3.z);
-//      PoseStack pose = new PoseStack();
-//      Matrix4f matrix4f = pose.last().pose();
-
-        final Vec3 vec = blockPos.getCenter();
-        final double f = 0.5;
-
-//      renderFilledBox(pose, buffer, aabb1, red, green, blue, alpha);
-        final var type = RenderType.lines();
-        VertexConsumer consumer = buffer.getBuffer(type);
-        final var poseIn = pose.last().pose();
-
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f),
-            (float) (vec.z - 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f),
-            (float) (vec.z - 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y - 0.5f),
-            (float) (vec.z + 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f),
-            (float) (vec.z + 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y - 0.5f),
-            (float) (vec.z - 0.5f))
-          .setColor(red, green, blue, alpha);
-
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f),
-            (float) (vec.z - 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f),
-            (float) (vec.z - 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x + 0.5f), (float) (vec.y + 0.5f),
-            (float) (vec.z + 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f),
-            (float) (vec.z + 0.5f))
-          .setColor(red, green, blue, alpha);
-        consumer.addVertex(poseIn, (float) (vec.x - 0.5f), (float) (vec.y + 0.5f),
-            (float) (vec.z - 0.5f))
-          .setColor(red, green, blue, alpha);
-
-//        LevelRenderer.renderVoxelShape(pose, consumer, Shapes.block(),
-//          vec.x - 13, vec.y - 13, vec.z - 13,
-//          red, green, blue, alpha, true);
-//        LevelRenderer.addChainedFilledBoxVertices(
-//          pose, consumer,
-//          vec.x - f + 1, vec.y - f + 1, vec.z - f + 1,
-//          vec.x + f + 1, vec.y + f + 1, vec.z + f + 1,
-//          red, green, blue, alpha
-//        );
-        buffer.endBatch(type);
-      }
-    }
-    pose.popPose();
-    RenderSystem.disableBlend();
+    buffer.endBatch();
   }
-
-  /*VoxelShape shape = new ArrayVoxelShape(new BitSetDiscreteVoxelShape());
-  shape.*/
 }

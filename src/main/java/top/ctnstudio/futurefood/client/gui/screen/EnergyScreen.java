@@ -10,19 +10,14 @@ import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.FutureFood;
 
-//todo
 public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   public static final ResourceLocation DEFAULT_BG = FutureFood.modRL("textures/gui/container/energy.png");
   public static final ResourceLocation ENERGY_ICON = FutureFood.modRL("energy_icon");
   private final ResourceLocation textureBg;
   protected EnergyBar listener;
-  private int energy;
-  private int maxEnergy;
   public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title, ResourceLocation textureBg) {
     super(menu, playerInventory, title);
     this.textureBg = textureBg;
-    energy = menu.getEnergy();
-    maxEnergy = menu.getMaxEnergy();
   }
 
   public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title) {
@@ -32,14 +27,15 @@ public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   @Override
   protected void init() {
     super.init();
-    energy = menu.getEnergy();
-    maxEnergy = menu.getMaxEnergy();
-    this.listener = new EnergyBar(leftPos + 1, topPos + 14, energy, maxEnergy);
+    this.listener = new EnergyBar(leftPos + 1, topPos + 14, menu.getEnergy(), menu.getMaxEnergy());
     addRenderableWidget(listener);
   }
 
   @Override
   public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    if (listener != null) {
+      listener.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
+    }
     super.render(guiGraphics, mouseX, mouseY, partialTick);
     renderTooltip(guiGraphics, mouseX, mouseY);
   }
@@ -55,10 +51,8 @@ public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   @Override
   protected void containerTick() {
     super.containerTick();
-    energy = menu.getEnergy();
-    maxEnergy = menu.getMaxEnergy();
     if (listener != null) {
-      listener.setEnergy(energy, maxEnergy);
+      listener.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
     }
   }
 }
