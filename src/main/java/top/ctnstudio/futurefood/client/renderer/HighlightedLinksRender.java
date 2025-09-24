@@ -1,5 +1,6 @@
 package top.ctnstudio.futurefood.client.renderer;
 
+import com.google.common.collect.Sets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -13,10 +14,10 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 import net.neoforged.neoforge.common.Tags;
+import org.checkerframework.checker.units.qual.A;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import static net.minecraft.client.renderer.debug.DebugRenderer.renderFilledBox;
 
@@ -65,14 +66,22 @@ public class HighlightedLinksRender {
       return;
     }
     var playerPos = player.getOnPos();
-    var aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10), playerPos.offset(-10, -10, -10));
+//    var aabb = AABB.encapsulatingFullBlocks(playerPos.offset(10, 10, 10), playerPos.offset(-10, -10, -10));
     var frustum = event.getFrustum();
-    List<BlockPos> blockPosList = new ArrayList<>();
-    BlockPos.betweenClosedStream(aabb).filter(pos -> {
-      var pos1 = pos;
-      return frustum.isVisible(new AABB(pos)) && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_RECEIVE);
-    });/*.forEach(pos -> {
-    });*/
+
+//    final Set<BlockPos> blockPosList =  BlockPos.betweenClosedStream(aabb)
+//      .filter(pos -> frustum.isVisible(new AABB(pos))
+//        && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_RECEIVE))
+//      .collect(Collectors.toSet());
+
+    final Set<BlockPos> blockPosList = Sets.newHashSet();
+    for (int x = -10; x <= 10; x++) for (int y = -10; y <= 10; y++) for (int z = -10; z <= 10; z++) {
+      BlockPos pos = playerPos.offset(x, y, z);
+      if (frustum.isVisible(new AABB(pos))
+        && level.getBlockState(pos).is(FfBlockTags.UNLIMITED_RECEIVE)) {
+        blockPosList.add(pos);
+      }
+    }
 
     var buffer = minecraft.renderBuffers().bufferSource();
     var pose = event.getPoseStack();
@@ -81,7 +90,7 @@ public class HighlightedLinksRender {
     for (BlockPos blockPos : blockPosList) {
       pose.pushPose();
 
-      pose.translate(-cameraPos.x - 11, -cameraPos.y - 11, -cameraPos.z - 11);
+      pose.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 
       pose.pushPose();
       var blockPosCenter = blockPos.getCenter();
