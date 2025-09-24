@@ -20,9 +20,13 @@ public class TestLayerDraw extends LayeredDraw implements LayeredDraw.Layer {
   private final Minecraft minecraft;
   private final Font font;
   private final int fontHeight;
-  public final List<Component> componentList = new ArrayList<>();
+  public final List<Component> componentList;
 
   public TestLayerDraw(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Minecraft minecraft) {
+    componentList = new ArrayList<>();
+    for (int i = 0; i < 1145; i++) {
+      componentList.add(Component.empty());
+    }
     this.minecraft = minecraft;
     font = minecraft.font;
     fontHeight = font.lineHeight;
