@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import top.ctnstudio.futurefood.client.gui.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 public record EnergyStorageData(int energy, int maxEnergy) implements CustomPacketPayload {

@@ -1,0 +1,8 @@
+{
+  "block.futurefood.particle_collider": "粒子对撞器",
+  "block.futurefood.quantum_energy_diffuser": "量子能源扩散器",
+  "block.futurefood.quantum_energy_receiver": "量子能源接收器",
+  "futurefood.gui.energy.tooltip": "能量存储：%s/%s",
+  "item.futurefood.cyber_wrench": "赛博扳手",
+  "itemGroup.futurefood": "未来食物"
+}

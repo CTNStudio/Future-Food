@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "futurefood:block/particle_collider"
+    }
+  }
+}
