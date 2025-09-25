@@ -166,6 +166,9 @@ public class HighlightedLinksRender {
     renderQuads(pose, consumer, matrix4f, minInternalX, maxInternalZ, minX, maxZ, minZ, minInternalZ, red, green, blue, alpha);
   }
 
+  /**
+   * 等腰梯形
+   */
   private static void renderQuads(PoseStack pose, VertexConsumer consumer, Matrix4f matrix4f,
     float pX, float pZ, float p1X, float p1Z, float p2Z, float p3Z,
     int red, int green, int blue, float alpha) {
