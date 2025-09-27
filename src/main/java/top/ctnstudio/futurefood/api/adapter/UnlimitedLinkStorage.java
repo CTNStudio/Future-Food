@@ -49,7 +49,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
 
     Queue<BlockPos> cacheData = this.getCacheData();
 
-    while(!cacheData.isEmpty()) {
+    while (!cacheData.isEmpty()) {
       final BlockPos cache = cacheData.poll();
       var flag = world.getBlockEntity(cache) instanceof IEnergyStorage;
       flag = flag
@@ -62,8 +62,9 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     }
   }
 
-  public final void addLinkCache(BlockPos pos) {
-    this.cacheData.add(pos);
+  @Nonnull
+  public final Queue<BlockPos> getCacheData() {
+    return cacheData;
   }
 
   @Override
@@ -71,30 +72,21 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     return linkSet.remove(pos);
   }
 
-  @Nonnull
-  public final Set<BlockPos> getLinkSet() {
-    return ImmutableSet.copyOf(linkSet);
-  }
-
-  @Nonnull
-  public final Queue<BlockPos> getCacheData() {
-    return cacheData;
-  }
-
-  /**
-   * 获取一个链接的方块
-   *
-   * @param pos 要获取的链接方块位置
-   * @return 链接的方块
-   */
-  @CheckForNull
-  public BlockState getLinkedBlock(BlockPos pos) {
-    if (Objects.isNull(this.getLevel())) {
-      return null;
+  @Override
+  public boolean linkBlock(Level level, BlockPos pos) {
+    if (level == null || level.isClientSide) {
+      linkFailure(pos);
+      return false;
     }
 
-    BlockState blockState = getLevel().getBlockState(pos);
-    return !blockState.isEmpty() ? blockState : null;
+    IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(level, pos);
+    if (capability == null) {
+      linkFailure(pos);
+      return false;
+    }
+
+    linkSet.add(pos);
+    return true;
   }
 
   @Override
@@ -113,6 +105,22 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     );
     nbt.put("linkList", tags);
     return nbt;
+  }
+
+  /**
+   * 获取一个链接的方块
+   *
+   * @param pos 要获取的链接方块位置
+   * @return 链接的方块
+   */
+  @CheckForNull
+  public BlockState getLinkedBlock(BlockPos pos) {
+    if (Objects.isNull(this.getLevel())) {
+      return null;
+    }
+
+    BlockState blockState = getLevel().getBlockState(pos);
+    return !blockState.isEmpty() ? blockState : null;
   }
 
   @Override
@@ -139,20 +147,12 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     });
   }
 
-  @Override
-  public boolean linkBlock(Level level, BlockPos pos) {
-    if (level == null || level.isClientSide) {
-      linkFailure(pos);
-      return false;
-    }
+  public final void addLinkCache(BlockPos pos) {
+    this.cacheData.add(pos);
+  }
 
-    IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(level, pos);
-    if (capability == null) {
-      linkFailure(pos);
-      return false;
-    }
-
-    linkSet.add(pos);
-    return true;
+  @Nonnull
+  public final Set<BlockPos> getLinkSet() {
+    return ImmutableSet.copyOf(linkSet);
   }
 }

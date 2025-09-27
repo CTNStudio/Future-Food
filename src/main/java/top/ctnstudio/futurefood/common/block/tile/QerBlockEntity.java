@@ -9,7 +9,7 @@ import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
+import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 
 public class QerBlockEntity extends EnergyStorageBlockEntity implements IUnlimitedEntityReceive {
 

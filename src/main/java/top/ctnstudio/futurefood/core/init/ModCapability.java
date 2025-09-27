@@ -1,7 +1,6 @@
 package top.ctnstudio.futurefood.core.init;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -9,10 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage;
 import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.tile.EnergyStorageBlockEntity;
-
-import java.util.Optional;
 
 @EventBusSubscriber
 public final class ModCapability {
@@ -28,24 +24,8 @@ public final class ModCapability {
           ((EnergyStorageBlockEntity) be1).externalGetItemHandler(d));
       }
     });
-  }
 
-  /**
-   * 获取反向方向
-   *
-   * @param be   方块实体
-   * @param side 方向
-   * @return 是否是反向方向
-   */
-  public static boolean getOppositeDirection(BlockEntity be, Direction side) {
-    if (side == null) {
-      return false;
-    }
-    Optional<Direction> optionalValue = be.getBlockState().getOptionalValue(QedEntityBlock.FACING);
-    if (optionalValue.isEmpty()) {
-      return false;
-    }
-    Direction value = optionalValue.get();
-    return value == side.getOpposite();
+    event.registerBlockEntity(ModCapabilitys.Block.UNLIMITED_LINK_STORAGE, ModTileEntity.QED.get(),
+      (be, v) -> be.getUnlimitedStorage());
   }
 }

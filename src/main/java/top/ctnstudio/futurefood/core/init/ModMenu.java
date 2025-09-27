@@ -15,11 +15,13 @@ public final class ModMenu {
   public static final DeferredRegister<MenuType<?>> MENU =
     DeferredRegister.create(BuiltInRegistries.MENU, FutureFood.ID);
 
-  public static final Supplier<MenuType<EnergyMenu>> ENERGY_MENU =
-    MENU.register("energy_menu", () -> IMenuTypeExtension.create(EnergyMenu::new));
-
   private static <T extends AbstractContainerMenu>
   Supplier<MenuType<T>> register(String key, IContainerFactory<T> factory) {
     return MENU.register(key, () -> IMenuTypeExtension.create(factory));
   }
+
+  public static final Supplier<MenuType<EnergyMenu>> ENERGY_MENU =
+    MENU.register("energy_menu", () -> IMenuTypeExtension.create(EnergyMenu::new));
+
+
 }

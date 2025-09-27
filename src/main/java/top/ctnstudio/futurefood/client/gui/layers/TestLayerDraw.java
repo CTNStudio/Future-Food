@@ -17,10 +17,10 @@ import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class TestLayerDraw extends LayeredDraw implements LayeredDraw.Layer {
+  public final List<Component> componentList;
   private final Minecraft minecraft;
   private final Font font;
   private final int fontHeight;
-  public final List<Component> componentList;
 
   public TestLayerDraw(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Minecraft minecraft) {
     componentList = new ArrayList<>();

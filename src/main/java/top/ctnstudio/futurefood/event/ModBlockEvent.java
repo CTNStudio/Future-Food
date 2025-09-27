@@ -25,6 +25,23 @@ public final class ModBlockEvent {
     handle(event.getLevel(), event.getPos());
   }
 
+  private static void handle(final LevelAccessor world, final BlockPos pos) {
+    if (world.isClientSide()) {
+      return;
+    }
+
+    final AABB aabb = AABB.encapsulatingFullBlocks(
+      pos.offset(-5, -5, -5),
+      pos.offset(5, 5, 5));
+
+    BlockPos.betweenClosedStream(aabb).forEach((pos1) -> {
+      final var tile = world.getBlockEntity(pos1);
+      if (tile instanceof QedBlockEntity qed) {
+        qed.getUnlimitedStorage().addLinkCache(pos);
+      }
+    });
+  }
+
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public static void onBlockPlaceEvent(final BlockEvent.EntityPlaceEvent event) {
     final var tile = event.getLevel().getBlockEntity(event.getPos());
@@ -48,22 +65,5 @@ public final class ModBlockEvent {
     }
 
     handle(event.getLevel(), blockPos);
-  }
-
-  private static void handle(final LevelAccessor world, final BlockPos pos) {
-    if (world.isClientSide()) {
-      return;
-    }
-
-    final AABB aabb = AABB.encapsulatingFullBlocks(
-      pos.offset(-5, -5, -5),
-      pos.offset(5, 5, 5));
-
-    BlockPos.betweenClosedStream(aabb).forEach((pos1) -> {
-      final var tile = world.getBlockEntity(pos1);
-      if (tile instanceof QedBlockEntity qed) {
-        qed.getUnlimitedStorage().addLinkCache(pos);
-      }
-    });
   }
 }

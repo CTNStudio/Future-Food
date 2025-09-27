@@ -1,30 +1,858 @@
 {
-  "variants": {
-    "facing=down": {
-      "model": "futurefood:block/quantum_energy_diffuser",
-      "x": 180
+  "multipart": [
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/default",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "down"
+              }
+            ]
+          },
+          {
+            "activate": "default"
+          }
+        ]
+      }
     },
-    "facing=east": {
-      "model": "futurefood:block/quantum_energy_diffuser",
-      "x": 90,
-      "y": 90
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/work",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "down"
+              }
+            ]
+          },
+          {
+            "activate": "work"
+          }
+        ]
+      }
     },
-    "facing=north": {
-      "model": "futurefood:block/quantum_energy_diffuser",
-      "x": 90
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "down"
+              }
+            ]
+          },
+          {
+            "activate": "flash"
+          }
+        ]
+      }
     },
-    "facing=south": {
-      "model": "futurefood:block/quantum_energy_diffuser",
-      "x": 90,
-      "y": 180
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash1",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "down"
+              }
+            ]
+          },
+          {
+            "activate": "flash1"
+          }
+        ]
+      }
     },
-    "facing=up": {
-      "model": "futurefood:block/quantum_energy_diffuser"
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/default",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "down"
+              }
+            ]
+          },
+          {
+            "light": "default"
+          }
+        ]
+      }
     },
-    "facing=west": {
-      "model": "futurefood:block/quantum_energy_diffuser",
-      "x": 90,
-      "y": 270
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/work",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "down"
+              }
+            ]
+          },
+          {
+            "light": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/abnormal",
+        "x": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "down"
+              }
+            ]
+          },
+          {
+            "light": "abnormal"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/default"
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "up"
+              }
+            ]
+          },
+          {
+            "activate": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/work"
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "up"
+              }
+            ]
+          },
+          {
+            "activate": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash"
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "up"
+              }
+            ]
+          },
+          {
+            "activate": "flash"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash1"
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "up"
+              }
+            ]
+          },
+          {
+            "activate": "flash1"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/default"
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "up"
+              }
+            ]
+          },
+          {
+            "light": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/work"
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "up"
+              }
+            ]
+          },
+          {
+            "light": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/abnormal"
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "up"
+              }
+            ]
+          },
+          {
+            "light": "abnormal"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/default",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "north"
+              }
+            ]
+          },
+          {
+            "activate": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/work",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "north"
+              }
+            ]
+          },
+          {
+            "activate": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "north"
+              }
+            ]
+          },
+          {
+            "activate": "flash"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash1",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "north"
+              }
+            ]
+          },
+          {
+            "activate": "flash1"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/default",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "north"
+              }
+            ]
+          },
+          {
+            "light": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/work",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "north"
+              }
+            ]
+          },
+          {
+            "light": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/abnormal",
+        "x": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "north"
+              }
+            ]
+          },
+          {
+            "light": "abnormal"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/default",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "south"
+              }
+            ]
+          },
+          {
+            "activate": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/work",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "south"
+              }
+            ]
+          },
+          {
+            "activate": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "south"
+              }
+            ]
+          },
+          {
+            "activate": "flash"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash1",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "south"
+              }
+            ]
+          },
+          {
+            "activate": "flash1"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/default",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "south"
+              }
+            ]
+          },
+          {
+            "light": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/work",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "south"
+              }
+            ]
+          },
+          {
+            "light": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/abnormal",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "south"
+              }
+            ]
+          },
+          {
+            "light": "abnormal"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/default",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "west"
+              }
+            ]
+          },
+          {
+            "activate": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/work",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "west"
+              }
+            ]
+          },
+          {
+            "activate": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "west"
+              }
+            ]
+          },
+          {
+            "activate": "flash"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash1",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "west"
+              }
+            ]
+          },
+          {
+            "activate": "flash1"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/default",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "west"
+              }
+            ]
+          },
+          {
+            "light": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/work",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "west"
+              }
+            ]
+          },
+          {
+            "light": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/abnormal",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "west"
+              }
+            ]
+          },
+          {
+            "light": "abnormal"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/default",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "east"
+              }
+            ]
+          },
+          {
+            "activate": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/work",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "east"
+              }
+            ]
+          },
+          {
+            "activate": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "east"
+              }
+            ]
+          },
+          {
+            "activate": "flash"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/base/flash1",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "east"
+              }
+            ]
+          },
+          {
+            "activate": "flash1"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/default",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "east"
+              }
+            ]
+          },
+          {
+            "light": "default"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/work",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "east"
+              }
+            ]
+          },
+          {
+            "light": "work"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "futurefood:block/quantum_energy_diffuser/display_light/abnormal",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "AND": [
+              {
+                "facing": "east"
+              }
+            ]
+          },
+          {
+            "light": "abnormal"
+          }
+        ]
+      }
     }
-  }
+  ]
 }

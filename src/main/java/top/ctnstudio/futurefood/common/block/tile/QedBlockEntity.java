@@ -20,10 +20,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Queue;
 
-import static top.ctnstudio.futurefood.core.init.ModCapability.getOppositeDirection;
+import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 
 public class QedBlockEntity extends EnergyStorageBlockEntity {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
+  protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
   /**
    * 剩余传递计时
    */
@@ -32,7 +33,12 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
    * 最大传递计时
    */
   private int maxRemainingTime; // 使用变量以方便后续做升级
-  protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
+
+  public QedBlockEntity(BlockPos pos, BlockState blockState) {
+    this(ModTileEntity.QED.get(), pos, blockState,
+      new ModEnergyStorage(20480, 4096, 4096),
+      DEFAULT_MAX_REMAINING_TIME);
+  }
 
   public QedBlockEntity(BlockEntityType<? extends QedBlockEntity> type, BlockPos pos,
                         BlockState blockState, ModEnergyStorage energyStorage,
@@ -42,10 +48,35 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     linkStorage = new TileEntityUnlimitedLinkStorage(this);
   }
 
-  public QedBlockEntity(BlockPos pos, BlockState blockState) {
-    this(ModTileEntity.QED.get(), pos, blockState,
-      new ModEnergyStorage(20480, 4096, 4096),
-      DEFAULT_MAX_REMAINING_TIME);
+  @Override
+  protected void loadAdditional(CompoundTag nbt, Provider provider) {
+    super.loadAdditional(nbt, provider);
+    linkStorage.deserializeNBT(provider, nbt);
+    remainingTime = nbt.getInt("remainingTime");
+    if (!nbt.contains("maxRemainingTime")) {
+      maxRemainingTime = DEFAULT_MAX_REMAINING_TIME;
+    } else {
+      maxRemainingTime = nbt.getInt("maxRemainingTime");
+    }
+
+    final var pos = this.getBlockPos();
+  }
+
+  @Override
+  protected void saveAdditional(CompoundTag nbt, Provider provider) {
+    super.saveAdditional(nbt, provider);
+    linkStorage.serializeNBT(provider);
+    nbt.putInt("remainingTime", remainingTime);
+    nbt.putInt("maxRemainingTime", maxRemainingTime);
+  }
+
+  @Override
+  public IEnergyStorage externalGetEnergyStorage(@Nullable Direction direction) {
+    if (direction == null) {
+      return energyStorage;
+    }
+    return !getOppositeDirection(this, direction) ? null :
+      super.externalGetEnergyStorage(direction);
   }
 
   @Override
@@ -76,6 +107,10 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
       resetRemainingTime();
     }
     remainingTime--;
+  }
+
+  public int getRemainingTime() {
+    return remainingTime;
   }
 
   public void extractItemEnergy() {
@@ -122,32 +157,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     });
   }
 
-  @Override
-  protected void loadAdditional(CompoundTag nbt, Provider provider) {
-    super.loadAdditional(nbt, provider);
-    linkStorage.deserializeNBT(provider, nbt);
-    remainingTime = nbt.getInt("remainingTime");
-    if (!nbt.contains("maxRemainingTime")) {
-      maxRemainingTime = DEFAULT_MAX_REMAINING_TIME;
-    } else {
-      maxRemainingTime = nbt.getInt("maxRemainingTime");
-    }
-
-    final var pos = this.getBlockPos();
-  }
-
-  @Override
-  protected void saveAdditional(CompoundTag nbt, Provider provider) {
-    super.saveAdditional(nbt, provider);
-    linkStorage.serializeNBT(provider);
-    nbt.putInt("remainingTime", remainingTime);
-    nbt.putInt("maxRemainingTime", maxRemainingTime);
-  }
-
-  public int getRemainingTime() {
-    return remainingTime;
-  }
-
   /**
    * 重置传递时间
    */
@@ -160,12 +169,8 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
   }
 
   @Override
-  public IEnergyStorage externalGetEnergyStorage(@Nullable Direction direction) {
-    if (direction == null) {
-      return energyStorage;
-    }
-    return !getOppositeDirection(this, direction) ? null :
-      super.externalGetEnergyStorage(direction);
+  public void onChunkUnloaded() {
+    final var pos = this.getBlockPos();
   }
 
   @Override
@@ -173,12 +178,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity {
     final var pos = this.getBlockPos();
   }
 
-  @Override
-  public void onChunkUnloaded() {
-    final var pos = this.getBlockPos();
-  }
-
-  public UnlimitedLinkStorage getUnlimitedStorage() {
+  public IUnlimitedLinkStorage getUnlimitedStorage() {
     return linkStorage;
   }
 }
