@@ -1,0 +1,9 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "block/quantum_energy_diffuser/energy_ball",
+      "prefix": "block/quantum_energy_diffuser/energy_ball/"
+    }
+  ]
+}

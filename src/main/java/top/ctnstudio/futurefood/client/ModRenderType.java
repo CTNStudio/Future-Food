@@ -1,7 +1,6 @@
 package top.ctnstudio.futurefood.client;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +9,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.function.Function;
 
+import static com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS;
 import static net.minecraft.client.renderer.RenderStateShard.*;
 import static net.minecraft.client.renderer.RenderType.OutlineProperty.AFFECTS_OUTLINE;
 
@@ -18,7 +18,7 @@ public class ModRenderType {
   public static final Function<DepthTestStateShard, RenderType> HIGHLIGHTED = depth -> RenderType.create(
     "highlighted",
     DefaultVertexFormat.POSITION_COLOR,
-    Mode.QUADS,
+    QUADS,
     1536,
     RenderType.CompositeState.builder()
       .setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
@@ -33,12 +33,12 @@ public class ModRenderType {
   public static final Function<ResourceLocation, RenderType> ENERGY_BALL = texture -> RenderType.create(
     "energy_ball",
     DefaultVertexFormat.BLOCK,
-    Mode.QUADS,
+    QUADS,
     1536,
     false,
     true,
     RenderType.CompositeState.builder()
-      .setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
+      .setShaderState(POSITION_TEX_SHADER) // RENDERTYPE_ENERGY_SWIRL_SHADER
       .setLightmapState(NO_LIGHTMAP)
       .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
       .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -62,4 +62,22 @@ public class ModRenderType {
   public static RenderType getEnergyBall(ResourceLocation rl) {
     return ENERGY_BALL.apply(rl);
   }
+
+  private static RenderType createEnergyBall(ResourceLocation location) {
+    return RenderType.create(
+      "energy_ball",
+      DefaultVertexFormat.POSITION_TEX,
+      QUADS,
+      256,
+      false,
+      true,
+      RenderType.CompositeState.builder()
+        .setShaderState(POSITION_TEX_SHADER)
+        .setTextureState(new RenderStateShard.TextureStateShard(location, false, false))
+        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+        .setWriteMaskState(COLOR_WRITE)
+        .createCompositeState(false)
+    );
+  }
+
 }
