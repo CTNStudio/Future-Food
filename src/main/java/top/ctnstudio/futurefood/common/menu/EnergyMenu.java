@@ -27,10 +27,6 @@ public class EnergyMenu extends AbstractContainerMenu {
     this(containerId, container, new ItemStackHandler(1), new SimpleContainerData(2), null);
   }
 
-  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData) {
-    this(containerId, container, dataInventory, energyData, null);
-  }
-
   public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data) {
     super(ENERGY_MENU.get(), containerId);
     this.container = container;
@@ -66,6 +62,15 @@ public class EnergyMenu extends AbstractContainerMenu {
   protected void addOtherSlot(IItemHandler dataInventory, ContainerData data, int slots) {
     for (int i = 0; i < slots; i++) {
     }
+  }
+
+  public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData) {
+    this(containerId, container, dataInventory, energyData, null);
+  }
+
+  @Override
+  public void sendAllDataToRemote() {
+    super.sendAllDataToRemote();
   }
 
   /**
@@ -115,11 +120,6 @@ public class EnergyMenu extends AbstractContainerMenu {
     return itemstack;
   }
 
-  @Override
-  public void sendAllDataToRemote() {
-    super.sendAllDataToRemote();
-  }
-
   /**
    * 物品移动逻辑
    *
@@ -164,12 +164,12 @@ public class EnergyMenu extends AbstractContainerMenu {
     return energyData.get(1);
   }
 
-  public void setEnergyData(EnergyData energyData) {
-    this.energyData = energyData;
-  }
-
   public ContainerData getEnergyData() {
     return energyData;
+  }
+
+  public void setEnergyData(EnergyData energyData) {
+    this.energyData = energyData;
   }
 
   public static final class EnergyData implements ContainerData {

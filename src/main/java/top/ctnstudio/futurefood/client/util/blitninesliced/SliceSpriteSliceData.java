@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
+package top.ctnstudio.futurefood.client.util.blitninesliced;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

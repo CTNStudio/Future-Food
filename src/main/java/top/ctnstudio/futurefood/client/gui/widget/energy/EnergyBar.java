@@ -16,22 +16,18 @@ public class EnergyBar extends ImageWidget.Sprite {
   private int energy;
   private int maxEnergy;
 
+  public EnergyBar(int x, int y, int energy, int maxEnergy) {
+    this(x, y, 12, 39, TEXTURE, energy, maxEnergy);
+  }
+
   public EnergyBar(int x, int y, int width, int height, ResourceLocation sprite, int energy, int maxEnergy) {
     super(x, y, width, height, sprite);
     this.energy = energy;
     this.maxEnergy = maxEnergy;
   }
 
-  public EnergyBar(int x, int y, int energy, int maxEnergy) {
-    this(x, y, 12, 39, TEXTURE, energy, maxEnergy);
-  }
-
   public void setMaxEnergy(int maxEnergy) {
     this.maxEnergy = maxEnergy;
-  }
-
-  public void setEnergy(int energy) {
-    this.energy = energy;
   }
 
   public void setEnergy(int energy, int maxEnergy) {
@@ -41,6 +37,10 @@ public class EnergyBar extends ImageWidget.Sprite {
 
   public int getEnergy() {
     return this.energy;
+  }
+
+  public void setEnergy(int energy) {
+    this.energy = energy;
   }
 
   @Override

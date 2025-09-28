@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.gui.tool.blitninesliced;
+package top.ctnstudio.futurefood.client.util.blitninesliced;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

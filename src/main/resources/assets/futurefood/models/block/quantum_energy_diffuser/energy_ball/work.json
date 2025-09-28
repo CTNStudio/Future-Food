@@ -1,0 +1,344 @@
+{
+  "format_version": "1.9.0",
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/cube_all",
+  "ambientocclusion": false,
+  "texture_size": [
+    128,
+    128
+  ],
+  "textures": {
+    "0": "futurefood:block/quantum_energy_diffuser/energy_ball/work",
+    "particle": "futurefood:block/quantum_energy_diffuser/energy_ball/work"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        16,
+        4
+      ],
+      "to": [
+        12,
+        24,
+        12
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "y",
+        "origin": [
+          8,
+          19,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            6.625,
+            8.625,
+            7.625,
+            9.625
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            9.125,
+            2.25,
+            10.125,
+            3.25
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            9.375,
+            1,
+            10.375
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            9.375,
+            0,
+            10.375,
+            1
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            2.125,
+            10.375,
+            1.125,
+            9.375
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            3.25,
+            9.375,
+            2.25,
+            10.375
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "cube inverted",
+      "from": [
+        13.99,
+        25.99,
+        13.99
+      ],
+      "to": [
+        2.01,
+        14.01,
+        2.01
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "y",
+        "origin": [
+          8,
+          19,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            5.25,
+            7,
+            6.75,
+            8.5
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            7,
+            5.25,
+            8.5,
+            6.75
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            6.875,
+            7,
+            8.375,
+            8.5
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            7.125,
+            1.5,
+            8.625
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            3.125,
+            8.625,
+            1.625,
+            7.125
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            9.25,
+            0,
+            7.75,
+            1.5
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "cube inverted",
+      "from": [
+        12.99,
+        24.99,
+        12.99
+      ],
+      "to": [
+        3.01,
+        15.01,
+        3.01
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "y",
+        "origin": [
+          8,
+          19,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            7.75,
+            1.625,
+            9,
+            2.875
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            7.75,
+            3,
+            9,
+            4.25
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.5,
+            6.875,
+            9.75,
+            8.125
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            8.5,
+            8.25,
+            9.75,
+            9.5
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            9.875,
+            5.625,
+            8.625,
+            4.375
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            6.5,
+            8.625,
+            5.25,
+            9.875
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "cube inverted",
+      "from": [
+        14.5,
+        26.5,
+        14.5
+      ],
+      "to": [
+        1.5,
+        13.5,
+        1.5
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "y",
+        "origin": [
+          8,
+          19,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            3.5,
+            5.25,
+            5.125,
+            6.875
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            5.25,
+            5.25,
+            6.875,
+            6.875
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            6,
+            0,
+            7.625,
+            1.625
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            6,
+            1.75,
+            7.625,
+            3.375
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            7.625,
+            5.125,
+            6,
+            3.5
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            5.125,
+            7,
+            3.5,
+            8.625
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "energy_ball",
+      "origin": [
+        8,
+        8,
+        8
+      ],
+      "color": 0,
+      "children": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

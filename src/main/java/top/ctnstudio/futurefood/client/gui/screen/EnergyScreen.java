@@ -15,13 +15,14 @@ public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
   public static final ResourceLocation ENERGY_ICON = FutureFood.modRL("energy_icon");
   private final ResourceLocation textureBg;
   protected EnergyBar listener;
-  public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title, ResourceLocation textureBg) {
-    super(menu, playerInventory, title);
-    this.textureBg = textureBg;
-  }
 
   public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title) {
     this(menu, playerInventory, title, DEFAULT_BG);
+  }
+
+  public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title, ResourceLocation textureBg) {
+    super(menu, playerInventory, title);
+    this.textureBg = textureBg;
   }
 
   @Override

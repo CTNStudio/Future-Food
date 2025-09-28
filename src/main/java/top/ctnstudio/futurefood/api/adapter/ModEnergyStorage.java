@@ -37,25 +37,25 @@ public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage
   }
 
   @Override
-  public void setMaxExtract(@Nonnegative int maxExtract) {
-    this.maxExtract = maxExtract;
-  }
-
-  @Override
-  public void setMaxReceive(@Nonnegative int maxReceive) {
-    this.maxReceive = maxReceive;
-  }
-
-  @Override
   @Nonnegative
   public int getMaxExtract() {
     return maxExtract;
   }
 
   @Override
+  public void setMaxExtract(@Nonnegative int maxExtract) {
+    this.maxExtract = maxExtract;
+  }
+
+  @Override
   @Nonnegative
   public int getMaxReceive() {
     return maxReceive;
+  }
+
+  @Override
+  public void setMaxReceive(@Nonnegative int maxReceive) {
+    this.maxReceive = maxReceive;
   }
 
   @Override

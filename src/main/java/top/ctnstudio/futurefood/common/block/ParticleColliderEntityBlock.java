@@ -25,16 +25,16 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
     simpleCodec(ParticleColliderEntityBlock::new);
 
   public ParticleColliderEntityBlock() {
-    this(Properties.of()
+    this(Properties.of());
+  }
+
+  public ParticleColliderEntityBlock(Properties properties) {
+    super(properties
       .noOcclusion()
       .isValidSpawn(ModBlock.argumentNever())
       .isRedstoneConductor(ModBlock.never())
       .isSuffocating(ModBlock.never())
       .isViewBlocking(ModBlock.never()));
-  }
-
-  private ParticleColliderEntityBlock(Properties properties) {
-    super(properties);
   }
 
   @Override
@@ -46,13 +46,13 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
   }
 
   @Override
-  protected MapCodec<? extends HorizontalDirectionalEntityBlock> codec() {
-    return CODEC;
+  protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
   }
 
   @Override
-  public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-    return new ParticleColliderBlockEntity(pos, state);
+  protected MapCodec<? extends HorizontalDirectionalEntityBlock> codec() {
+    return CODEC;
   }
 
   @Override
@@ -61,7 +61,7 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
   }
 
   @Override
-  protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-    return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+  public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    return new ParticleColliderBlockEntity(pos, state);
   }
 }

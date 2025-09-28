@@ -21,7 +21,7 @@ public abstract class DirectionalEntityBlock<T extends BlockEntity> extends Base
 
   protected DirectionalEntityBlock(Properties properties) {
     super(properties);
-    this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP));
   }
 
   @Override

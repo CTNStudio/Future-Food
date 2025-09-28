@@ -22,11 +22,6 @@ public record EnergyStorageData(int energy, int maxEnergy) implements CustomPack
     EnergyStorageData::new
   );
 
-  @Override
-  public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
-    return TYPE;
-  }
-
   /**
    * 发送到服务端
    */
@@ -47,5 +42,10 @@ public record EnergyStorageData(int energy, int maxEnergy) implements CustomPack
       energyData.set(0, data.energy());
       energyData.set(1, data.maxEnergy());
     });
+  }
+
+  @Override
+  public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+    return TYPE;
   }
 }

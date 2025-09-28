@@ -5,20 +5,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -44,44 +47,32 @@ import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLeve
 
 public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
-
+  public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
+  public static final EnumProperty<Light> LIGHT = EnumProperty.create("light", Light.class);
   public QedEntityBlock() {
-    super(Properties.of()
-      .noOcclusion()
+    this(Properties.of());
+  }
+
+  public QedEntityBlock(Properties properties) {
+    super(properties.noOcclusion()
       .isValidSpawn(ModBlock.argumentNever())
       .isRedstoneConductor(ModBlock.never())
       .isSuffocating(ModBlock.never())
       .isViewBlocking(ModBlock.never()));
-  }
-
-  public QedEntityBlock(Properties properties) {
-    super(properties);
-  }
-
-//  @Override
-//  protected @org.jetbrains.annotations.Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-//    return super.getMenuProvider(state, level, pos);
-//  }
-
-  @Override
-  protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-    if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-      serverPlayer.openMenu(state.getMenuProvider(level, pos));
-    }
-    return InteractionResult.sidedSuccess(level.isClientSide);
+    this.registerDefaultState(this.stateDefinition.any()
+      .setValue(ACTIVATE, Activate.DEFAULT)
+      .setValue(LIGHT, Light.DEFAULT)
+    );
   }
 
   @Override
-  public void setPlacedBy(Level level, BlockPos pos, BlockState state,
-                          @Nullable LivingEntity placer, ItemStack stack) {
-//    if (level.isClientSide) {
-//      return;
-//    }
-//    buildUnlimitedLinks(level, pos, state);
+  protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+    super.createBlockStateDefinition(builder);
+    builder.add(ACTIVATE, LIGHT);
   }
 
   /**
-   * 建立无限链接
+   * 与周围方块建立无限链接
    */
   public void buildUnlimitedLinks(Level level, BlockPos pos, BlockState state) {
     BoundingBox mutableBox = BoundingBox.fromCorners(pos.offset(5, 5, 5), pos.offset(-5, -5, -5));
@@ -93,14 +84,6 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
     blockStateMap.entrySet().stream()
       .filter(entry -> isLinkable(level, entry.getKey(), entry.getValue()))
       .forEach(entry -> linkBlock(level, entry.getKey(), blockEntity.getUnlimitedStorage()));
-  }
-
-  @Override
-  protected void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack,
-                                 boolean dropExperience) {
-    final var tile = getBlockEntity(level, pos);
-    EntityItemUtil.summonLootItems(level, pos, tile.getEnergyItemStack().copy());
-    tile.clearContent();
   }
 
   public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {
@@ -130,15 +113,15 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
     return RenderShape.MODEL;
   }
 
+  @Override
+  public BlockState getStateForPlacement(BlockPlaceContext context) {
+    return this.defaultBlockState().setValue(FACING, context.getClickedFace());
+  }
+
   @Nullable
   @Override
   public QedBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
     return new QedBlockEntity(pos, state);
-  }
-
-  @Override
-  public BlockState getStateForPlacement(BlockPlaceContext context) {
-    return this.defaultBlockState().setValue(FACING, context.getClickedFace());
   }
 
   @Override
@@ -153,9 +136,11 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
   }
 
   @Override
-  protected VoxelShape getVisualShape(BlockState state, BlockGetter getter,
-    BlockPos pos, CollisionContext context) {
-    return Shapes.empty();
+  protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+      serverPlayer.openMenu(state.getMenuProvider(level, pos));
+    }
+    return InteractionResult.sidedSuccess(level.isClientSide);
   }
 
   @Override
@@ -165,9 +150,79 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
   }
 
   @Override
+  protected VoxelShape getVisualShape(BlockState state, BlockGetter getter,
+                                      BlockPos pos, CollisionContext context) {
+    return Shapes.empty();
+  }
+
+  @Override
+  protected void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack,
+                                 boolean dropExperience) {
+    final var tile = getBlockEntity(level, pos);
+    EntityItemUtil.summonLootItems(level, pos, tile.getEnergyItemStack().copy());
+    tile.clearContent();
+  }
+
+  @Override
   protected boolean propagatesSkylightDown(BlockState state, BlockGetter getter,
     BlockPos pos) {
     return true;
   }
 
+  public enum Activate implements StringRepresentable {
+    DEFAULT(0, "default"),
+    WORK(1, "work"),
+    FLASH(2, "flash"),
+    FLASH1(3, "flash1"),
+    ;
+
+    private final int id;
+    private final String name;
+
+    Activate(int id, String name) {
+      this.id = id;
+      this.name = name;
+    }
+
+    @Override
+    public @NotNull String getSerializedName() {
+      return name;
+    }
+
+    public int getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
+  }
+
+  public enum Light implements StringRepresentable {
+    DEFAULT(0, "default"),
+    WORK(1, "work"),
+    ABNORMAL(2, "abnormal"),
+    ;
+
+    private final int id;
+    private final String name;
+
+    Light(int id, String name) {
+      this.id = id;
+      this.name = name;
+    }
+
+    @Override
+    public @NotNull String getSerializedName() {
+      return name;
+    }
+
+    public int getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
+  }
 }

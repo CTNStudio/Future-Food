@@ -52,16 +52,25 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-    BlockState blockState, ModEnergyStorage energyStorage) {
-    this(type, pos, blockState, new ItemStackHandler(1), energyStorage);
-  }
-
-  public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
     BlockState blockState, ItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
     energyData = new EnergyData(this.energyStorage);
+  }
+
+  public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
+                                  BlockState blockState, ModEnergyStorage energyStorage) {
+    this(type, pos, blockState, new ItemStackHandler(1), energyStorage);
+  }
+
+  /**
+   * 处理接收的数据
+   */
+  @Override
+  public void handleUpdateTag(CompoundTag tag, Provider provider) {
+    super.handleUpdateTag(tag, provider);
+    loadAdditional(tag, provider);
   }
 
   /**
@@ -93,16 +102,6 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   /**
-   * 获取更新nbt
-   */
-  @Override
-  public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-    CompoundTag tag = super.getUpdateTag(provider);
-    saveAdditional(tag, provider);
-    return tag;
-  }
-
-  /**
    * 获取更新数据包
    */
   @Override
@@ -111,12 +110,13 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   /**
-   * 处理接收的数据
+   * 获取更新nbt
    */
   @Override
-  public void handleUpdateTag(CompoundTag tag, Provider provider) {
-    super.handleUpdateTag(tag, provider);
-    loadAdditional(tag, provider);
+  public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+    CompoundTag tag = super.getUpdateTag(provider);
+    saveAdditional(tag, provider);
+    return tag;
   }
 
   @Override
@@ -200,6 +200,15 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     return !this.isRemoved() && player.canInteractWithEntity(new AABB(getBlockPos()), 4.0);
   }
 
+  protected List<ItemStack> getItems() {
+    List<ItemStack> list = new ArrayList<>();
+    int slots = itemHandler.getSlots();
+    for (int i = 0; i < slots; i++) {
+      itemHandler.getStackInSlot(i);
+    }
+    return list;
+  }
+
   @Override
   public void clearContent() {
     if (getLevel() != null && getLevel().isClientSide) {
@@ -209,15 +218,6 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     for (ItemStack stack : getItems()) {
       EntityItemUtil.summonLootItems(serverLevel, getBlockPos(), stack);
     }
-  }
-
-  protected List<ItemStack> getItems() {
-    List<ItemStack> list = new ArrayList<>();
-    int slots = itemHandler.getSlots();
-    for (int i = 0; i < slots; i++) {
-      itemHandler.getStackInSlot(i);
-    }
-    return list;
   }
 
   @Override
