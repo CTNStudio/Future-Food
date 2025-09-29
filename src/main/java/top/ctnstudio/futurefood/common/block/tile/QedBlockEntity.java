@@ -25,6 +25,8 @@ import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 public class QedBlockEntity extends EnergyStorageBlockEntity {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
+  public float sphereTick;
+
   /**
    * 剩余传递计时
    */

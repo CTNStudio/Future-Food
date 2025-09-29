@@ -2,7 +2,12 @@ package top.ctnstudio.futurefood.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -10,9 +15,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import top.ctnstudio.futurefood.client.ModModelLayer;
 import top.ctnstudio.futurefood.client.ModRenderType;
 import top.ctnstudio.futurefood.common.block.DirectionalEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
@@ -21,29 +28,78 @@ import top.ctnstudio.futurefood.common.block.QedEntityBlock.Light;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.FutureFood;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEntityRenderer<T> {
   public static final ResourceLocation ENERGY_BALL_SHEET = FutureFood.modRL("energy_ball");
-  public static final RenderType ENERGY_BALL_RENDER_TYPE = createRenderType(ENERGY_BALL_SHEET);
-  public static final Material FLASH_INSIDE_MATERIAL = chestMaterial("flash/inside");
-  public static final Material FLASH_OUTSIDE_MATERIAL = chestMaterial("flash/outside");
-  public static final Material FLASH_OUTSIDE_1_MATERIAL = chestMaterial("flash/outside_1");
-  public static final Material FLASH_OUTSIDE_2_MATERIAL = chestMaterial("flash/outside_2");
-  public static final Material FLASH_THUNDERSTORM_MATERIAL = chestMaterial("flash/thunderstorm");
-  public static final Material FLASH1_INSIDE_MATERIAL = chestMaterial("flash1/inside");
-  public static final Material FLASH1_OUTSIDE_MATERIAL = chestMaterial("flash1/outside");
-  public static final Material FLASH1_OUTSIDE_1_MATERIAL = chestMaterial("flash1/outside_1");
-  public static final Material FLASH1_OUTSIDE_2_MATERIAL = chestMaterial("flash1/outside_2");
-  public static final Material FLASH1_THUNDERSTORM_MATERIAL = chestMaterial("flash1/thunderstorm");
-  public static final Material WORK_INSIDE_MATERIAL = chestMaterial("work/inside");
-  public static final Material WORK_OUTSIDE_MATERIAL = chestMaterial("work/outside");
-  public static final Material WORK_OUTSIDE_1_MATERIAL = chestMaterial("work/outside_1");
-  public static final Material WORK_OUTSIDE_2_MATERIAL = chestMaterial("work/outside_2");
-  public static final Material WORK_THUNDERSTORM_MATERIAL = chestMaterial("work/thunderstorm");
+  private static final String RL = "textures/block/quantum_energy_diffuser/energy_ball/";
+  public final List<Material> flashMaterials;
+  public final List<Material> flash1Materials;
+  public final List<Material> workMaterials;
+
+  private final ModelPart sphere;
 
   public QedBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+    ModelPart modelpart = context.bakeLayer(ModModelLayer.ENERGY_BALL);
+    this.sphere = modelpart.getChild("sphere");
+
+    flashMaterials = new ArrayList<>();
+    flash1Materials = new ArrayList<>();
+    workMaterials = new ArrayList<>();
+    ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+    int i = 0;
+    while (resourceManager.getResource(FutureFood.modRL(RL + "work/sphere" + i + ".png")).isPresent()) {
+      workMaterials.add(chestMaterial("work/sphere" + i));
+      i++;
+    }
+
+    i = 0;
+    while (resourceManager.getResource(FutureFood.modRL(RL + "flash/sphere" + i + ".png")).isPresent()) {
+      flashMaterials.add(chestMaterial("flash/sphere" + i));
+      i++;
+    }
+
+    i = 0;
+    while (resourceManager.getResource(FutureFood.modRL(RL + "flash1/sphere" + i + ".png")).isPresent()) {
+      flash1Materials.add(chestMaterial("flash1/sphere" + i));
+      i++;
+    }
+  }
+
+  public static LayerDefinition createBodyLayer() {
+    MeshDefinition md = new MeshDefinition();
+    PartDefinition pd = md.getRoot();
+    PartDefinition pd1 = pd.addOrReplaceChild(
+      "sphere", CubeListBuilder.create()
+        .texOffs(0, 0)
+        .addBox(0, 0, 0, 8, 8, 8),
+      PartPose.offset(-4, 0, -4));
+
+    pd1.addOrReplaceChild("outer_ring",
+      CubeListBuilder.create()
+        .texOffs(72, 20)
+        .addBox(-1, -11, -1, -10, -10, -10,
+          new CubeDeformation(0.01f, 0.01f, 0.01f)),
+      PartPose.offset(10, 20, 10));
+
+    pd1.addOrReplaceChild("outer_ring1",
+      CubeListBuilder.create()
+        .texOffs(120, 24)
+        .addBox(-2, -10, -2, -12, -12, -12,
+          new CubeDeformation(0.01f, 0.01f, 0.01f)),
+      PartPose.offset(12, 20, 12));
+
+    pd1.addOrReplaceChild("outer_ring2",
+      CubeListBuilder.create()
+        .texOffs(172, 26)
+        .addBox(-2.5f, -9.5f, -2.5f, -13, -13, -13),
+      PartPose.offset(13, 20, 13));
+
+    return LayerDefinition.create(md, 172, 26);
   }
 
   @Override
@@ -56,144 +112,75 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     }
     final Direction directionState = blockState.getValue(DirectionalEntityBlock.FACING);
     final Light lightState = blockState.getValue(QedEntityBlock.LIGHT);
-    final Minecraft minecraft = Minecraft.getInstance();
-    var renderBuffers = minecraft.renderBuffers();
 
+    final long timeVariable = System.currentTimeMillis() % 10000;
 
-    final VertexConsumer inside;
-    final VertexConsumer outside;
-    final VertexConsumer outside1;
-    final VertexConsumer outside2;
-    final VertexConsumer thunderstorm;
-    switch (activateState) {
-      case WORK -> {
-        inside = WORK_INSIDE_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside = WORK_OUTSIDE_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside1 = WORK_OUTSIDE_1_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside2 = WORK_OUTSIDE_2_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        thunderstorm = WORK_THUNDERSTORM_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-      }
-      case FLASH -> {
-        inside = FLASH_INSIDE_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside = FLASH_OUTSIDE_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside1 = FLASH_OUTSIDE_1_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside2 = FLASH_OUTSIDE_2_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        thunderstorm = FLASH_THUNDERSTORM_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-      }
-      case FLASH1 -> {
-        inside = FLASH1_INSIDE_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside = FLASH1_OUTSIDE_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside1 = FLASH1_OUTSIDE_1_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        outside2 = FLASH1_OUTSIDE_2_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-        thunderstorm = FLASH1_THUNDERSTORM_MATERIAL.buffer(bufferSource, ModRenderType.ENERGY_BALL);
-      }
-      default -> {
-        return;
-      }
+    final VertexConsumer vertexConsumer = getVertexConsumer(activateState, bufferSource, timeVariable, partialTick);
+    if (vertexConsumer == null) {
+      return;
     }
+    poseStack.pushPose();
+    poseStack.translate(0.5, 1, 0.5);
 
     poseStack.pushPose();
+    switch (lightState) {
+      case DEFAULT -> {
+        poseStack.translate(0, 0.1f, 0);
+        float time = (timeVariable / 2000.0f * (float) Math.PI);
+        poseStack.mulPose(Axis.YP.rotation(time));
+        float bobbing = (float) Math.sin(time * 2) * 0.1f;
+        poseStack.translate(0, bobbing, 0);
+      }
+      case WORK -> {
+        poseStack.translate(0, 0.2f, 0);
+        float time = (timeVariable / 1000.0f * (float) Math.PI);
+        poseStack.mulPose(Axis.YP.rotation(time));
+        float bobbing = (float) Math.sin(time * 2) * 0.1f;
+        poseStack.translate(0, bobbing, 0);
+      }
+      case ABNORMAL -> {
+        float time = (timeVariable / 4000.0f * (float) Math.PI);
+        float bobbing = (float) Math.sin(time * 2) * 0.05f;
+        poseStack.translate(0, bobbing, 0);
+      }
+    }
+    poseStack.pushPose();
 
-    // outside2
-    int[] uv = {0, 0};
-    int[] uv1 = {13, 13};
-    renderQuads(poseStack, outside2, true, partialTick, 13, uv, uv1);
+    sphere.render(poseStack, vertexConsumer, LightTexture.FULL_BRIGHT, packedOverlay);
 
+    poseStack.popPose();
+    poseStack.popPose();
     poseStack.popPose();
   }
 
-  private void renderQuads(PoseStack pose, VertexConsumer vertex, boolean isReverse, float partialTick, float size, int[] uv, int[] uv1) {
-    PoseStack.Pose last = pose.last();
-    for (Direction direction : Direction.values()) {
-      renderNoodles(last, vertex, direction, partialTick, size, isReverse, uv[0], uv[1], uv1[0], uv1[1]);
-    }
+  @Nullable
+  private VertexConsumer getVertexConsumer(Activate activate, MultiBufferSource bufferSource, long timeVariable, float partialTick) {
+    return switch (activate) {
+      case WORK -> getVertexConsumer(bufferSource, workMaterials, timeVariable, partialTick);
+      case FLASH -> getVertexConsumer(bufferSource, flashMaterials, timeVariable, partialTick);
+      case FLASH1 -> getVertexConsumer(bufferSource, flash1Materials, timeVariable, partialTick);
+      default -> null;
+    };
   }
 
-  private void renderQuads(PoseStack pose, VertexConsumer[] vertex, boolean isReverse, float partialTick, float size, int[][] uv, int[][] uv1) {
-    PoseStack.Pose last = pose.last();
-    int index = 0;
-    for (Direction direction : Direction.values()) {
-      renderNoodles(last, vertex[index], direction, partialTick, size, isReverse, uv[index][0], uv[index][1], uv1[index][0], uv1[index][1]);
-      index++;
+  @Nullable
+  private VertexConsumer getVertexConsumer(MultiBufferSource bufferSource, List<Material> workMaterials, long timeVariable, float partialTick) {
+    if (workMaterials.isEmpty()) {
+      return null;
     }
-  }
-
-  private static void renderNoodles(PoseStack.Pose last, VertexConsumer vertex, Direction direction,
-                                    float partialTick, float size, boolean isReverse, int u, int v, int u1, int v1) {
-    final float scopeSize = size / 2;
-    float v1x = 0, v1y = 0, v1z = 0;
-    float v2x = 0, v2y = 0, v2z = 0;
-    float v3x = 0, v3y = 0, v3z = 0;
-    float v4x = 0, v4y = 0, v4z = 0;
-    float nX = 0, nY = 0, nZ = 0;
-    switch (direction) {
-      case DOWN -> {
-        v1x = -scopeSize;
-        v1y = -scopeSize;
-        v1z = scopeSize;
-        v2x = scopeSize;
-        v2y = scopeSize;
-        v2z = scopeSize;
-        v3x = scopeSize;
-        v3z = -scopeSize;
-        v3y = -scopeSize;
-        v4x = -scopeSize;
-        v4y = -scopeSize;
-        v4z = -scopeSize;
-      }
-      case UP -> {
-        v1x = scopeSize;
-        v1y = -scopeSize;
-        v1z = -scopeSize;
-        v2x = -scopeSize;
-        v2y = -scopeSize;
-        v2z = -scopeSize;
-        v3x = scopeSize;
-        v3z = scopeSize;
-        v3y = scopeSize;
-        v4x = scopeSize;
-        v4y = scopeSize;
-        v4z = scopeSize;
-      }
-      case NORTH, SOUTH, EAST, WEST -> {
-        v1x = scopeSize;
-        v1y = scopeSize;
-        v1z = scopeSize;
-        v2x = scopeSize;
-        v2y = -scopeSize;
-        v2z = -scopeSize;
-        v3x = -scopeSize;
-        v3z = -scopeSize;
-        v3y = -scopeSize;
-        v4x = -scopeSize;
-        v4y = -scopeSize;
-        v4z = scopeSize;
-      }
+    int size = workMaterials.size() - 1;
+    int index = (int) (timeVariable / 50.0 % size);
+    if (index > size) {
+      index = size;
+    } else if (index < 0) {
+      index = 0;
     }
-    switch (direction) {
-      case DOWN -> nY = isReverse ? -1 : 1;
-      case UP -> nY = isReverse ? 1 : -1;
-      case NORTH -> nZ = isReverse ? -1 : 1;
-      case SOUTH -> nZ = isReverse ? 1 : -1;
-      case WEST -> nX = isReverse ? 1 : -1;
-      case EAST -> nX = isReverse ? -1 : 1;
-    }
-    vertex.addVertex(last, v1x, v1y, v1z).setNormal(last, nX, nY, nZ).setUv(u, v).setUv2(u1, v1);
-    vertex.addVertex(last, v2x, v2y, v2z).setNormal(last, nX, nY, nZ).setUv(u, v).setUv2(u1, v1);
-    vertex.addVertex(last, v3x, v3y, v3z).setNormal(last, nX, nY, nZ).setUv(u, v).setUv2(u1, v1);
-    vertex.addVertex(last, v4x, v4y, v4z).setNormal(last, nX, nY, nZ).setUv(u, v).setUv2(u1, v1);
-  }
-
-  private static RenderType createRenderType(ResourceLocation rl) {
-    return ModRenderType.getEnergyBall(rl);
+    Material material = workMaterials.get(index);
+    return material.buffer(bufferSource, ModRenderType::getEnergyBall);
   }
 
   private static Function<MultiBufferSource, VertexConsumer> createVertexConsumer(RenderType renderType) {
     return mbs -> mbs.getBuffer(renderType);
-  }
-
-  protected static Material getMaterial(ResourceLocation texture) {
-    return new Material(ENERGY_BALL_SHEET, texture);
   }
 
   protected static Material chestMaterial(String texture) {

@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class ModLayerDefinition {
+public class ModModelLayer {
   private static final Set<ModelLayerLocation> ALL_MODELS = Sets.newHashSet();
   public static final ModelLayerLocation ENERGY_BALL = register("energy_ball");
 

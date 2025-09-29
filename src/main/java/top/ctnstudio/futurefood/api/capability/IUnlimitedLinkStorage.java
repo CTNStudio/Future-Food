@@ -1,6 +1,6 @@
 package top.ctnstudio.futurefood.api.capability;
 
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.LinkedListMultimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -55,9 +55,8 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
    * @return 能量接口
    */
   @Nonnull
-  static HashBiMap<Direction, IEnergyStorage> getEnergyStorageAllCapabilities(Level level,
-                                                                              BlockPos pos) {
-    HashBiMap<Direction, IEnergyStorage> capabilities = HashBiMap.create(7);
+  static LinkedListMultimap<Direction, IEnergyStorage> getEnergyStorageAllCapabilities(Level level, BlockPos pos) {
+    var capabilities = LinkedListMultimap.<Direction, IEnergyStorage>create(7);
     IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null);
     if (capability != null && capability.canReceive()) {
       capabilities.put(null, capability);

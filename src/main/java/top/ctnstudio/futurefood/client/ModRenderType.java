@@ -1,6 +1,7 @@
 package top.ctnstudio.futurefood.client;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ public class ModRenderType {
     QUADS,
     1536,
     RenderType.CompositeState.builder()
-      .setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
+      .setShaderState(RENDERTYPE_GUI_GHOST_RECIPE_OVERLAY_SHADER)
       .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
       .setOutputState(ITEM_ENTITY_TARGET)
       .setWriteMaskState(COLOR_DEPTH_WRITE)
@@ -30,23 +31,18 @@ public class ModRenderType {
       .setDepthTestState(depth)
       .createCompositeState(AFFECTS_OUTLINE));
 
-  public static final Function<ResourceLocation, RenderType> ENERGY_BALL = texture -> RenderType.create(
-    "energy_ball",
-    DefaultVertexFormat.BLOCK,
-    QUADS,
-    1536,
-    false,
-    true,
-    RenderType.CompositeState.builder()
-      .setShaderState(POSITION_TEX_SHADER) // RENDERTYPE_ENERGY_SWIRL_SHADER
-      .setLightmapState(NO_LIGHTMAP)
-      .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+  public static final Function<ResourceLocation, RenderType> ENERGY_BALL = (texture) -> {
+    RenderType.CompositeState rendertype$compositestate = RenderType.CompositeState.builder()
+      .setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
       .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
-      .setTexturingState(DEFAULT_TEXTURING)
-      .setOutputState(ITEM_ENTITY_TARGET)
-      .setCullState(CULL)
-      .createCompositeState(false)
-  );
+//        .setTexturingState(new RenderStateShard.OffsetTexturingStateShard(u, v))
+      .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+      .setLightmapState(LIGHTMAP)
+      .setOverlayState(OVERLAY)
+      .createCompositeState(true);
+    return RenderType.create("energy_ball", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS,
+      1536, true, false, rendertype$compositestate);
+  };
 
   public static RenderType getHighlighted(DepthTestStateShard depth) {
     return HIGHLIGHTED.apply(depth);
@@ -61,23 +57,6 @@ public class ModRenderType {
 
   public static RenderType getEnergyBall(ResourceLocation rl) {
     return ENERGY_BALL.apply(rl);
-  }
-
-  private static RenderType createEnergyBall(ResourceLocation location) {
-    return RenderType.create(
-      "energy_ball",
-      DefaultVertexFormat.POSITION_TEX,
-      QUADS,
-      256,
-      false,
-      true,
-      RenderType.CompositeState.builder()
-        .setShaderState(POSITION_TEX_SHADER)
-        .setTextureState(new RenderStateShard.TextureStateShard(location, false, false))
-        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-        .setWriteMaskState(COLOR_WRITE)
-        .createCompositeState(false)
-    );
   }
 
 }

@@ -19,6 +19,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMaterialAtlasesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import top.ctnstudio.futurefood.client.ModModelLayer;
 import top.ctnstudio.futurefood.client.gui.screen.EnergyScreen;
 import top.ctnstudio.futurefood.client.renderer.block.BasicGeoBlockRenderer;
 import top.ctnstudio.futurefood.client.renderer.block.ParticleColliderBlockEntityRenderer;
@@ -61,7 +62,7 @@ public class FfClient {
   public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
     FutureFood.LOGGER.info("Registering Layer Definitions");
 
-//    event.registerLayerDefinition(ModLayerDefinition.ENERGY_BALL, EMPTY_LAYER_DEFINITION);
+    event.registerLayerDefinition(ModModelLayer.ENERGY_BALL, QedBlockEntityRenderer::createBodyLayer);
   }
 
   private static <M extends AbstractContainerMenu, E extends Screen & MenuAccess<M>> void registerScreen(

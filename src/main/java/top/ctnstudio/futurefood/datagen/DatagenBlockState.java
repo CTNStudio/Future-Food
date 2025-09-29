@@ -39,7 +39,7 @@ public class DatagenBlockState extends BlockStateProvider {
 
     for (Direction direction : Direction.values()) {
       final int xValue = direction == Direction.DOWN ? 180 : direction.getAxis().isHorizontal() ? 90 : 0;
-      final int yValue = direction.getAxis().isVertical() ? 0 : (((int) direction.toYRot()) + 180) % 360;
+      final int yValue = direction.getAxis().isVertical() ? 0 : 360;
       for (Activate activate : QedEntityBlock.Activate.values()) {
         multiPartBuilder
           .part()
