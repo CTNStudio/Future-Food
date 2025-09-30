@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import top.ctnstudio.futurefood.client.core.ModRender;
+import top.ctnstudio.futurefood.common.item.CyberWrenchItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModItem;
@@ -22,6 +24,14 @@ public class DatagenI18ZhCn extends LanguageProvider {
   protected void addTranslations() {
     add("itemGroup.futurefood", "未来食物");
     add("futurefood.gui.energy.tooltip", "能量存储：%s/%s");
+    add(ModRender.ITEM_TOOLTIP_POSITION, "绑定的方块坐标：%s %s %s");
+    add(ModRender.ITEM_TOOLTIP_POSITION_EMPTY, "没有绑定方块坐标");
+    add(CyberWrenchItem.BINDING_SUCCESS, "绑定成功，坐标： x %s y %s z %s");
+    add(CyberWrenchItem.BINDING_CANCEL, "已取消绑定，坐标： x %s y %s z %s");
+    add(CyberWrenchItem.BINDING_FAILURE, "绑定失败，坐标： x %s y %s z %s");
+    add(CyberWrenchItem.LINK_SUCCESS, "链接成功，坐标： x %s y %s z %s");
+    add(CyberWrenchItem.LINK_CANCEL, "已取消链接，坐标： x %s y %s z %s");
+    add(CyberWrenchItem.LINK_FAILURE, "链接失败坐标： x %s y %s z %s");
     addItem(ModItem.CYBER_WRENCH, "赛博扳手");
     addBlock(ModBlock.QED, "量子能源扩散器");
     addBlock(ModBlock.QER, "量子能源接收器");

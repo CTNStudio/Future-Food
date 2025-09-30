@@ -2,7 +2,15 @@
   "block.futurefood.particle_collider": "粒子对撞器",
   "block.futurefood.quantum_energy_diffuser": "量子能源扩散器",
   "block.futurefood.quantum_energy_receiver": "量子能源接收器",
+  "futurefood.cyber_wrench.binding.cancel": "已取消绑定，坐标： x %s y %s z %s",
+  "futurefood.cyber_wrench.binding.failure": "绑定失败，坐标： x %s y %s z %s",
+  "futurefood.cyber_wrench.binding.success": "绑定成功，坐标： x %s y %s z %s",
+  "futurefood.cyber_wrench.link.cancel": "已取消链接，坐标： x %s y %s z %s",
+  "futurefood.cyber_wrench.link.failure": "链接失败坐标： x %s y %s z %s",
+  "futurefood.cyber_wrench.link.success": "链接成功，坐标： x %s y %s z %s",
   "futurefood.gui.energy.tooltip": "能量存储：%s/%s",
+  "futurefood.item.tooltip.position": "绑定的方块坐标：%s %s %s",
+  "futurefood.item.tooltip.position.empty": "没有绑定方块坐标",
   "item.futurefood.cyber_wrench": "赛博扳手",
   "itemGroup.futurefood": "未来食物"
 }
