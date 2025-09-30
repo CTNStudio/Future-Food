@@ -4,27 +4,35 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 
 import javax.annotation.Nullable;
+import java.util.Properties;
 
 public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QerEntityBlock> CODEC = simpleCodec(QerEntityBlock::new);
+  public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
+  public static final EnumProperty<QedEntityBlock.Light> LIGHT = QedEntityBlock.LIGHT;
 
   public QerEntityBlock() {
     this(Properties.of());
@@ -37,6 +45,16 @@ public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> imple
       .isRedstoneConductor(ModBlock.never())
       .isSuffocating(ModBlock.never())
       .isViewBlocking(ModBlock.never()));
+    this.registerDefaultState(this.stateDefinition.any()
+      .setValue(ACTIVATE, Activate.DEFAULT)
+      .setValue(LIGHT, QedEntityBlock.Light.DEFAULT)
+    );
+  }
+
+  @Override
+  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    super.createBlockStateDefinition(builder);
+    builder.add(ACTIVATE, LIGHT);
   }
 
   @Override
@@ -74,20 +92,47 @@ public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> imple
   }
 
   @Override
-  protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_,
-                                     BlockPos p_308918_) {
+  protected float getShadeBrightness(BlockState blockState, BlockGetter getter,
+                                     BlockPos pos) {
     return 1.0F;
   }
 
   @Override
-  protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_,
-                                      BlockPos p_308956_, CollisionContext p_309006_) {
+  protected VoxelShape getVisualShape(BlockState blockState, BlockGetter getter,
+                                      BlockPos pos, CollisionContext context) {
     return Shapes.empty();
   }
 
   @Override
-  protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_,
-                                           BlockPos p_309097_) {
+  protected boolean propagatesSkylightDown(BlockState blockState, BlockGetter getter,
+                                           BlockPos pos) {
     return true;
+  }
+
+  public enum Activate implements StringRepresentable {
+    DEFAULT(0, "default"),
+    WORK(1, "work"),
+    ;
+
+    private final int id;
+    private final String name;
+
+    Activate(int id, String name) {
+      this.id = id;
+      this.name = name;
+    }
+
+    @Override
+    public @NotNull String getSerializedName() {
+      return name;
+    }
+
+    public int getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
   }
 }

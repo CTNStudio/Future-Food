@@ -7,9 +7,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import top.ctnstudio.futurefood.common.effect.EffectRadiation;
 import top.ctnstudio.futurefood.core.FutureFood;
 
-import java.util.function.Supplier;
-
-public class ModEffect {
+public final class ModEffect {
   public static final DeferredRegister<MobEffect> EFFECT =
     DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, FutureFood.ID);
 

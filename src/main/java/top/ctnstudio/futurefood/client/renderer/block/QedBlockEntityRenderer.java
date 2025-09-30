@@ -14,13 +14,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import top.ctnstudio.futurefood.client.ModModelLayer;
-import top.ctnstudio.futurefood.client.ModRenderType;
+import top.ctnstudio.futurefood.client.core.ModMaterialAtlases;
+import top.ctnstudio.futurefood.client.core.ModModelLayer;
+import top.ctnstudio.futurefood.client.core.ModRenderType;
 import top.ctnstudio.futurefood.common.block.DirectionalEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock.Activate;
@@ -35,7 +35,6 @@ import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEntityRenderer<T> {
-  public static final ResourceLocation ENERGY_BALL_SHEET = FutureFood.modRL("energy_ball");
   private static final String RL = "textures/block/quantum_energy_diffuser/energy_ball/";
   public final List<Material> flashMaterials;
   public final List<Material> flash1Materials;
@@ -184,6 +183,6 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
   }
 
   protected static Material chestMaterial(String texture) {
-    return new Material(ENERGY_BALL_SHEET, FutureFood.modRL("block/quantum_energy_diffuser/energy_ball/" + texture));
+    return new Material(ModMaterialAtlases.ENERGY_BALL, FutureFood.modRL("block/quantum_energy_diffuser/energy_ball/" + texture));
   }
 }

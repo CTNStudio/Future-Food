@@ -1,0 +1,205 @@
+{
+  "format_version": "1.9.0",
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/cube_all",
+  "ambientocclusion": false,
+  "textures": {
+    "0": "futurefood:block/quantum_energy_receiver/display_light/abnormal",
+    "particle": "futurefood:block/particle"
+  },
+  "elements": [
+    {
+      "name": "Quantum_Receiver_Green_Led",
+      "from": [
+        11.5,
+        2.25,
+        -2.25
+      ],
+      "to": [
+        13.5,
+        4.25,
+        0.75
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          4.5,
+          0.25,
+          -0.25
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            4,
+            2,
+            6
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            3,
+            2
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            5,
+            0,
+            7,
+            2
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            2,
+            3,
+            4
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            5,
+            3,
+            3,
+            0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            5,
+            3,
+            3,
+            6
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "Quantum_Receiver_Green_Led",
+      "from": [
+        2.5,
+        2.25,
+        -2.25
+      ],
+      "to": [
+        4.5,
+        4.25,
+        0.75
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          4.5,
+          0.25,
+          -0.25
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            4,
+            2,
+            6
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            3,
+            2
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            5,
+            0,
+            7,
+            2
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            2,
+            3,
+            4
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            5,
+            3,
+            3,
+            0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            5,
+            3,
+            3,
+            6
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "quantum_energy_receiver",
+      "origin": [
+        8,
+        8,
+        8
+      ],
+      "color": 0,
+      "children": [
+        {
+          "name": "display_light1",
+          "origin": [
+            8,
+            8,
+            8
+          ],
+          "color": 0,
+          "children": [
+            0
+          ]
+        },
+        {
+          "name": "display_light2",
+          "origin": [
+            8,
+            8,
+            8
+          ],
+          "color": 0,
+          "children": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}

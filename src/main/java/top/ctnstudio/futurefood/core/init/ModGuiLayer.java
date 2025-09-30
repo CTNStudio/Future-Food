@@ -15,7 +15,7 @@ import top.ctnstudio.futurefood.core.FutureFood;
 import java.util.function.Supplier;
 
 @EventBusSubscriber
-public class ModLayer {
+public final class ModGuiLayer {
   public static final ResourceLocation TEST_LAYER = FutureFood.modRL("test_layer");
 //  public static Supplier<TestLayerDraw> testLayerDraw; 暂时完成了他的使命
 

@@ -4,7 +4,7 @@
   "parent": "minecraft:block/cube_all",
   "textures": {
     "0": "futurefood:block/quantum_energy_diffuser/display_light/default",
-    "particle": "futurefood:block/quantum_energy_diffuser/display_light/default"
+    "particle": "futurefood:block/particle"
   },
   "elements": [
     {

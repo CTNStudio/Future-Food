@@ -6,18 +6,8 @@
         "x": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "down"
-              }
-            ]
-          },
-          {
-            "activate": "default"
-          }
-        ]
+        "activate": "default",
+        "facing": "down"
       }
     },
     {
@@ -26,18 +16,8 @@
         "x": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "down"
-              }
-            ]
-          },
-          {
-            "activate": "work"
-          }
-        ]
+        "activate": "work",
+        "facing": "down"
       }
     },
     {
@@ -46,18 +26,8 @@
         "x": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "down"
-              }
-            ]
-          },
-          {
-            "activate": "flash"
-          }
-        ]
+        "activate": "flash",
+        "facing": "down"
       }
     },
     {
@@ -66,18 +36,8 @@
         "x": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "down"
-              }
-            ]
-          },
-          {
-            "activate": "flash1"
-          }
-        ]
+        "activate": "flash1",
+        "facing": "down"
       }
     },
     {
@@ -86,18 +46,8 @@
         "x": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "down"
-              }
-            ]
-          },
-          {
-            "light": "default"
-          }
-        ]
+        "facing": "down",
+        "light": "default"
       }
     },
     {
@@ -106,18 +56,8 @@
         "x": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "down"
-              }
-            ]
-          },
-          {
-            "light": "work"
-          }
-        ]
+        "facing": "down",
+        "light": "work"
       }
     },
     {
@@ -126,18 +66,8 @@
         "x": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "down"
-              }
-            ]
-          },
-          {
-            "light": "abnormal"
-          }
-        ]
+        "facing": "down",
+        "light": "abnormal"
       }
     },
     {
@@ -145,18 +75,8 @@
         "model": "futurefood:block/quantum_energy_diffuser/base/default"
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "up"
-              }
-            ]
-          },
-          {
-            "activate": "default"
-          }
-        ]
+        "activate": "default",
+        "facing": "up"
       }
     },
     {
@@ -164,18 +84,8 @@
         "model": "futurefood:block/quantum_energy_diffuser/base/work"
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "up"
-              }
-            ]
-          },
-          {
-            "activate": "work"
-          }
-        ]
+        "activate": "work",
+        "facing": "up"
       }
     },
     {
@@ -183,18 +93,8 @@
         "model": "futurefood:block/quantum_energy_diffuser/base/flash"
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "up"
-              }
-            ]
-          },
-          {
-            "activate": "flash"
-          }
-        ]
+        "activate": "flash",
+        "facing": "up"
       }
     },
     {
@@ -202,18 +102,8 @@
         "model": "futurefood:block/quantum_energy_diffuser/base/flash1"
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "up"
-              }
-            ]
-          },
-          {
-            "activate": "flash1"
-          }
-        ]
+        "activate": "flash1",
+        "facing": "up"
       }
     },
     {
@@ -221,18 +111,8 @@
         "model": "futurefood:block/quantum_energy_diffuser/display_light/default"
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "up"
-              }
-            ]
-          },
-          {
-            "light": "default"
-          }
-        ]
+        "facing": "up",
+        "light": "default"
       }
     },
     {
@@ -240,18 +120,8 @@
         "model": "futurefood:block/quantum_energy_diffuser/display_light/work"
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "up"
-              }
-            ]
-          },
-          {
-            "light": "work"
-          }
-        ]
+        "facing": "up",
+        "light": "work"
       }
     },
     {
@@ -259,18 +129,8 @@
         "model": "futurefood:block/quantum_energy_diffuser/display_light/abnormal"
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "up"
-              }
-            ]
-          },
-          {
-            "light": "abnormal"
-          }
-        ]
+        "facing": "up",
+        "light": "abnormal"
       }
     },
     {
@@ -279,18 +139,8 @@
         "x": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "north"
-              }
-            ]
-          },
-          {
-            "activate": "default"
-          }
-        ]
+        "activate": "default",
+        "facing": "north"
       }
     },
     {
@@ -299,18 +149,8 @@
         "x": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "north"
-              }
-            ]
-          },
-          {
-            "activate": "work"
-          }
-        ]
+        "activate": "work",
+        "facing": "north"
       }
     },
     {
@@ -319,18 +159,8 @@
         "x": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "north"
-              }
-            ]
-          },
-          {
-            "activate": "flash"
-          }
-        ]
+        "activate": "flash",
+        "facing": "north"
       }
     },
     {
@@ -339,18 +169,8 @@
         "x": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "north"
-              }
-            ]
-          },
-          {
-            "activate": "flash1"
-          }
-        ]
+        "activate": "flash1",
+        "facing": "north"
       }
     },
     {
@@ -359,18 +179,8 @@
         "x": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "north"
-              }
-            ]
-          },
-          {
-            "light": "default"
-          }
-        ]
+        "facing": "north",
+        "light": "default"
       }
     },
     {
@@ -379,18 +189,8 @@
         "x": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "north"
-              }
-            ]
-          },
-          {
-            "light": "work"
-          }
-        ]
+        "facing": "north",
+        "light": "work"
       }
     },
     {
@@ -399,18 +199,8 @@
         "x": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "north"
-              }
-            ]
-          },
-          {
-            "light": "abnormal"
-          }
-        ]
+        "facing": "north",
+        "light": "abnormal"
       }
     },
     {
@@ -420,18 +210,8 @@
         "y": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "south"
-              }
-            ]
-          },
-          {
-            "activate": "default"
-          }
-        ]
+        "activate": "default",
+        "facing": "south"
       }
     },
     {
@@ -441,18 +221,8 @@
         "y": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "south"
-              }
-            ]
-          },
-          {
-            "activate": "work"
-          }
-        ]
+        "activate": "work",
+        "facing": "south"
       }
     },
     {
@@ -462,18 +232,8 @@
         "y": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "south"
-              }
-            ]
-          },
-          {
-            "activate": "flash"
-          }
-        ]
+        "activate": "flash",
+        "facing": "south"
       }
     },
     {
@@ -483,18 +243,8 @@
         "y": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "south"
-              }
-            ]
-          },
-          {
-            "activate": "flash1"
-          }
-        ]
+        "activate": "flash1",
+        "facing": "south"
       }
     },
     {
@@ -504,18 +254,8 @@
         "y": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "south"
-              }
-            ]
-          },
-          {
-            "light": "default"
-          }
-        ]
+        "facing": "south",
+        "light": "default"
       }
     },
     {
@@ -525,18 +265,8 @@
         "y": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "south"
-              }
-            ]
-          },
-          {
-            "light": "work"
-          }
-        ]
+        "facing": "south",
+        "light": "work"
       }
     },
     {
@@ -546,18 +276,8 @@
         "y": 180
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "south"
-              }
-            ]
-          },
-          {
-            "light": "abnormal"
-          }
-        ]
+        "facing": "south",
+        "light": "abnormal"
       }
     },
     {
@@ -567,18 +287,8 @@
         "y": 270
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "west"
-              }
-            ]
-          },
-          {
-            "activate": "default"
-          }
-        ]
+        "activate": "default",
+        "facing": "west"
       }
     },
     {
@@ -588,18 +298,8 @@
         "y": 270
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "west"
-              }
-            ]
-          },
-          {
-            "activate": "work"
-          }
-        ]
+        "activate": "work",
+        "facing": "west"
       }
     },
     {
@@ -609,18 +309,8 @@
         "y": 270
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "west"
-              }
-            ]
-          },
-          {
-            "activate": "flash"
-          }
-        ]
+        "activate": "flash",
+        "facing": "west"
       }
     },
     {
@@ -630,18 +320,8 @@
         "y": 270
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "west"
-              }
-            ]
-          },
-          {
-            "activate": "flash1"
-          }
-        ]
+        "activate": "flash1",
+        "facing": "west"
       }
     },
     {
@@ -651,18 +331,8 @@
         "y": 270
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "west"
-              }
-            ]
-          },
-          {
-            "light": "default"
-          }
-        ]
+        "facing": "west",
+        "light": "default"
       }
     },
     {
@@ -672,18 +342,8 @@
         "y": 270
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "west"
-              }
-            ]
-          },
-          {
-            "light": "work"
-          }
-        ]
+        "facing": "west",
+        "light": "work"
       }
     },
     {
@@ -693,18 +353,8 @@
         "y": 270
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "west"
-              }
-            ]
-          },
-          {
-            "light": "abnormal"
-          }
-        ]
+        "facing": "west",
+        "light": "abnormal"
       }
     },
     {
@@ -714,18 +364,8 @@
         "y": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "east"
-              }
-            ]
-          },
-          {
-            "activate": "default"
-          }
-        ]
+        "activate": "default",
+        "facing": "east"
       }
     },
     {
@@ -735,18 +375,8 @@
         "y": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "east"
-              }
-            ]
-          },
-          {
-            "activate": "work"
-          }
-        ]
+        "activate": "work",
+        "facing": "east"
       }
     },
     {
@@ -756,18 +386,8 @@
         "y": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "east"
-              }
-            ]
-          },
-          {
-            "activate": "flash"
-          }
-        ]
+        "activate": "flash",
+        "facing": "east"
       }
     },
     {
@@ -777,18 +397,8 @@
         "y": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "east"
-              }
-            ]
-          },
-          {
-            "activate": "flash1"
-          }
-        ]
+        "activate": "flash1",
+        "facing": "east"
       }
     },
     {
@@ -798,18 +408,8 @@
         "y": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "east"
-              }
-            ]
-          },
-          {
-            "light": "default"
-          }
-        ]
+        "facing": "east",
+        "light": "default"
       }
     },
     {
@@ -819,18 +419,8 @@
         "y": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "east"
-              }
-            ]
-          },
-          {
-            "light": "work"
-          }
-        ]
+        "facing": "east",
+        "light": "work"
       }
     },
     {
@@ -840,18 +430,8 @@
         "y": 90
       },
       "when": {
-        "AND": [
-          {
-            "AND": [
-              {
-                "facing": "east"
-              }
-            ]
-          },
-          {
-            "light": "abnormal"
-          }
-        ]
+        "facing": "east",
+        "light": "abnormal"
       }
     }
   ]

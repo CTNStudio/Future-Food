@@ -14,6 +14,7 @@ import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.TileEntityUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nonnull;
@@ -22,7 +23,7 @@ import java.util.Queue;
 
 import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 
-public class QedBlockEntity extends EnergyStorageBlockEntity {
+public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
   public float sphereTick;

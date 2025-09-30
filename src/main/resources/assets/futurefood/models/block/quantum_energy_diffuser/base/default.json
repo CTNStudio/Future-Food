@@ -9,7 +9,7 @@
   "textures": {
     "0": "futurefood:block/quantum_energy_diffuser/base/default",
     "1": "futurefood:block/quantum_energy_diffuser/base/default_shine",
-    "particle": "futurefood:block/quantum_energy_diffuser/base/default"
+    "particle": "futurefood:block/particle"
   },
   "elements": [
     {

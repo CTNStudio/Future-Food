@@ -28,8 +28,8 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import javax.annotation.Nonnull;
@@ -37,13 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class EnergyStorageBlockEntity extends BlockEntity
+public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extends BlockEntity
   implements Container, MenuProvider {
-  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE
-    = () -> new ModEnergyStorage(10240, 1024, 1024);
+  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE =
+    () -> new ModEnergyStorage(10240, 1024, 1024);
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
-  protected final EnergyData energyData;
+  protected final BasicEnergyMenu.EnergyData energyData;
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
     BlockState blockState) {
@@ -56,7 +56,7 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
-    energyData = new EnergyData(this.energyStorage);
+    energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
   }
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -120,11 +120,11 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   @Override
-  public @Nullable EnergyMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+  public @Nullable T createMenu(int containerId, Inventory playerInventory, Player player) {
     if (!player.isAlive()) {
       return null;
     }
-    return new EnergyMenu(containerId, playerInventory, itemHandler, energyData);
+    return (T) new EnergyMenu(containerId, playerInventory, itemHandler, energyData);
   }
 
   @Override

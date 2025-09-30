@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client;
+package top.ctnstudio.futurefood.client.core;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -15,7 +15,7 @@ import static net.minecraft.client.renderer.RenderStateShard.*;
 import static net.minecraft.client.renderer.RenderType.OutlineProperty.AFFECTS_OUTLINE;
 
 @OnlyIn(Dist.CLIENT)
-public class ModRenderType {
+public final class ModRenderType {
   public static final Function<DepthTestStateShard, RenderType> HIGHLIGHTED = depth -> RenderType.create(
     "highlighted",
     DefaultVertexFormat.POSITION_COLOR,

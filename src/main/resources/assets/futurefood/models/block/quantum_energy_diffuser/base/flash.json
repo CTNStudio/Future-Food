@@ -8,7 +8,7 @@
   ],
   "textures": {
     "0": "futurefood:block/quantum_energy_diffuser/base/flash",
-    "particle": "futurefood:block/quantum_energy_diffuser/base/flash"
+    "particle": "futurefood:block/particle"
   },
   "elements": [
     {

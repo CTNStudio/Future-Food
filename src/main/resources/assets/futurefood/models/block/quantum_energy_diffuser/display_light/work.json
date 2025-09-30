@@ -5,7 +5,7 @@
   "ambientocclusion": false,
   "textures": {
     "0": "futurefood:block/quantum_energy_diffuser/display_light/work",
-    "particle": "futurefood:block/quantum_energy_diffuser/display_light/work"
+    "particle": "futurefood:block/particle"
   },
   "elements": [
     {
