@@ -3,10 +3,7 @@ package top.ctnstudio.futurefood.common.menu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -14,21 +11,23 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyInputSlot;
 
-import static top.ctnstudio.futurefood.core.init.ModMenu.ENERGY_MENU;
-
 public abstract class BasicEnergyMenu extends AbstractContainerMenu {
   private final Inventory container;
   protected int maxSlot;
   private ContainerData energyData;
 
-  public BasicEnergyMenu(int containerId, Inventory container, FriendlyByteBuf buf) {
-    this(containerId, container, new ItemStackHandler(1), new SimpleContainerData(2), null);
+  public BasicEnergyMenu(MenuType<?> menuType, int containerId, Inventory container, FriendlyByteBuf buf) {
+    this(menuType, containerId, container, new ItemStackHandler(1), new SimpleContainerData(2), null);
   }
 
-  public BasicEnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data) {
-    super(ENERGY_MENU.get(), containerId);
+  public BasicEnergyMenu(MenuType<?> menuType, int containerId, Inventory container, IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data) {
+    super(menuType, containerId);
     this.container = container;
     addSlot(container, dataInventory, energyData, data);
+  }
+
+  public BasicEnergyMenu(MenuType<?> menuType, int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData) {
+    this(menuType, containerId, container, dataInventory, energyData, null);
   }
 
   protected void addSlot(Inventory container, IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data) {
@@ -60,10 +59,6 @@ public abstract class BasicEnergyMenu extends AbstractContainerMenu {
   protected void addOtherSlot(IItemHandler dataInventory, ContainerData data, int slots) {
     for (int i = 0; i < slots; i++) {
     }
-  }
-
-  public BasicEnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData) {
-    this(containerId, container, dataInventory, energyData, null);
   }
 
   @Override

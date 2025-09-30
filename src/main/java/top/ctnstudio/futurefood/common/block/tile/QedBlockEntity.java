@@ -4,11 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.TileEntityUnlimitedLinkStorage;
@@ -39,7 +37,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
 
   public QedBlockEntity(BlockPos pos, BlockState blockState) {
     this(ModTileEntity.QED.get(), pos, blockState,
-      new ModEnergyStorage(20480, 4096, 4096),
+      new ModEnergyStorage(20480),
       DEFAULT_MAX_REMAINING_TIME);
   }
 
@@ -90,10 +88,11 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
     // 使用方法方便重写逻辑
     int time = getRemainingTime();
 
-    // 提取物品方块的能量
-    extractItemEnergy();
+    super.tick(level, pos, bs);
 
-    //  这玩意是？
+    // 提取物品方块的能量
+    controlItemEnergy(energyStorage, itemHandler, true);
+
     Queue<BlockPos> cacheData = linkStorage.getCacheData();
     if (!cacheData.isEmpty()) {
       for (BlockPos cache : cacheData) {
@@ -114,30 +113,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
 
   public int getRemainingTime() {
     return remainingTime;
-  }
-
-  public void extractItemEnergy() {
-    if (!energyStorage.canReceive()) {
-      return;
-    }
-    ItemStack stack = itemHandler.getStackInSlot(0);
-    if (stack.isEmpty()) {
-      return;
-    }
-    IEnergyStorage capability = stack.getCapability(EnergyStorage.ITEM);
-    if (capability == null || !capability.canExtract()) {
-      return;
-    }
-    int extractEnergyValue = energyStorage.getMaxReceive();
-    int simulateExtractEnergy = capability.extractEnergy(extractEnergyValue, true);
-    if (simulateExtractEnergy <= 0) {
-      return;
-    }
-    int simulateReceiveEnergy = energyStorage.receiveEnergy(simulateExtractEnergy, true);
-    if (simulateReceiveEnergy <= 0) {
-      return;
-    }
-    energyStorage.receiveEnergy(capability.extractEnergy(extractEnergyValue, false), false);
   }
 
   /**

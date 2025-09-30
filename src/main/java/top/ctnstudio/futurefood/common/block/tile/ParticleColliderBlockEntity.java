@@ -4,8 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -24,8 +26,16 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
   public ParticleColliderBlockEntity(BlockPos pos, BlockState blockState) {
-    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModEnergyStorage(102400,
-      102400, 0));
+    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModEnergyStorage(102400));
+  }
+
+  @Override
+  public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
+    if (level.isClientSide) {
+      return;
+    }
+    super.tick(level, pos, bs);
+    controlItemEnergy(energyStorage, itemHandler, true);
   }
 
   @Override

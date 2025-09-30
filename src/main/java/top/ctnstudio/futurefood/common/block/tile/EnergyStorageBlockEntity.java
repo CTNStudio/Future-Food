@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -81,13 +82,9 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     super.loadAdditional(nbt, provider);
     if (nbt.contains("energyStorage")) {
       energyStorage.deserializeNBT(provider, nbt.getCompound("energyStorage"));
-    } else {
-      energyStorage.setEnergy(0);
     }
     if (nbt.contains("items")) {
       itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
-    } else {
-      itemHandler.setSize(1);
     }
   }
 
@@ -226,5 +223,42 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
   }
 
   public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
+  }
+
+  /**
+   * 操控能源物品槽的能量
+   */
+  public void controlItemEnergy(ModEnergyStorage energyStorage, ItemStackHandler itemHandler, boolean isExtract) {
+    if (isExtract ? !energyStorage.canReceive() : !energyStorage.canExtract()) {
+      return;
+    }
+    ItemStack stack = itemHandler.getStackInSlot(0);
+    if (stack.isEmpty()) {
+      return;
+    }
+    IEnergyStorage capability = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+    if (capability == null || (isExtract ? !capability.canExtract() : !capability.canReceive())) {
+      return;
+    }
+    int controlEnergyValue = isExtract ? energyStorage.getMaxReceive() : energyStorage.getMaxExtract();
+    int simulateControlEnergyValue = isExtract ?
+      capability.extractEnergy(controlEnergyValue, true) :
+      capability.receiveEnergy(controlEnergyValue, true);
+    if (simulateControlEnergyValue <= 0) {
+      return;
+    }
+    int simulateControlEnergyValue2 = isExtract ?
+      energyStorage.receiveEnergy(simulateControlEnergyValue, true) :
+      energyStorage.extractEnergy(simulateControlEnergyValue, true);
+    if (simulateControlEnergyValue2 <= 0) {
+      return;
+    }
+    if (isExtract) {
+      int toReceive = capability.extractEnergy(controlEnergyValue, false);
+      energyStorage.receiveEnergy(toReceive, false);
+    } else {
+      int toReceive = energyStorage.extractEnergy(controlEnergyValue, false);
+      capability.receiveEnergy(toReceive, false);
+    }
   }
 }

@@ -12,12 +12,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
+import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock
   implements IEntityStorageBlock, SimpleWaterloggedBlock {
@@ -63,5 +66,11 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
   @Override
   public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
     return new ParticleColliderBlockEntity(pos, state);
+  }
+
+  @Override
+  public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+                                                                BlockEntityType<T> type) {
+    return createTickerHelper(type, ModTileEntity.PARTICLE_COLLIDER.get(), (l, bp, bs, be) -> be.tick(level, bp, bs));
   }
 }
