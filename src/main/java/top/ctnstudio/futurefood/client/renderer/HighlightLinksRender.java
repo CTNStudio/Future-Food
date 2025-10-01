@@ -2,34 +2,37 @@ package top.ctnstudio.futurefood.client.renderer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor.ARGB32;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
-import top.ctnstudio.futurefood.common.block.QedEntityBlock;
+import top.ctnstudio.futurefood.client.core.ModMaterialAtlases;
+import top.ctnstudio.futurefood.client.core.ModRenderType;
+import top.ctnstudio.futurefood.core.FutureFood;
+import top.ctnstudio.futurefood.core.init.ModItem;
 import top.ctnstudio.futurefood.util.ModUtil;
 
 import java.util.Map;
-import java.util.function.Predicate;
 
-import static top.ctnstudio.futurefood.client.core.ModRenderType.getHighlighted;
 import static top.ctnstudio.futurefood.client.util.ColorUtil.colorValue;
 import static top.ctnstudio.futurefood.client.util.ColorUtil.rgbColor;
-import static top.ctnstudio.futurefood.client.util.GraphicsPlaneRenderUtil.renderRegularPolygonXYByRadius;
+import static top.ctnstudio.futurefood.client.util.GraphicsPlaneRenderUtil.renderTextures;
 import static top.ctnstudio.futurefood.common.item.CyberWrenchItem.SCOPE;
+import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_LAUNCH;
 import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_RECEIVE;
 
 /**
@@ -38,6 +41,8 @@ import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_RECEIVE
 @OnlyIn(Dist.CLIENT)
 public class HighlightLinksRender implements ModRender {
   private static final HighlightLinksRender INSTANCE = new HighlightLinksRender();
+  private static final Material RECEIVE_ICON = chestMaterial("receive");
+  private static final Material LAUNCH_ICON = chestMaterial("launch");
 
   public static ModRender get() {
     return INSTANCE;
@@ -47,99 +52,91 @@ public class HighlightLinksRender implements ModRender {
   public void levelRender(Minecraft minecraft, ClientLevel level, Frustum frustum, PoseStack pose, Camera camera) {
     final LocalPlayer player = minecraft.player;
     if (level == null || player == null || !player.isAlive() || (
-      !player.getMainHandItem().is(Tags.Items.TOOLS_WRENCH) &&
-        !player.getItemInHand(InteractionHand.OFF_HAND).is(Tags.Items.TOOLS_WRENCH))) {
+      !player.getMainHandItem().is(ModItem.CYBER_WRENCH) &&
+        !player.getItemInHand(InteractionHand.OFF_HAND).is(ModItem.CYBER_WRENCH))) {
       return;
     }
     final BlockPos playerPos = player.getOnPos();
-
     final Map<BlockPos, BlockState> blockPosList = getBlock(level, frustum, playerPos);
     if (blockPosList.isEmpty()) {
       return;
     }
-    RenderSystem.disableDepthTest();
-    final var renderBuffers = minecraft.renderBuffers();
-    final var buffer = renderBuffers.bufferSource();
-    final var cameraPos = camera.getPosition();
-    final VertexConsumer consumer = buffer.getBuffer(getHighlighted());
 
+    final var renderBuffers = minecraft.renderBuffers();
+    final var cameraPos = camera.getPosition();
+    final var from = player.getEyePosition();
+    final var playerLookAngle = player.getLookAngle();
+    final double scope = SCOPE;
+    final var to = from.add(playerLookAngle.x * scope, playerLookAngle.y * scope, playerLookAngle.z * scope);
+    final var context = new ClipBlockStateContext(from, to, HighlightLinksRender::filterBlock);
+    final var recentlyBlockPos = BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context,
+      (context1, pos) -> context1.isTargetBlock().test(level.getBlockState(pos)) ? pos : null,
+      a -> null);
+
+    RenderSystem.disableDepthTest();
+    final var buffer = renderBuffers.bufferSource();
     pose.pushPose();
     pose.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-
-    // TODO 完成高亮显示
-//    var from = player.getEyePosition();
-//    var playerLookAngle = player.getLookAngle();
-//    double scope = from.distanceToSqr(blockCenterV3);
-//    var to = from.add(playerLookAngle.x * scope,
-//      playerLookAngle.y * scope,
-//      playerLookAngle.z * scope);
-//    getTargetBlockPos(blockPos, from, to)
     for (Map.Entry<BlockPos, BlockState> entry : blockPosList.entrySet()) {
-      blockRender(entry, consumer, pose, camera, false);
-    }
+      final var blockPos = entry.getKey();
+      final var blockState = entry.getValue();
+      final var blockCenterV3 = blockPos.getCenter();
+      var size = 0.5f;
+      var alpha = 0.4f;
+      var receiveColor = rgbColor("#af5300");
+      var launchColor = rgbColor("#0083af");
+      // 如果是眼前最近的方块，则高亮
+      if (blockPos.equals(recentlyBlockPos)) {
+        alpha = 0.7f;
+        size = 0.7f;
+      }
 
+      pose.pushPose();
+
+      pose.translate(blockCenterV3.x, blockCenterV3.y, blockCenterV3.z);
+      pose.mulPose(camera.rotation());
+      pose.pushPose();
+      if (blockState.is(UNLIMITED_RECEIVE)) {
+        renderIcon(pose, buffer, chestMaterial("receive"), 0, 0, 0, size, receiveColor, alpha);
+      } else if (blockState.is(UNLIMITED_LAUNCH)) {
+        renderIcon(pose, buffer, chestMaterial("launch"), 0, 0, 0, size, launchColor, alpha);
+      }
+
+      pose.popPose();
+
+      pose.popPose();
+    }
     pose.popPose();
     buffer.endBatch();
-
     RenderSystem.disableDepthTest();
   }
 
-  private @NotNull Map<BlockPos, BlockState> getBlock(ClientLevel level, Frustum frustum, BlockPos playerPos) {
+  private static @NotNull Map<BlockPos, BlockState> getBlock(ClientLevel level, Frustum frustum, BlockPos playerPos) {
     return ModUtil.rangePos(level, playerPos, SCOPE, entry -> {
       BlockPos pos = entry.getKey();
       if (!frustum.isVisible(new AABB(pos))) {
         return false;
       }
       BlockState blockState = level.getBlockState(pos);
-      if (blockState.isEmpty()) {
-        return false;
-      }
-      return blockState.is(UNLIMITED_RECEIVE) || blockState.getBlock() instanceof QedEntityBlock;
+      return filterBlock(blockState);
     });
   }
 
-  private void blockRender(Map.Entry<BlockPos, BlockState> entry, VertexConsumer consumer,
-                           PoseStack pose, Camera camera, boolean isSelected) {
-    final var blockPos = entry.getKey();
-    final var blockState = entry.getValue();
-    final var blockCenterV3 = blockPos.getCenter();
-    final var x = blockCenterV3.x;
-    final var y = blockCenterV3.y;
-    final var z = blockCenterV3.z;
-    var size = 0.1f;
-    var sideLength = 0.35f;
-    var alpha = 0.4f;
-    var color = rgbColor("#6916af");
-    if (isSelected) {
-      sideLength = 0.4f;
-      alpha = 0.7f;
-      color = rgbColor("#a11aff");
-    }
-    if (blockState.is(UNLIMITED_RECEIVE)) { // 可链接方块
-
-    }
-
-    pose.pushPose();
-
-    pose.translate(x, y, z);
-    pose.mulPose(camera.rotation());
-    var last = pose.last();
-    var matrix4f = last.pose();
-
-    pose.pushPose();
-
-    renderRegularPolygonXYByRadius(pose, consumer, matrix4f, size, 0, 0, sideLength, 6,
-      ARGB32.red(color), ARGB32.green(color), ARGB32.blue(color), colorValue(alpha));
-
-    pose.popPose();
-
-    pose.popPose();
+  private static boolean filterBlock(BlockState blockState) {
+    return !blockState.isEmpty() && (blockState.is(UNLIMITED_RECEIVE) || blockState.is(UNLIMITED_LAUNCH));
   }
 
-  public boolean getTargetBlockPos(BlockPos target, Vec3 from, Vec3 to) {
-    return BlockGetter.traverseBlocks(from, to,
-      (Predicate<BlockPos>) pos -> pos.equals(target),
-      (posPredicate, t) -> posPredicate.test(t) ? true : null,
-      a -> false);
+  private static @NotNull Material chestMaterial(String texture) {
+    return chestMaterial(FutureFood.modRL(texture));
+  }
+
+  private static @NotNull Material chestMaterial(ResourceLocation rl) {
+    return new Material(ModMaterialAtlases.ICON, rl);
+  }
+
+  private static void renderIcon(PoseStack pose, MultiBufferSource.BufferSource bufferSource, Material material,
+                                 float x, float y, float z, float size, int rgb, float a) {
+    renderTextures(pose, material.buffer(bufferSource, ModRenderType::getIcon), size, x, y, z, 0, 0, 1, 1,
+      ARGB32.red(rgb), ARGB32.green(rgb), ARGB32.blue(rgb), colorValue(a));
   }
 }

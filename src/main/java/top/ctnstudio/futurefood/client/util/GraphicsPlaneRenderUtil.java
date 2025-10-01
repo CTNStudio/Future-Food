@@ -2,6 +2,7 @@ package top.ctnstudio.futurefood.client.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.Direction;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -10,26 +11,50 @@ import org.joml.Matrix4f;
 @OnlyIn(Dist.CLIENT)
 public class GraphicsPlaneRenderUtil {
 
+  public static void renderTextures(PoseStack pose, VertexConsumer buffer,
+                                    float size,
+                                    float x, float y, float z,
+                                    float u, float v, float u1, float v1,
+                                    int r, int g, int b, int a) {
+    int fullBright = LightTexture.FULL_BRIGHT;
+    PoseStack.Pose last = pose.last();
+    float s = size / 2;
+    renderVertex(last, buffer, x + s, y - s, z, r, g, b, a, u1, v1, fullBright);
+    renderVertex(last, buffer, x + s, y + s, z, r, g, b, a, u1, v, fullBright);
+    renderVertex(last, buffer, x - s, y + s, z, r, g, b, a, u, v, fullBright);
+    renderVertex(last, buffer, x - s, y - s, z, r, g, b, a, u, v1, fullBright);
+  }
+
+  private static void renderVertex(PoseStack.Pose pose, VertexConsumer buffer,
+                                   float x, float y, float z,
+                                   int r, int g, int b, int a,
+                                   float u, float v, int packedLight) {
+    buffer.addVertex(pose, x, y, z)
+      .setUv(u, v)
+      .setColor(r, g, b, a)
+      .setLight(packedLight);
+  }
+
   public static void renderQuads(PoseStack pose, VertexConsumer vertex,
-                                 boolean isReverse, float partialTick, float size, int[] uv, int[] uv1) {
+                                 boolean isReverse, float size, int[] uv, int[] uv1) {
     PoseStack.Pose last = pose.last();
     for (Direction direction : Direction.values()) {
-      renderNoodles(last, vertex, direction, partialTick, size, isReverse, uv[0], uv[1], uv1[0], uv1[1]);
+      renderNoodles(last, vertex, direction, size, isReverse, uv[0], uv[1], uv1[0], uv1[1]);
     }
   }
 
   public static void renderQuads(PoseStack pose, VertexConsumer[] vertex,
-                                 boolean isReverse, float partialTick, float size, int[][] uv, int[][] uv1) {
+                                 boolean isReverse, float size, int[][] uv, int[][] uv1) {
     PoseStack.Pose last = pose.last();
     int index = 0;
     for (Direction direction : Direction.values()) {
-      renderNoodles(last, vertex[index], direction, partialTick, size, isReverse, uv[index][0], uv[index][1], uv1[index][0], uv1[index][1]);
+      renderNoodles(last, vertex[index], direction, size, isReverse, uv[index][0], uv[index][1], uv1[index][0], uv1[index][1]);
       index++;
     }
   }
 
   public static void renderNoodles(PoseStack.Pose last, VertexConsumer vertex, Direction direction,
-                                   float partialTick, float size, boolean isReverse, int u, int v, int u1, int v1) {
+                                   float size, boolean isReverse, int u, int v, int u1, int v1) {
     final float scopeSize = size / 2;
     float v1x = 0, v1y = 0, v1z = 0;
     float v2x = 0, v2y = 0, v2z = 0;

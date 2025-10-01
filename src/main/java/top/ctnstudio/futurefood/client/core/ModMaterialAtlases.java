@@ -14,11 +14,11 @@ import java.util.Map;
 @EventBusSubscriber(modid = FutureFood.ID, value = Dist.CLIENT)
 public final class ModMaterialAtlases {
   public static final ResourceLocation ENERGY_BALL = FutureFood.modRL("textures/atlas/energy_ball.png");
-  public static final ResourceLocation GUI = FutureFood.modRL("textures/atlas/gui.png");
+  public static final ResourceLocation ICON = FutureFood.modRL("textures/atlas/icon.png");
 
   private static final Map<ResourceLocation, ResourceLocation> MANAGER_TEXTURES = Map.of(
-    ModMaterialAtlases.GUI,
-    FutureFood.modRL("gui"),
+    ModMaterialAtlases.ICON,
+    FutureFood.modRL("icon"),
     ModMaterialAtlases.ENERGY_BALL,
     FutureFood.modRL("energy_ball")
   );

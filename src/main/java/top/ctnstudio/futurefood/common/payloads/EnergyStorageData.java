@@ -11,6 +11,9 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.FutureFood;
 
+/**
+ * 能源存储数据包
+ */
 public record EnergyStorageData(int energy, int maxEnergy) implements CustomPacketPayload {
   public static final CustomPacketPayload.Type<EnergyStorageData> TYPE = new CustomPacketPayload.Type<>(FutureFood.modRL("energy_storage_data"));
 

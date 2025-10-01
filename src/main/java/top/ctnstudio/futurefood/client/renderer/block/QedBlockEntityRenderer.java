@@ -174,8 +174,7 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     } else if (index < 0) {
       index = 0;
     }
-    Material material = workMaterials.get(index);
-    return material.buffer(bufferSource, ModRenderType::getEnergyBall);
+    return workMaterials.get(index).buffer(bufferSource, ModRenderType::getEnergyBall);
   }
 
   private static Function<MultiBufferSource, VertexConsumer> createVertexConsumer(RenderType renderType) {
@@ -183,6 +182,6 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
   }
 
   protected static Material chestMaterial(String texture) {
-    return new Material(ModMaterialAtlases.ENERGY_BALL, FutureFood.modRL("block/quantum_energy_diffuser/energy_ball/" + texture));
+    return new Material(ModMaterialAtlases.ENERGY_BALL, FutureFood.modRL(texture));
   }
 }

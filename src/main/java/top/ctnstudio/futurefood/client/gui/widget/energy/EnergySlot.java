@@ -33,6 +33,6 @@ public abstract class EnergySlot extends SlotItemHandler {
 
   @Override
   public @Nullable Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-    return Pair.of(ModMaterialAtlases.GUI, ENERGY_ICON);
+    return Pair.of(ModMaterialAtlases.ICON, ENERGY_ICON);
   }
 }

@@ -2,10 +2,8 @@ package top.ctnstudio.futurefood.common.item;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionHand;
@@ -21,13 +19,14 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.core.FutureFood;
-import top.ctnstudio.futurefood.core.init.ModCapabilitys.Block;
+import top.ctnstudio.futurefood.core.init.ModCapability;
 import top.ctnstudio.futurefood.core.init.ModItemComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_RECEIVE;
+import static top.ctnstudio.futurefood.util.ModUtil.sendOverlayMessage;
 
 public class CyberWrenchItem extends Item {
   public static final String BINDING_SUCCESS = FutureFood.ID + ".cyber_wrench.binding.success";
@@ -84,7 +83,7 @@ public class CyberWrenchItem extends Item {
    */
   public @NotNull InteractionResultHolder<ItemStack> linkMode(Level level, Player player, InteractionHand usedHand, List<Integer> diffuserPos, BlockPos blockPos, ItemStack item) {
     BlockPos bePos = new BlockPos(diffuserPos.get(0), diffuserPos.get(1), diffuserPos.get(2));
-    IUnlimitedLinkStorage capability = level.getCapability(Block.UNLIMITED_LINK_STORAGE, bePos);
+    IUnlimitedLinkStorage capability = level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, bePos);
     int x = blockPos.getX();
     int y = blockPos.getY();
     int z = blockPos.getZ();
@@ -104,7 +103,7 @@ public class CyberWrenchItem extends Item {
    * 绑定模式
    */
   public @NotNull InteractionResultHolder<ItemStack> bindingMode(Level level, Player player, InteractionHand usedHand, List<Integer> diffuserPos, BlockPos blockPos, ItemStack item) {
-    if (diffuserPos == null || level.getCapability(Block.UNLIMITED_LINK_STORAGE, blockPos) == null) {
+    if (diffuserPos == null || level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, blockPos) == null) {
       return super.use(level, player, usedHand);
     }
     int x = blockPos.getX();
@@ -115,10 +114,6 @@ public class CyberWrenchItem extends Item {
     item.set(ModItemComponent.POSITION, pos);
 
     return InteractionResultHolder.sidedSuccess(item, level.isClientSide);
-  }
-
-  private void sendOverlayMessage(String text, Object... args) {
-    Minecraft.getInstance().gui.setOverlayMessage(Component.translatable(text, args), false);
   }
 
   /**

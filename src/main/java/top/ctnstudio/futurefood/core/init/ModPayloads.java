@@ -5,6 +5,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import top.ctnstudio.futurefood.common.payloads.EnergyStorageData;
+import top.ctnstudio.futurefood.common.payloads.TextPromptData;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 @EventBusSubscriber
@@ -19,6 +20,7 @@ public final class ModPayloads {
 
     /// 接收来自服务端的数据
     registrar.commonToClient(EnergyStorageData.TYPE, EnergyStorageData.STREAM_CODEC, EnergyStorageData::toClient);
+    registrar.commonToClient(TextPromptData.TYPE, TextPromptData.STREAM_CODEC, TextPromptData::toClient);
     //..
 
     /// 接收来自客户端的数据

@@ -1,7 +1,9 @@
 package top.ctnstudio.futurefood.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,6 +15,13 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ModUtil {
+  /**
+   * 快速发送到UI
+   */
+  public static void sendOverlayMessage(String text, Object... args) {
+    Minecraft.getInstance().gui.setOverlayMessage(Component.translatable(text, args), false);
+  }
+
   /**
    * 获取一个坐标的周围方块
    *
