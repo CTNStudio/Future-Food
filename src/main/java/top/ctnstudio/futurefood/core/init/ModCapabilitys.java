@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
 
-public class ModCapabilitys {
+public final class ModCapabilitys {
   private static <T> @NotNull BlockCapability<T, @Nullable Void> createVoid(String name, Class<T> typeClass) {
     return BlockCapability.createVoid(FutureFood.modRL(name), typeClass);
   }

@@ -11,8 +11,8 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
-import top.ctnstudio.futurefood.common.block.QedEntityBlock.Activate;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock.Light;
+import top.ctnstudio.futurefood.common.block.QerEntityBlock;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 
@@ -24,37 +24,30 @@ public class DatagenBlockState extends BlockStateProvider {
   @Override
   protected void registerStatesAndModels() {
     qedModel();
+    qerModel();
     simpleParticleModels(ModBlock.PARTICLE_COLLIDER.get());
   }
 
-  private void qedModel() {
-    final var block = ModBlock.QED.get();
-//    final var variantBuilder = getVariantBuilder(block);
-
+  private void qerModel() {
+    final var block = ModBlock.QER.get();
     final var multiPartBuilder = getMultipartBuilder(block);
 
-    final String baseRl = "block/quantum_energy_diffuser/base/";
-    final String displayLightRl = "block/quantum_energy_diffuser/display_light/";
-    final String energyBallRl = "block/quantum_energy_diffuser/energy_ball/";
+    final String rl = "block/quantum_energy_receiver/";
+    final String displayLightRl = "block/quantum_energy_receiver/display_light/";
+
 
     for (Direction direction : Direction.values()) {
       final int xValue = direction == Direction.DOWN ? 180 : direction.getAxis().isHorizontal() ? 90 : 0;
       final int yValue = direction.getAxis().isVertical() ? 0 : (((int) direction.toYRot()) + 180) % 360;
-      for (Activate activate : QedEntityBlock.Activate.values()) {
+      for (QerEntityBlock.Activate activate : QerEntityBlock.Activate.values()) {
         multiPartBuilder
           .part()
-          .modelFile(getExistingFile(baseRl + activate.getName()))
+          .modelFile(getExistingFile(rl + activate.getName()))
           .rotationX(xValue)
           .rotationY(yValue)
           .addModel()
-          .nestedGroup()
-          .nestedGroup()
           .condition(BlockStateProperties.FACING, direction)
-          .endNestedGroup()
-          .end()
-          .nestedGroup()
-          .condition(QedEntityBlock.ACTIVATE, activate)
-          .end()
+          .condition(QerEntityBlock.ACTIVATE, activate)
           .end();
       }
       for (Light light : QedEntityBlock.Light.values()) {
@@ -64,14 +57,43 @@ public class DatagenBlockState extends BlockStateProvider {
           .rotationX(xValue)
           .rotationY(yValue)
           .addModel()
-          .nestedGroup()
-          .nestedGroup()
           .condition(BlockStateProperties.FACING, direction)
-          .endNestedGroup()
-          .end()
-          .nestedGroup()
           .condition(QedEntityBlock.LIGHT, light)
-          .end()
+          .end();
+      }
+    }
+  }
+
+  private void qedModel() {
+    final var block = ModBlock.QED.get();
+    final var multiPartBuilder = getMultipartBuilder(block);
+
+    final String baseRl = "block/quantum_energy_diffuser/base/";
+    final String displayLightRl = "block/quantum_energy_diffuser/display_light/";
+
+    for (Direction direction : Direction.values()) {
+      final int xValue = direction == Direction.DOWN ? 180 : direction.getAxis().isHorizontal() ? 90 : 0;
+      final int yValue = direction.getAxis().isVertical() ? 0 : (((int) direction.toYRot()) + 180) % 360;
+      for (QedEntityBlock.Activate activate : QedEntityBlock.Activate.values()) {
+        multiPartBuilder
+          .part()
+          .modelFile(getExistingFile(baseRl + activate.getName()))
+          .rotationX(xValue)
+          .rotationY(yValue)
+          .addModel()
+          .condition(BlockStateProperties.FACING, direction)
+          .condition(QedEntityBlock.ACTIVATE, activate)
+          .end();
+      }
+      for (Light light : QedEntityBlock.Light.values()) {
+        multiPartBuilder
+          .part()
+          .modelFile(getExistingFile(displayLightRl + light.getName()))
+          .rotationX(xValue)
+          .rotationY(yValue)
+          .addModel()
+          .condition(BlockStateProperties.FACING, direction)
+          .condition(QedEntityBlock.LIGHT, light)
           .end();
       }
     }

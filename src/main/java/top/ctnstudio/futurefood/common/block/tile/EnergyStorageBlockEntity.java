@@ -23,13 +23,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu.EnergyData;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import javax.annotation.Nonnull;
@@ -37,13 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class EnergyStorageBlockEntity extends BlockEntity
+public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extends BlockEntity
   implements Container, MenuProvider {
-  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE
-    = () -> new ModEnergyStorage(10240, 1024, 1024);
+  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE =
+    () -> new ModEnergyStorage(10240, 1024, 1024);
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
-  protected final EnergyData energyData;
+  protected final BasicEnergyMenu.EnergyData energyData;
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
     BlockState blockState) {
@@ -56,7 +57,7 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
-    energyData = new EnergyData(this.energyStorage);
+    energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
   }
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -81,13 +82,9 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
     super.loadAdditional(nbt, provider);
     if (nbt.contains("energyStorage")) {
       energyStorage.deserializeNBT(provider, nbt.getCompound("energyStorage"));
-    } else {
-      energyStorage.setEnergy(0);
     }
     if (nbt.contains("items")) {
       itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
-    } else {
-      itemHandler.setSize(1);
     }
   }
 
@@ -120,11 +117,11 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   @Override
-  public @Nullable EnergyMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+  public @Nullable T createMenu(int containerId, Inventory playerInventory, Player player) {
     if (!player.isAlive()) {
       return null;
     }
-    return new EnergyMenu(containerId, playerInventory, itemHandler, energyData);
+    return (T) new EnergyMenu(containerId, playerInventory, itemHandler, energyData);
   }
 
   @Override
@@ -226,5 +223,42 @@ public abstract class EnergyStorageBlockEntity extends BlockEntity
   }
 
   public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
+  }
+
+  /**
+   * 操控能源物品槽的能量
+   */
+  public void controlItemEnergy(ModEnergyStorage energyStorage, ItemStackHandler itemHandler, boolean isExtract) {
+    if (isExtract ? !energyStorage.canReceive() : !energyStorage.canExtract()) {
+      return;
+    }
+    ItemStack stack = itemHandler.getStackInSlot(0);
+    if (stack.isEmpty()) {
+      return;
+    }
+    IEnergyStorage capability = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+    if (capability == null || (isExtract ? !capability.canExtract() : !capability.canReceive())) {
+      return;
+    }
+    int controlEnergyValue = isExtract ? energyStorage.getMaxReceive() : energyStorage.getMaxExtract();
+    int simulateControlEnergyValue = isExtract ?
+      capability.extractEnergy(controlEnergyValue, true) :
+      capability.receiveEnergy(controlEnergyValue, true);
+    if (simulateControlEnergyValue <= 0) {
+      return;
+    }
+    int simulateControlEnergyValue2 = isExtract ?
+      energyStorage.receiveEnergy(simulateControlEnergyValue, true) :
+      energyStorage.extractEnergy(simulateControlEnergyValue, true);
+    if (simulateControlEnergyValue2 <= 0) {
+      return;
+    }
+    if (isExtract) {
+      int toReceive = capability.extractEnergy(controlEnergyValue, false);
+      energyStorage.receiveEnergy(toReceive, false);
+    } else {
+      int toReceive = energyStorage.extractEnergy(controlEnergyValue, false);
+      capability.receiveEnergy(toReceive, false);
+    }
   }
 }

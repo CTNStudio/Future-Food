@@ -7,22 +7,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.core.FutureFood;
 
-public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
-  public static final ResourceLocation DEFAULT_BG = FutureFood.modRL("textures/gui/container/energy.png");
-  public static final ResourceLocation ENERGY_ICON = FutureFood.modRL("energy_icon");
+public class EnergyScreen<T extends BasicEnergyMenu> extends AbstractContainerScreen<T> {
+  public static final ResourceLocation BG = FutureFood.modRL("textures/gui/container/energy.png");
   private final ResourceLocation textureBg;
   protected EnergyBar listener;
 
-  public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title) {
-    this(menu, playerInventory, title, DEFAULT_BG);
+  public EnergyScreen(T menu, Inventory playerInventory, Component title) {
+    this(menu, playerInventory, title, BG);
   }
 
-  public EnergyScreen(EnergyMenu menu, Inventory playerInventory, Component title, ResourceLocation textureBg) {
+  public EnergyScreen(T menu, Inventory playerInventory, Component title, ResourceLocation textureBg) {
     super(menu, playerInventory, title);
     this.textureBg = textureBg;
+    this.titleLabelX += 8;
+    this.titleLabelY -= 2;
   }
 
   @Override
@@ -55,5 +56,10 @@ public class EnergyScreen extends AbstractContainerScreen<EnergyMenu> {
     if (listener != null) {
       listener.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
     }
+  }
+
+  @Override
+  protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
   }
 }

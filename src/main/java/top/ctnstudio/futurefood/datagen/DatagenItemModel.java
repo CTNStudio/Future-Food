@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -27,8 +28,8 @@ public class DatagenItemModel extends ItemModelProvider {
 
   @Override
   protected void registerModels() {
-    simpleBlockItem(ModBlock.QED.get());
-    simpleBlockItem(ModBlock.QER.get());
+    item(ModBlock.QED.get(), FutureFood.modRL("block/quantum_energy_diffuser/work"));
+    item(ModBlock.QER.get(), FutureFood.modRL("block/quantum_energy_receiver/work"));
     handheldItem(ModItem.CYBER_WRENCH.get());
   }
 
@@ -104,6 +105,10 @@ public class DatagenItemModel extends ItemModelProvider {
    */
   public void specialItem(Item item) {
     getBuilder(item.toString()).parent(new ModelFile.UncheckedModelFile(parse("builtin/entity")));
+  }
+
+  public void item(ItemLike item, ResourceLocation rl) {
+    getBuilder(item.asItem().toString()).parent(new ModelFile.UncheckedModelFile(rl));
   }
 
   public ItemModelBuilder basicItem(Item item, String name) {

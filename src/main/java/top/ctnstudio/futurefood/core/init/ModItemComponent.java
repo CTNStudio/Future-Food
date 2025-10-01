@@ -13,7 +13,7 @@ import java.util.function.UnaryOperator;
 import static top.ctnstudio.futurefood.common.item.CyberWrenchItem.POSITION_CODEC;
 import static top.ctnstudio.futurefood.common.item.CyberWrenchItem.POSITION_STREAM;
 
-public class ModItemComponent {
+public final class ModItemComponent {
   public static final DeferredRegister<DataComponentType<?>> ITEM_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, FutureFood.ID);
 
   public static final Supplier<DataComponentType<List<Integer>>> POSITION = register("position", listBuilder ->

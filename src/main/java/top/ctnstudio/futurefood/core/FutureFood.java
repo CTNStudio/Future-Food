@@ -19,12 +19,14 @@ public class FutureFood {
   public static final Logger LOGGER = LogManager.getLogger(ID);
 
   public FutureFood(IEventBus modEventBus, ModContainer modContainer) {
+    LOGGER.info("Starting FutureFood");
     ModItemComponent.ITEM_COMPONENTS.register(modEventBus);
     ModMenu.MENU.register(modEventBus);
     ModItem.ITEMS.register(modEventBus);
     ModBlock.BLOCKS.register(modEventBus);
     ModTileEntity.TILES.register(modEventBus);
     ModCreativeModeTab.TABS.register(modEventBus);
+    ModEffect.EFFECT.register(modEventBus);
   }
 
   /**

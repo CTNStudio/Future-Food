@@ -12,7 +12,7 @@ import static top.ctnstudio.futurefood.util.TextUtil.getDigitalText;
 
 public class EnergyBar extends ImageWidget.Sprite {
   public static final String TOOLTIP = FutureFood.ID + ".gui.energy.tooltip";
-  public static final ResourceLocation TEXTURE = FutureFood.modRL("energy_bar");
+  public static final ResourceLocation TEXTURE = FutureFood.modRL("container/energy_bar/energy_bar");
   private int energy;
   private int maxEnergy;
 
