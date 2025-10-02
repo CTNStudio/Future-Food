@@ -45,6 +45,7 @@ import java.util.Optional;
 
 import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
+// TODO 完成状态变化
 // TODO 破坏不掉落库存物品
 public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);

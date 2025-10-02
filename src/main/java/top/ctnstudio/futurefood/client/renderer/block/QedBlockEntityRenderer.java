@@ -109,6 +109,8 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     if (activateState == Activate.DEFAULT) {
       return;
     }
+    
+    // TODO 根据方向渲染
     final Direction directionState = blockState.getValue(DirectionEntityBlock.FACING);
     final Light lightState = blockState.getValue(QedEntityBlock.LIGHT);
 

@@ -22,6 +22,7 @@ import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
+// TODO 完成状态变化
 // TODO 破坏不掉落库存物品
 public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock
   implements IEntityStorageBlock, SimpleWaterloggedBlock {

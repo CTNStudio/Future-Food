@@ -19,6 +19,8 @@ import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
+// TODO 自定义配方
+// TODO 新增2输入的原料槽，成品输出槽
 public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<ParticleColliderMenu>
   implements GeoBlockEntity, IUnlimitedEntityReceive {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();

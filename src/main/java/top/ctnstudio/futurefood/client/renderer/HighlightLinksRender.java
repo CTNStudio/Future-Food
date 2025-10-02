@@ -50,6 +50,7 @@ public class HighlightLinksRender implements ModRender {
     return INSTANCE;
   }
 
+  // TODO 更酷的渲染
   @Override
   public void levelRender(Minecraft minecraft, ClientLevel level, Frustum frustum, PoseStack pose, Camera camera) {
     final LocalPlayer player = minecraft.player;
