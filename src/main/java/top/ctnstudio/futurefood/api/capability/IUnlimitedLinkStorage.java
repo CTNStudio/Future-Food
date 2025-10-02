@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -95,9 +96,33 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
   boolean linkBlock(Level level, BlockPos pos);
 
   /**
+   * 是否可以链接
+   *
+   * @param pos 要链接的方块位置
+   * @return 是否可以链接
+   */
+  boolean isLink(BlockPos pos);
+
+  /**
+   * 是否包含链接
+   *
+   * @param pos 要链接的方块位置
+   * @return 是否包含链接
+   */
+  boolean isContainLink(BlockPos pos);
+
+  /**
    * 保存链接列表
    */
   CompoundTag serializeNBT(HolderLookup.Provider provider);
+
+  /**
+   * 获取一个链接的方块
+   *
+   * @param pos 要获取的链接方块位置
+   * @return 链接的方块
+   */
+  BlockState getLinkedBlock(BlockPos pos);
 
   /**
    * 加载链接列表

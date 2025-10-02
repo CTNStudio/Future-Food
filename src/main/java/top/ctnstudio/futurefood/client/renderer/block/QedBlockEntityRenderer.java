@@ -21,7 +21,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import top.ctnstudio.futurefood.client.core.ModMaterialAtlases;
 import top.ctnstudio.futurefood.client.core.ModModelLayer;
 import top.ctnstudio.futurefood.client.core.ModRenderType;
-import top.ctnstudio.futurefood.common.block.DirectionalEntityBlock;
+import top.ctnstudio.futurefood.common.block.DirectionEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock.Activate;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock.Light;
@@ -109,7 +109,7 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     if (activateState == Activate.DEFAULT) {
       return;
     }
-    final Direction directionState = blockState.getValue(DirectionalEntityBlock.FACING);
+    final Direction directionState = blockState.getValue(DirectionEntityBlock.FACING);
     final Light lightState = blockState.getValue(QedEntityBlock.LIGHT);
 
     final long timeVariable = System.currentTimeMillis() % 10000;

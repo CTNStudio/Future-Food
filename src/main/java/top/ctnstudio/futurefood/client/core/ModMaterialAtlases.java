@@ -15,12 +15,15 @@ import java.util.Map;
 public final class ModMaterialAtlases {
   public static final ResourceLocation ENERGY_BALL = FutureFood.modRL("textures/atlas/energy_ball.png");
   public static final ResourceLocation ICON = FutureFood.modRL("textures/atlas/icon.png");
+  public static final ResourceLocation SPRITES = FutureFood.modRL("textures/atlas/sprites.png");
 
   private static final Map<ResourceLocation, ResourceLocation> MANAGER_TEXTURES = Map.of(
-    ModMaterialAtlases.ICON,
+    ICON,
     FutureFood.modRL("icon"),
-    ModMaterialAtlases.ENERGY_BALL,
-    FutureFood.modRL("energy_ball")
+    ENERGY_BALL,
+    FutureFood.modRL("energy_ball"),
+    SPRITES,
+    FutureFood.modRL("sprites")
   );
 
   @SubscribeEvent

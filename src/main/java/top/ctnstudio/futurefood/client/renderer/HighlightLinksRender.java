@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -62,33 +64,35 @@ public class HighlightLinksRender implements ModRender {
       return;
     }
 
-    final var renderBuffers = minecraft.renderBuffers();
-    final var cameraPos = camera.getPosition();
-    final var from = player.getEyePosition();
-    final var playerLookAngle = player.getLookAngle();
+    final RenderBuffers renderBuffers = minecraft.renderBuffers();
+    final Vec3 cameraPos = camera.getPosition();
+    final Vec3 from = player.getEyePosition();
+    final Vec3 playerLookAngle = player.getLookAngle();
     final double scope = SCOPE;
-    final var to = from.add(playerLookAngle.x * scope, playerLookAngle.y * scope, playerLookAngle.z * scope);
-    final var context = new ClipBlockStateContext(from, to, HighlightLinksRender::filterBlock);
-    final var recentlyBlockPos = BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context,
+    final Vec3 to = from.add(playerLookAngle.x * scope, playerLookAngle.y * scope, playerLookAngle.z * scope);
+    final ClipBlockStateContext context = new ClipBlockStateContext(from, to, HighlightLinksRender::filterBlock);
+    final BlockPos recentlyBlockPos = BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context,
       (context1, pos) -> context1.isTargetBlock().test(level.getBlockState(pos)) ? pos : null,
       a -> null);
 
+    final boolean isContainsRecentlyPos = blockPosList.containsKey(recentlyBlockPos);
+
     RenderSystem.disableDepthTest();
-    final var buffer = renderBuffers.bufferSource();
+    final MultiBufferSource.BufferSource buffer = renderBuffers.bufferSource();
     pose.pushPose();
     pose.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
     for (Map.Entry<BlockPos, BlockState> entry : blockPosList.entrySet()) {
-      final var blockPos = entry.getKey();
-      final var blockState = entry.getValue();
-      final var blockCenterV3 = blockPos.getCenter();
+      final BlockPos blockPos = entry.getKey();
+      final BlockState blockState = entry.getValue();
+      final Vec3 blockCenterV3 = blockPos.getCenter();
       var size = 0.5f;
-      var alpha = 0.4f;
+      var alpha = isContainsRecentlyPos ? 0.4f : 0.6f;
       var receiveColor = rgbColor("#af5300");
       var launchColor = rgbColor("#0083af");
       // 如果是眼前最近的方块，则高亮
       if (blockPos.equals(recentlyBlockPos)) {
-        alpha = 0.7f;
-        size = 0.7f;
+        alpha = 1f;
+        size = 0.9f;
       }
 
       pose.pushPose();

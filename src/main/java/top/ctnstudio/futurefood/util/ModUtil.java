@@ -8,6 +8,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -65,5 +67,30 @@ public class ModUtil {
     }
     Direction value = optionalValue.get();
     return value == side.getOpposite();
+  }
+
+  /**
+   * 控制两个能源槽之间的能量传递
+   *
+   * @param extract 被提取
+   * @param receive 接收的
+   */
+  public static void controlEnergy(@NotNull IEnergyStorage extract, @NotNull IEnergyStorage receive) {
+    if (extract.getEnergyStored() <= 0 ||
+      receive.getEnergyStored() >= receive.getMaxEnergyStored() ||
+      !extract.canExtract() ||
+      !receive.canReceive()) {
+      return;
+    }
+    int value = extract.getEnergyStored();
+    int extractValue = extract.extractEnergy(value, true);
+    if (extractValue <= 0) {
+      return;
+    }
+    int receiveValue = receive.receiveEnergy(extractValue, true);
+    if (receiveValue <= 0) {
+      return;
+    }
+    receive.receiveEnergy(extract.extractEnergy(extractValue, false), false);
   }
 }

@@ -20,6 +20,9 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 
+/**
+ * 无限连接存储
+ */
 public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
   /**
    * 链接哈希集合
@@ -90,6 +93,16 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
   }
 
   @Override
+  public boolean isLink(BlockPos pos) {
+    return !isContainLink(pos);
+  }
+
+  @Override
+  public boolean isContainLink(BlockPos pos) {
+    return linkSet.contains(pos);
+  }
+
+  @Override
   public CompoundTag serializeNBT(Provider provider) {
     CompoundTag nbt = new CompoundTag();
     ListTag tags = new ListTag();
@@ -114,6 +127,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
    * @return 链接的方块
    */
   @CheckForNull
+  @Override
   public BlockState getLinkedBlock(BlockPos pos) {
     if (Objects.isNull(this.getLevel())) {
       return null;
@@ -147,6 +161,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     });
   }
 
+  @Override
   public final void addLinkCache(BlockPos pos) {
     this.cacheData.add(pos);
   }

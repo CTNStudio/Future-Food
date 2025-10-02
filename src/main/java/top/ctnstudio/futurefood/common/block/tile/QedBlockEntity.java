@@ -14,6 +14,7 @@ import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.util.Queue;
 import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 
 // TODO 添加配置功能
+// TODO 每次重启世界链接丢失
 public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
@@ -92,7 +94,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
     super.tick(level, pos, bs);
 
     // 提取物品方块的能量
-    controlItemEnergy(energyStorage, itemHandler, true);
+    controlItemEnergy(itemHandler, false);
 
     Queue<BlockPos> cacheData = linkStorage.getCacheData();
     if (!cacheData.isEmpty()) {
@@ -106,7 +108,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
     }
 
     if (time <= 0) {
-      executeEnergyTransmission(level, pos, bs);
+      executeEnergyTransmission(level, bs);
       resetRemainingTime();
     }
     remainingTime--;
@@ -119,21 +121,20 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   /**
    * 执行能量传递
    *
-   * @param blockLevel 方块的世界
-   * @param pos        当前方块的位置
-   * @param bs         当方块的方块状态
+   * @param qedLevel qed世界
+   * @param qedBlockState qed方块状态
    */
-  // TODO 传递异常 当前状态反向传递
-  public void executeEnergyTransmission(Level blockLevel, BlockPos pos, BlockState bs) {
-    linkStorage.getLinkSet().forEach((bp) -> {
-      IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(blockLevel, pos);
+  public void executeEnergyTransmission(Level qedLevel, BlockState qedBlockState) {
+    if (!energyStorage.canExtract() || energyStorage.getEnergyStored() <= 0) {
+      return;
+    }
+
+    linkStorage.getLinkSet().forEach(bp -> {
+      IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(qedLevel, bp);
       if (capability == null) {
         return;
       }
-      int maxReceive = energyStorage.getMaxReceive();
-      if (capability.receiveEnergy(maxReceive, true) > 0) {
-        capability.receiveEnergy(maxReceive, false);
-      }
+      ModUtil.controlEnergy(energyStorage, capability);
     });
   }
 

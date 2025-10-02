@@ -3,6 +3,7 @@ package top.ctnstudio.futurefood.common.item;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -14,26 +15,29 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
-import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModCapability;
 import top.ctnstudio.futurefood.core.init.ModItemComponent;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_LAUNCH;
 import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_RECEIVE;
-import static top.ctnstudio.futurefood.util.ModUtil.sendOverlayMessage;
 
 public class CyberWrenchItem extends Item {
   public static final String BINDING_SUCCESS = FutureFood.ID + ".cyber_wrench.binding.success";
   public static final String BINDING_CANCEL = FutureFood.ID + ".cyber_wrench.binding.cancel";
   public static final String BINDING_FAILURE = FutureFood.ID + ".cyber_wrench.binding.failure";
   public static final String LINK_SUCCESS = FutureFood.ID + ".cyber_wrench.link.success";
-  public static final String LINK_CANCEL = FutureFood.ID + ".cyber_wrench.link.cancel";
+  public static final String LINK_REMOVE = FutureFood.ID + ".cyber_wrench.link.remove";
+  public static final String LINK_REMOVE_FAILURE = FutureFood.ID + ".cyber_wrench.link.remove_failure";
   public static final String LINK_FAILURE = FutureFood.ID + ".cyber_wrench.link.failure";
   public static final int SCOPE = 10; // TODO 添加配置功能
 
@@ -57,79 +61,159 @@ public class CyberWrenchItem extends Item {
       return super.use(level, player, usedHand);
     }
 
-    final List<Integer> diffuserPos = item.get(component);
-    final boolean isLinkMode = diffuserPos != null && !diffuserPos.isEmpty();
-    // 获取目标方块位置
-    final BlockPos blockPos = getTargetBlockPos(level, player, isLinkMode);
-    if ((player.isShiftKeyDown() || (blockPos == null && player.isShiftKeyDown())) && isLinkMode) {
-      sendOverlayMessage(BINDING_CANCEL, diffuserPos.get(0), diffuserPos.get(1), diffuserPos.get(2));
-      item.set(component, new ArrayList<>());
-      return InteractionResultHolder.sidedSuccess(item, level.isClientSide);
-    }
-    if (blockPos == null) {
+    final List<Integer> diffuserPosList = item.get(component);
+    if (diffuserPosList == null) {
       return super.use(level, player, usedHand);
     }
 
-    // 选择操作方式
-    if (isLinkMode) {
-      // 链接模式
-      return linkMode(level, player, usedHand, diffuserPos, blockPos, item);
+    final BlockPos diffuserPos = diffuserPosList.isEmpty() ? null :
+      new BlockPos(diffuserPosList.get(0), diffuserPosList.get(1), diffuserPosList.get(2));
+
+    // 移除绑定
+    if (player.isShiftKeyDown() && diffuserPos != null) {
+      sendOverlayMessage(BINDING_CANCEL, diffuserPos);
+      item.set(component, new ArrayList<>());
+      return InteractionResultHolder.sidedSuccess(item, level.isClientSide);
     }
-    // 绑定模式
-    return bindingMode(level, player, usedHand, diffuserPos, blockPos, item);
+
+    // 获取目标方块信息
+    final var targetBlock = getTargetBlockPos(level, player);
+
+    Map.Entry<BlockPos, BlockState> launchEntry;
+    Map.Entry<BlockPos, BlockState> receiveEntry = null;
+    if (targetBlock.isEmpty() || (
+      (launchEntry = targetBlock.get("launch")) == null && (receiveEntry = targetBlock.get("receive")) == null)) {
+      return super.use(level, player, usedHand);
+    }
+
+    if (receiveEntry != null) {
+      return linkMode(level, player, usedHand, diffuserPos, receiveEntry.getKey(), item);
+    }
+    BlockPos launchEntryKey = launchEntry.getKey();
+    if (diffuserPos == null || !diffuserPos.equals(launchEntryKey)) {
+      return bindingMode(level, player, usedHand, launchEntryKey, item);
+    }
+    return super.use(level, player, usedHand);
   }
 
   /**
    * 链接模式
+   * @param level  世界
+   * @param player 玩家
+   * @param usedHand 使用的Hand
+   * @param diffuserPos 绑定方块位置
+   * @param targetBlockPos 目标方块位置
+   * @param item 玩家物品
+   * @return
    */
-  public @NotNull InteractionResultHolder<ItemStack> linkMode(Level level, Player player, InteractionHand usedHand, List<Integer> diffuserPos, BlockPos blockPos, ItemStack item) {
-    BlockPos bePos = new BlockPos(diffuserPos.get(0), diffuserPos.get(1), diffuserPos.get(2));
-    IUnlimitedLinkStorage capability = level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, bePos);
-    int x = blockPos.getX();
-    int y = blockPos.getY();
-    int z = blockPos.getZ();
+  public @NotNull InteractionResultHolder<ItemStack> linkMode(Level level,
+                                                              Player player,
+                                                              InteractionHand usedHand,
+                                                              BlockPos diffuserPos,
+                                                              BlockPos targetBlockPos,
+                                                              ItemStack item) {
+    if (level.isClientSide) {
+      return InteractionResultHolder.success(item);
+    }
+    IUnlimitedLinkStorage capability = level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, diffuserPos);
     if (capability == null) {
-      sendOverlayMessage(BINDING_FAILURE, x, y, z);
+      sendOverlayMessage(LINK_FAILURE, targetBlockPos);
       return super.use(level, player, usedHand);
     }
-    if (!capability.linkBlock(level, blockPos)) {
-      sendOverlayMessage(BINDING_FAILURE, x, y, z);
-      return super.use(level, player, usedHand);
+
+    if (capability.isLink(targetBlockPos)) {
+      if (!capability.linkBlock(level, targetBlockPos)) {
+        sendOverlayMessage(LINK_FAILURE, targetBlockPos);
+        return super.use(level, player, usedHand);
+      }
+      sendOverlayMessage(LINK_SUCCESS, targetBlockPos);
+    } else {
+      if (!capability.removeLink(targetBlockPos)) {
+        sendOverlayMessage(LINK_REMOVE_FAILURE, targetBlockPos);
+        return super.use(level, player, usedHand);
+      }
+      sendOverlayMessage(LINK_REMOVE, targetBlockPos);
     }
-    sendOverlayMessage(LINK_SUCCESS, x, y, z);
-    return InteractionResultHolder.sidedSuccess(item, level.isClientSide);
+
+    return InteractionResultHolder.consume(item);
   }
 
   /**
    * 绑定模式
+   * @param level  世界
+   * @param player 玩家
+   * @param usedHand 使用的Hand
+   * @param targetBlockPos 目标方块位置
+   * @param item 玩家物品
+   * @return
    */
-  public @NotNull InteractionResultHolder<ItemStack> bindingMode(Level level, Player player, InteractionHand usedHand, List<Integer> diffuserPos, BlockPos blockPos, ItemStack item) {
-    if (diffuserPos == null || level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, blockPos) == null) {
+  public @NotNull InteractionResultHolder<ItemStack> bindingMode(Level level,
+                                                                 Player player,
+                                                                 InteractionHand usedHand,
+                                                                 BlockPos targetBlockPos,
+                                                                 ItemStack item) {
+    if (level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, targetBlockPos) == null) {
+      sendOverlayMessage(BINDING_FAILURE, targetBlockPos);
       return super.use(level, player, usedHand);
     }
-    int x = blockPos.getX();
-    int y = blockPos.getY();
-    int z = blockPos.getZ();
-    List<Integer> pos = List.of(x, y, z);
-    sendOverlayMessage(BINDING_SUCCESS, x, y, z);
-    item.set(ModItemComponent.POSITION, pos);
+    sendOverlayMessage(BINDING_SUCCESS, targetBlockPos);
+    item.set(ModItemComponent.POSITION, getPositionList(targetBlockPos));
 
     return InteractionResultHolder.sidedSuccess(item, level.isClientSide);
+  }
+
+  public static @NotNull List<Integer> getPositionList(BlockPos blockPos) {
+    return List.of(blockPos.getX(), blockPos.getY(), blockPos.getZ());
   }
 
   /**
    * 获取目标方块位置
    */
-  @Nullable
-  public BlockPos getTargetBlockPos(Level level, Player player, boolean isLinkMode) {
+  @NotNull
+  public Map<String, Map.Entry<BlockPos, BlockState>> getTargetBlockPos(Level level, Player player) {
     var eyePosition = player.getEyePosition();
     var lookAngle = player.getLookAngle();
     var vec3 = eyePosition.add(lookAngle.x * SCOPE, lookAngle.y * SCOPE, lookAngle.z * SCOPE);
     var context = new ClipBlockStateContext(eyePosition, vec3, blockState ->
-      isLinkMode ? blockState.is(UNLIMITED_RECEIVE) : blockState.getBlock() instanceof QedEntityBlock);
+      blockState.is(UNLIMITED_RECEIVE) || blockState.is(UNLIMITED_LAUNCH));
 
+    int[] receiveQuantity = new int[]{0};
+    int[] launchQuantity = new int[]{0};
+    var map = new HashMap<String, Map.Entry<BlockPos, BlockState>>();
     return BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context,
-      (c, pos) -> context.isTargetBlock().test(level.getBlockState(pos)) ? pos : null,
-      (c) -> null);
+      (c, pos) -> {
+        if (receiveQuantity[0] >= 1 && (launchQuantity[0] >= 1)) {
+          return map;
+        }
+        BlockState blockState = level.getBlockState(pos);
+        if (!context.isTargetBlock().test(blockState)) {
+          return null;
+        }
+        String key;
+        if (blockState.is(UNLIMITED_RECEIVE)) {
+          if (receiveQuantity[0] >= 1) {
+            return null;
+          }
+          key = "receive";
+          receiveQuantity[0]++;
+        } else {
+          if (launchQuantity[0] >= 1) {
+            return null;
+          }
+          key = "launch";
+          launchQuantity[0]++;
+        }
+        map.put(key, Map.entry(pos, blockState));
+        return map;
+      },
+      (c) -> map);
+  }
+
+  public static void sendOverlayMessage(String text, Vec3i pos) {
+    ModUtil.sendOverlayMessage(text, pos.getX(), pos.getY(), pos.getZ());
+  }
+
+  public static void sendOverlayMessage(String text, List<Integer> pos) {
+    ModUtil.sendOverlayMessage(text, pos.get(0), pos.get(1), pos.get(2));
   }
 }

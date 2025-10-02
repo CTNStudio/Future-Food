@@ -46,7 +46,7 @@ import java.util.Optional;
 import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
 // TODO 破坏不掉落库存物品
-public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
+public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
   public static final EnumProperty<Light> LIGHT = EnumProperty.create("light", Light.class);

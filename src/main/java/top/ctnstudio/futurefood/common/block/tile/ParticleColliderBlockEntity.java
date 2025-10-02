@@ -35,7 +35,7 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
       return;
     }
     super.tick(level, pos, bs);
-    controlItemEnergy(energyStorage, itemHandler, true);
+    controlItemEnergy(itemHandler, false);
   }
 
   @Override

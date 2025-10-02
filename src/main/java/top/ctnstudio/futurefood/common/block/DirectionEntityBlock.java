@@ -16,10 +16,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public abstract class DirectionalEntityBlock<T extends BlockEntity> extends BaseEntityBlock {
+public abstract class DirectionEntityBlock<T extends BlockEntity> extends BaseEntityBlock {
   public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-  protected DirectionalEntityBlock(Properties properties) {
+  protected DirectionEntityBlock(Properties properties) {
     super(properties);
     this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP));
   }

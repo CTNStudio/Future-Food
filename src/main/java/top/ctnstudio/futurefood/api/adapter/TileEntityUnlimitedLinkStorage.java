@@ -7,6 +7,9 @@ import top.ctnstudio.futurefood.core.FutureFood;
 
 import javax.annotation.CheckForNull;
 
+/**
+ * 方块实体无限连接存储
+ */
 public class TileEntityUnlimitedLinkStorage extends UnlimitedLinkStorage {
   private final BlockEntity tile;
 

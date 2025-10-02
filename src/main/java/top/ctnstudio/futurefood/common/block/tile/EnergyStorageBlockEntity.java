@@ -32,6 +32,7 @@ import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -228,37 +229,17 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
   /**
    * 操控能源物品槽的能量
    */
-  public void controlItemEnergy(ModEnergyStorage energyStorage, ItemStackHandler itemHandler, boolean isExtract) {
-    if (isExtract ? !energyStorage.canReceive() : !energyStorage.canExtract()) {
-      return;
-    }
+  public void controlItemEnergy(ItemStackHandler itemHandler, boolean isOutput) {
     ItemStack stack = itemHandler.getStackInSlot(0);
     if (stack.isEmpty()) {
       return;
     }
     IEnergyStorage capability = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-    if (capability == null || (isExtract ? !capability.canExtract() : !capability.canReceive())) {
+    if (capability == null) {
       return;
     }
-    int controlEnergyValue = isExtract ? energyStorage.getMaxReceive() : energyStorage.getMaxExtract();
-    int simulateControlEnergyValue = isExtract ?
-      capability.extractEnergy(controlEnergyValue, true) :
-      capability.receiveEnergy(controlEnergyValue, true);
-    if (simulateControlEnergyValue <= 0) {
-      return;
-    }
-    int simulateControlEnergyValue2 = isExtract ?
-      energyStorage.receiveEnergy(simulateControlEnergyValue, true) :
-      energyStorage.extractEnergy(simulateControlEnergyValue, true);
-    if (simulateControlEnergyValue2 <= 0) {
-      return;
-    }
-    if (isExtract) {
-      int toReceive = capability.extractEnergy(controlEnergyValue, false);
-      energyStorage.receiveEnergy(toReceive, false);
-    } else {
-      int toReceive = energyStorage.extractEnergy(controlEnergyValue, false);
-      capability.receiveEnergy(toReceive, false);
-    }
+    IEnergyStorage extract = isOutput ? this.energyStorage : capability;
+    IEnergyStorage receive = isOutput ? capability : this.energyStorage;
+    ModUtil.controlEnergy(extract, receive);
   }
 }
