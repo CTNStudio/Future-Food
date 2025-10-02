@@ -35,7 +35,7 @@ public class CyberWrenchItem extends Item {
   public static final String LINK_SUCCESS = FutureFood.ID + ".cyber_wrench.link.success";
   public static final String LINK_CANCEL = FutureFood.ID + ".cyber_wrench.link.cancel";
   public static final String LINK_FAILURE = FutureFood.ID + ".cyber_wrench.link.failure";
-  public static final int SCOPE = 10;
+  public static final int SCOPE = 10; // TODO 添加配置功能
 
   public static final StreamCodec<ByteBuf, List<Integer>> POSITION_STREAM =
     ByteBufCodecs.<ByteBuf, Integer>list(3).apply(ByteBufCodecs.VAR_INT);
@@ -48,6 +48,7 @@ public class CyberWrenchItem extends Item {
       .component(ModItemComponent.POSITION, new ArrayList<>()));
   }
 
+  // TODO 处理链接动作，添加断开链接
   @Override
   public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand usedHand) {
     final ItemStack item = player.getItemInHand(usedHand);

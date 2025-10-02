@@ -30,7 +30,7 @@ public class DatagenI18ZhCn extends LanguageProvider {
     add(CyberWrenchItem.BINDING_CANCEL, "已取消绑定，坐标： x %s y %s z %s");
     add(CyberWrenchItem.BINDING_FAILURE, "绑定失败，坐标： x %s y %s z %s");
     add(CyberWrenchItem.LINK_SUCCESS, "链接成功，坐标： x %s y %s z %s");
-    add(CyberWrenchItem.LINK_CANCEL, "已取消链接，坐标： x %s y %s z %s");
+    add(CyberWrenchItem.LINK_CANCEL, "已断开链接，坐标： x %s y %s z %s");
     add(CyberWrenchItem.LINK_FAILURE, "链接失败坐标： x %s y %s z %s");
     addItem(ModItem.CYBER_WRENCH, "赛博扳手");
     addBlock(ModBlock.QED, "量子能源扩散器");

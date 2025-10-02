@@ -32,6 +32,7 @@ import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nullable;
 
+// TODO 破坏不掉落库存物品
 public class QerEntityBlock extends DirectionalEntityBlock<QerBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QerEntityBlock> CODEC = simpleCodec(QerEntityBlock::new);
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);

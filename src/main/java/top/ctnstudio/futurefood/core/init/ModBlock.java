@@ -22,6 +22,8 @@ public final class ModBlock {
     register("quantum_energy_receiver", QerEntityBlock::new);
   public static final DeferredBlock<Block> PARTICLE_COLLIDER =
     register("particle_collider", ParticleColliderEntityBlock::new);
+  // TODO 添加能源方块
+  // TODO 添加食物粉碎机
 
   public static @NotNull BlockBehaviour.StatePredicate never() {
     return (blockState, blockGetter, blockPos) -> false;

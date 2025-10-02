@@ -27,6 +27,7 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
     }
     super.tick(level, pos, bs);
     controlItemEnergy(energyStorage, itemHandler, false);
+    // TODO 将能量存储到周围的方块
   }
 
   @Override

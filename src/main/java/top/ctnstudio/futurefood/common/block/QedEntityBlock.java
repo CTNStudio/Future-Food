@@ -45,6 +45,7 @@ import java.util.Optional;
 
 import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
+// TODO 破坏不掉落库存物品
 public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
@@ -99,6 +100,10 @@ public class QedEntityBlock extends DirectionalEntityBlock<QedBlockEntity> imple
     return state.is(FfBlockTags.UNLIMITED_LAUNCH) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
   }
 
+  /**
+   * 链接方块
+   */
+  // TODO 添加配置功能 进行链接条件判断
   public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLinkStorage linkStorage) {
     return linkStorage.linkBlock(level, pos);
   }

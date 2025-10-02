@@ -21,6 +21,7 @@ import java.util.Queue;
 
 import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 
+// TODO 添加配置功能
 public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
@@ -122,6 +123,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
    * @param pos        当前方块的位置
    * @param bs         当方块的方块状态
    */
+  // TODO 传递异常 当前状态反向传递
   public void executeEnergyTransmission(Level blockLevel, BlockPos pos, BlockState bs) {
     linkStorage.getLinkSet().forEach((bp) -> {
       IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(blockLevel, pos);

@@ -13,4 +13,6 @@ public class ParticleColliderScreen extends EnergyScreen<ParticleColliderMenu> {
   public ParticleColliderScreen(ParticleColliderMenu menu, Inventory playerInventory, Component title) {
     super(menu, playerInventory, title, BG);
   }
+
+  // TODO 完成粒子加速器界面
 }
