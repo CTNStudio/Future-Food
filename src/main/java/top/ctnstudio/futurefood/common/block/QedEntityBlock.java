@@ -75,7 +75,9 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
 
   /**
    * 与周围方块建立无限链接
+   * @deprecated 请使用能力系统的{@link IUnlimitedLinkStorage#linkBlock}方法
    */
+  @Deprecated
   public void buildUnlimitedLinks(Level level, BlockPos pos, BlockState state) {
     BoundingBox mutableBox = BoundingBox.fromCorners(pos.offset(5, 5, 5), pos.offset(-5, -5, -5));
     AABB aabb = AABB.of(mutableBox);
@@ -88,6 +90,22 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
       .forEach(entry -> linkBlock(level, entry.getKey(), blockEntity.getUnlimitedStorage()));
   }
 
+  /**
+   * @deprecated 请使用能力系统的{@link IUnlimitedLinkStorage#isLink}方法
+   */
+  @Deprecated
+  public boolean isLinkable(Level level, BlockPos pos, BlockState state) {
+    return state.is(FfBlockTags.UNLIMITED_LAUNCH) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
+  }
+
+  /**
+   * @deprecated 请使用能力系统的{@link IUnlimitedLinkStorage#linkBlock}方法
+   */
+  @Deprecated
+  public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLinkStorage linkStorage) {
+    return linkStorage.linkBlock(level, pos);
+  }
+
   public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {
     Optional<QedBlockEntity> blockEntity = getBlockEntityFromLevel(level, pos,
       ModTileEntity.QED.get());
@@ -95,18 +113,6 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
       throw new IllegalStateException("QedBlockEntity not found at " + pos);
     }
     return blockEntity.get();
-  }
-
-  public boolean isLinkable(Level level, BlockPos pos, BlockState state) {
-    return state.is(FfBlockTags.UNLIMITED_LAUNCH) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
-  }
-
-  /**
-   * 链接方块
-   */
-  // TODO 添加配置功能 进行链接条件判断
-  public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLinkStorage linkStorage) {
-    return linkStorage.linkBlock(level, pos);
   }
 
   @Override

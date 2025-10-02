@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -109,19 +110,35 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     if (activateState == Activate.DEFAULT) {
       return;
     }
-    
-    // TODO 根据方向渲染
+
     final Direction directionState = blockState.getValue(DirectionEntityBlock.FACING);
     final Light lightState = blockState.getValue(QedEntityBlock.LIGHT);
 
     final long timeVariable = System.currentTimeMillis() % 10000;
-
+    final double timeVariable1 = System.currentTimeMillis() / 500.0;
     final VertexConsumer vertexConsumer = getVertexConsumer(activateState, bufferSource, timeVariable, partialTick);
     if (vertexConsumer == null) {
       return;
     }
+
     poseStack.pushPose();
-    poseStack.translate(0.5, 1, 0.5);
+    poseStack.translate(0.5, 0.15, 0.5);
+
+    switch (directionState) {
+      case DOWN -> poseStack.translate(0, -1, 0);
+      case UP -> poseStack.translate(0, 1, 0);
+      case NORTH -> poseStack.translate(0, 0, -1);
+      case SOUTH -> poseStack.translate(0, 0, 1);
+      case WEST -> poseStack.translate(-1, 0, 0);
+      case EAST -> poseStack.translate(1, 0, 0);
+    }
+
+    double alpha = switch (activateState) {
+      case WORK -> Math.sin(timeVariable1 * 5) * 0.4 + 0.6;
+      case FLASH -> Math.sin(timeVariable1 * 10) * 0.2 + 0.6;
+      case FLASH1 -> Math.sin((timeVariable / 5000.0f * Math.PI) * 10) % 0.5;
+      default -> 0;
+    };
 
     poseStack.pushPose();
     switch (lightState) {
@@ -147,7 +164,8 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     }
     poseStack.pushPose();
 
-    sphere.render(poseStack, vertexConsumer, LightTexture.FULL_BRIGHT, packedOverlay);
+    int color = FastColor.ARGB32.color((int) (alpha * 255), 255, 255, 255);
+    sphere.render(poseStack, vertexConsumer, LightTexture.FULL_BRIGHT, packedOverlay, color);
 
     poseStack.popPose();
     poseStack.popPose();

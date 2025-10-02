@@ -16,6 +16,7 @@ import top.ctnstudio.futurefood.core.FutureFood;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
@@ -77,7 +78,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
 
   @Override
   public boolean linkBlock(Level level, BlockPos pos) {
-    if (level == null || level.isClientSide) {
+    if (level == null) {
       linkFailure(pos);
       return false;
     }
@@ -108,7 +109,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     ListTag tags = new ListTag();
     linkSet.forEach(
       (pos) -> {
-        BlockState state = getLinkedBlock(pos);
+        BlockState state = getLinkBlock(pos);
         if (state == null) {
           return;
         }
@@ -128,7 +129,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
    */
   @CheckForNull
   @Override
-  public BlockState getLinkedBlock(BlockPos pos) {
+  public BlockState getLinkBlock(BlockPos pos) {
     if (Objects.isNull(this.getLevel())) {
       return null;
     }
@@ -153,7 +154,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
       }
       int[] posNbtArray = compoundTag.getIntArray("pos");
       BlockPos pos = new BlockPos(posNbtArray[0], posNbtArray[1], posNbtArray[2]);
-      BlockState state = getLinkedBlock(pos);
+      BlockState state = getLinkBlock(pos);
       if (state == null) {
         return;
       }
@@ -169,5 +170,24 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
   @Nonnull
   public final Set<BlockPos> getLinkSet() {
     return ImmutableSet.copyOf(linkSet);
+  }
+
+  @Override
+  public void clear() {
+    linkSet.clear();
+  }
+
+  @Override
+  public boolean setLink(Level level, BlockPos oldPos, BlockPos newPos) {
+    if (level == null || isContainLink(newPos) || !removeLink(oldPos)) {
+      return false;
+    }
+    return linkBlock(level, newPos);
+  }
+
+  @Override
+  public void setLinkList(Collection<BlockPos> linkList) {
+    linkSet.clear();
+    linkSet.addAll(linkList);
   }
 }

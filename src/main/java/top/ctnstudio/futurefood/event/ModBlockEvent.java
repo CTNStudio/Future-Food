@@ -1,7 +1,11 @@
 package top.ctnstudio.futurefood.event;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
@@ -11,18 +15,24 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
+import top.ctnstudio.futurefood.core.init.ModItem;
+
+import java.util.List;
 
 @EventBusSubscriber
 public final class ModBlockEvent {
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public static void onBlockBreakEvent(final BlockEvent.BreakEvent event) {
-    final var tile = event.getLevel().getBlockEntity(event.getPos());
+    LevelAccessor level = event.getLevel();
+    BlockPos pos = event.getPos();
+    final var tile = level.getBlockEntity(pos);
     if (!(tile instanceof IEnergyStorage)) {
       return;
     }
 
-    handle(event.getLevel(), event.getPos());
+    handle(level, pos);
   }
 
   private static void handle(final LevelAccessor world, final BlockPos pos) {
@@ -44,12 +54,14 @@ public final class ModBlockEvent {
 
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public static void onBlockPlaceEvent(final BlockEvent.EntityPlaceEvent event) {
-    final var tile = event.getLevel().getBlockEntity(event.getPos());
+    LevelAccessor level = event.getLevel();
+    BlockPos pos = event.getPos();
+    final var tile = level.getBlockEntity(pos);
     if (!(tile instanceof IEnergyStorage)) {
       return;
     }
 
-    handle(event.getLevel(), event.getPos());
+    handle(level, pos);
   }
 
   @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -60,10 +72,23 @@ public final class ModBlockEvent {
 
     final var vec3 = event.getEventPosition();
     final var blockPos = new BlockPos(Mth.floor(vec3.x), Mth.floor(vec3.y), Mth.floor(vec3.z));
-    if (!(event.getLevel().getBlockEntity(blockPos) instanceof IEnergyStorage)) {
+    Level level = event.getLevel();
+    if (!(level.getBlockEntity(blockPos) instanceof IEnergyStorage)) {
       return;
     }
 
-    handle(event.getLevel(), blockPos);
+    handle(level, blockPos);
+  }
+
+  @SubscribeEvent(priority = EventPriority.LOWEST)
+  public static void onBlockTickEvent(final LevelTickEvent.Post event) {
+    if (!(event.getLevel() instanceof ServerLevel level)) {
+      return;
+    }
+    List<ServerPlayer> players = level.getPlayers(serverPlayer -> {
+      if (!serverPlayer.isAlive()) return false;
+      ItemStack item = serverPlayer.getMainHandItem();
+      return !item.isEmpty() && item.is(ModItem.CYBER_WRENCH.get());
+    });
   }
 }

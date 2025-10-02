@@ -8,10 +8,12 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.Level;
@@ -21,14 +23,15 @@ import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModCapability;
 import top.ctnstudio.futurefood.core.init.ModItemComponent;
+import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 import top.ctnstudio.futurefood.util.ModUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
-import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_LAUNCH;
 import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_RECEIVE;
 
 public class CyberWrenchItem extends Item {
@@ -46,6 +49,8 @@ public class CyberWrenchItem extends Item {
 
   public static final Codec<List<Integer>> POSITION_CODEC =
     Codec.list(Codec.INT, 0, 3);
+  private static final Predicate<BlockState> PREDICATE = blockState ->
+    blockState.is(FfBlockTags.UNLIMITED_RECEIVE) || blockState.is(FfBlockTags.UNLIMITED_LAUNCH);
 
   public CyberWrenchItem(Properties properties) {
     super(properties.stacksTo(1)
@@ -87,11 +92,13 @@ public class CyberWrenchItem extends Item {
     }
 
     if (receiveEntry != null) {
-      return linkMode(level, player, usedHand, diffuserPos, receiveEntry.getKey(), item);
+      return linkMode(level, diffuserPos, receiveEntry.getKey()) ?
+        InteractionResultHolder.sidedSuccess(item, level.isClientSide) : super.use(level, player, usedHand);
     }
-    BlockPos launchEntryKey = launchEntry.getKey();
-    if (diffuserPos == null || !diffuserPos.equals(launchEntryKey)) {
-      return bindingMode(level, player, usedHand, launchEntryKey, item);
+    BlockPos launchPos = launchEntry.getKey();
+    if (diffuserPos == null || !diffuserPos.equals(launchPos)) {
+      return bindingMode(level, launchPos, item) ?
+        InteractionResultHolder.sidedSuccess(item, level.isClientSide) : super.use(level, player, usedHand);
     }
     return super.use(level, player, usedHand);
   }
@@ -99,67 +106,88 @@ public class CyberWrenchItem extends Item {
   /**
    * 链接模式
    * @param level  世界
-   * @param player 玩家
-   * @param usedHand 使用的Hand
    * @param diffuserPos 绑定方块位置
    * @param targetBlockPos 目标方块位置
-   * @param item 玩家物品
    * @return
    */
-  public @NotNull InteractionResultHolder<ItemStack> linkMode(Level level,
-                                                              Player player,
-                                                              InteractionHand usedHand,
-                                                              BlockPos diffuserPos,
-                                                              BlockPos targetBlockPos,
-                                                              ItemStack item) {
+  public boolean linkMode(Level level, BlockPos diffuserPos, BlockPos targetBlockPos) {
     if (level.isClientSide) {
-      return InteractionResultHolder.success(item);
+      return true;
     }
     IUnlimitedLinkStorage capability = level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, diffuserPos);
     if (capability == null) {
       sendOverlayMessage(LINK_FAILURE, targetBlockPos);
-      return super.use(level, player, usedHand);
+      return false;
     }
 
     if (capability.isLink(targetBlockPos)) {
       if (!capability.linkBlock(level, targetBlockPos)) {
         sendOverlayMessage(LINK_FAILURE, targetBlockPos);
-        return super.use(level, player, usedHand);
+        return false;
       }
       sendOverlayMessage(LINK_SUCCESS, targetBlockPos);
     } else {
       if (!capability.removeLink(targetBlockPos)) {
         sendOverlayMessage(LINK_REMOVE_FAILURE, targetBlockPos);
-        return super.use(level, player, usedHand);
+        return false;
       }
       sendOverlayMessage(LINK_REMOVE, targetBlockPos);
     }
 
-    return InteractionResultHolder.consume(item);
+    return true;
+  }
+
+  @Override
+  public InteractionResult useOn(UseOnContext context) {
+    final var level = context.getLevel();
+    final var targetBlockPos = context.getClickedPos();
+    BlockState blockState = level.getBlockState(targetBlockPos);
+    if (!PREDICATE.test(blockState)) {
+      return super.useOn(context);
+    }
+
+    final var player = context.getPlayer();
+    final var item = context.getItemInHand();
+
+    final DataComponentType<List<Integer>> component = ModItemComponent.POSITION.get();
+    if (!item.has(component)) {
+      return super.useOn(context);
+    }
+
+    final List<Integer> diffuserPosList = item.get(component);
+    if (diffuserPosList == null) {
+      return super.useOn(context);
+    }
+
+    final BlockPos diffuserPos = diffuserPosList.isEmpty() ? null :
+      new BlockPos(diffuserPosList.get(0), diffuserPosList.get(1), diffuserPosList.get(2));
+
+    if (diffuserPos != null && blockState.is(FfBlockTags.UNLIMITED_RECEIVE)) {
+      return linkMode(level, diffuserPos, targetBlockPos) ?
+        InteractionResult.SUCCESS : InteractionResult.FAIL;
+    } else if (blockState.is(FfBlockTags.UNLIMITED_LAUNCH) && player == null || (player != null && !player.isShiftKeyDown())) {
+      return bindingMode(level, targetBlockPos, item) ?
+        InteractionResult.SUCCESS : InteractionResult.FAIL;
+    }
+    return super.useOn(context);
   }
 
   /**
    * 绑定模式
    * @param level  世界
-   * @param player 玩家
-   * @param usedHand 使用的Hand
    * @param targetBlockPos 目标方块位置
    * @param item 玩家物品
    * @return
    */
-  public @NotNull InteractionResultHolder<ItemStack> bindingMode(Level level,
-                                                                 Player player,
-                                                                 InteractionHand usedHand,
-                                                                 BlockPos targetBlockPos,
-                                                                 ItemStack item) {
+  public boolean bindingMode(Level level, BlockPos targetBlockPos, ItemStack item) {
     if (level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, targetBlockPos) == null) {
       sendOverlayMessage(BINDING_FAILURE, targetBlockPos);
-      return super.use(level, player, usedHand);
+      return false;
     }
     sendOverlayMessage(BINDING_SUCCESS, targetBlockPos);
     item.set(ModItemComponent.POSITION, getPositionList(targetBlockPos));
 
-    return InteractionResultHolder.sidedSuccess(item, level.isClientSide);
+    return true;
   }
 
   public static @NotNull List<Integer> getPositionList(BlockPos blockPos) {
@@ -174,8 +202,7 @@ public class CyberWrenchItem extends Item {
     var eyePosition = player.getEyePosition();
     var lookAngle = player.getLookAngle();
     var vec3 = eyePosition.add(lookAngle.x * SCOPE, lookAngle.y * SCOPE, lookAngle.z * SCOPE);
-    var context = new ClipBlockStateContext(eyePosition, vec3, blockState ->
-      blockState.is(UNLIMITED_RECEIVE) || blockState.is(UNLIMITED_LAUNCH));
+    var context = new ClipBlockStateContext(eyePosition, vec3, PREDICATE);
 
     int[] receiveQuantity = new int[]{0};
     int[] launchQuantity = new int[]{0};
