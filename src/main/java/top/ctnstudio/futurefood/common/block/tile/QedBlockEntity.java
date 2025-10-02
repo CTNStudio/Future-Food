@@ -23,7 +23,6 @@ import java.util.Queue;
 import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 
 // TODO 添加配置功能
-// TODO 每次重启世界链接丢失
 public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
@@ -55,7 +54,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   @Override
   protected void loadAdditional(CompoundTag nbt, Provider provider) {
     super.loadAdditional(nbt, provider);
-    linkStorage.deserializeNBT(provider, nbt);
+    linkStorage.deserializeNBT(provider, nbt.getCompound("linkStorage"));
     remainingTime = nbt.getInt("remainingTime");
     if (!nbt.contains("maxRemainingTime")) {
       maxRemainingTime = DEFAULT_MAX_REMAINING_TIME;
@@ -69,7 +68,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   @Override
   protected void saveAdditional(CompoundTag nbt, Provider provider) {
     super.saveAdditional(nbt, provider);
-    linkStorage.serializeNBT(provider);
+    nbt.put("linkStorage", linkStorage.serializeNBT(provider));
     nbt.putInt("remainingTime", remainingTime);
     nbt.putInt("maxRemainingTime", maxRemainingTime);
   }
@@ -147,16 +146,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
 
   public int getMaxRemainingTime() {
     return maxRemainingTime;
-  }
-
-  @Override
-  public void onChunkUnloaded() {
-    final var pos = this.getBlockPos();
-  }
-
-  @Override
-  public void onLoad() {
-    final var pos = this.getBlockPos();
   }
 
   public IUnlimitedLinkStorage getUnlimitedStorage() {
