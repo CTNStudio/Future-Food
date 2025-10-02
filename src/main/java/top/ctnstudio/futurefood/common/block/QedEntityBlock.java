@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -46,7 +46,6 @@ import java.util.Optional;
 import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
 // TODO 完成状态变化
-// TODO 破坏不掉落库存物品
 public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
@@ -168,11 +167,22 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
   }
 
   @Override
-  protected void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack,
-                                 boolean dropExperience) {
-    final var tile = getBlockEntity(level, pos);
-    EntityItemUtil.summonLootItems(level, pos, tile.getEnergyItemStack().copy());
+  public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player,
+                                     boolean willHarvest, FluidState fluid) {
+    if (world.isClientSide()) {
+      return true;
+    }
+
+    final ServerLevel serverWorld = (ServerLevel) world;
+    final var tile = getBlockEntity(serverWorld, pos);
+    if (!(tile instanceof QedBlockEntity)) {
+      return true;
+    }
+
+    EntityItemUtil.summonLootItems(serverWorld, pos, tile.getEnergyItemStack().copy());
     tile.clearContent();
+
+    return true;
   }
 
   @Override
