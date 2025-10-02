@@ -14,7 +14,7 @@ public class StronglyInteractingBread extends Item {
     .build();
 
   public StronglyInteractingBread() {
-    super(new  Item.Properties().food(foodProperties).stacksTo(1));
+    super(new Item.Properties().food(foodProperties).stacksTo(1));
   }
 
   @Override
