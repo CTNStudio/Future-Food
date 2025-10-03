@@ -30,7 +30,7 @@ public class ParticleColliderMenu extends BasicEnergyMenu {
   protected void addOtherSlot(IItemHandler dataInventory, ContainerData data) {
     super.addOtherSlot(dataInventory, data);
     addSlot(new SlotItemHandler(dataInventory, 1, 28, 35));
-    addSlot(new SlotItemHandler(dataInventory, 2, 123, 35));
+    addSlot(new SlotItemHandler(dataInventory, 2, 132, 35));
     addSlot(new SlotItemHandler(dataInventory, 3, 80, 35) {
       // 仅允许输出
       @Override
