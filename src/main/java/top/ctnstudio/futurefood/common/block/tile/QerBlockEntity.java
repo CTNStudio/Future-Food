@@ -59,7 +59,6 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
       return;
     }
 
-    // TODO 输入到通用机械的能源转换有误差
     controlItemEnergy(itemHandler, true);
 
     IEnergyStorage energyStorage = getSurroundingEnergyStorage(level, pos, bs);

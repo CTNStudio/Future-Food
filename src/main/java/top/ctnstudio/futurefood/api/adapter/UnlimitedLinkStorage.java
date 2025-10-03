@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -107,18 +109,27 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
   public CompoundTag serializeNBT(Provider provider) {
     CompoundTag nbt = new CompoundTag();
     ListTag tags = new ListTag();
-    linkSet.forEach(
-      (pos) -> {
-        BlockState state = getLinkBlock(pos);
-        if (state == null) {
-          return;
-        }
-        CompoundTag tag = new CompoundTag();
-        tag.putIntArray("pos", new int[]{pos.getX(), pos.getY(), pos.getZ()});
+    linkSet.forEach(pos -> {
+      BlockState state = getLinkBlock(pos);
+      if (state == null) {
+        return;
       }
-    );
+      tags.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()}));
+    });
     nbt.put("linkList", tags);
     return nbt;
+  }
+
+  @Override
+  public void deserializeNBT(Provider provider, CompoundTag nbt) {
+    Tag linkList = nbt.get("linkList");
+    if (!(linkList instanceof ListTag tags) || tags.isEmpty()) {
+      return;
+    }
+    linkSet.clear();
+    linkSet.addAll(tags.stream().map(tag ->
+        tag instanceof IntArrayTag intTags ? ModUtil.getBlockPos(intTags.getAsIntArray()) : null)
+      .filter(Objects::nonNull).toList());
   }
 
   /**
@@ -136,30 +147,6 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
 
     BlockState blockState = getLevel().getBlockState(pos);
     return !blockState.isEmpty() ? blockState : null;
-  }
-
-  @Override
-  public void deserializeNBT(Provider provider, CompoundTag nbt) {
-    Tag linkList = nbt.get("linkList");
-    if (!(linkList instanceof ListTag tags)) {
-      linkSet.clear();
-      return;
-    }
-    if (tags.isEmpty()) {
-      return;
-    }
-    tags.forEach(tag -> {
-      if (!(tag instanceof CompoundTag compoundTag)) {
-        return;
-      }
-      int[] posNbtArray = compoundTag.getIntArray("pos");
-      BlockPos pos = new BlockPos(posNbtArray[0], posNbtArray[1], posNbtArray[2]);
-      BlockState state = getLinkBlock(pos);
-      if (state == null) {
-        return;
-      }
-      linkSet.add(pos);
-    });
   }
 
   @Override

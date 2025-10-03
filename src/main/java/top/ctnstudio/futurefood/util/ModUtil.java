@@ -3,6 +3,7 @@ package top.ctnstudio.futurefood.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -76,14 +77,13 @@ public class ModUtil {
    * @param receive 接收的
    */
   public static void controlEnergy(@NotNull IEnergyStorage extract, @NotNull IEnergyStorage receive) {
-    if (extract.getEnergyStored() <= 0 ||
+    int energyStored = extract.getEnergyStored();
+    if (energyStored <= 0 ||
       receive.getEnergyStored() >= receive.getMaxEnergyStored() ||
-      !extract.canExtract() ||
-      !receive.canReceive()) {
+      !extract.canExtract() || !receive.canReceive()) {
       return;
     }
-    int value = extract.getEnergyStored();
-    int extractValue = extract.extractEnergy(value, true);
+    int extractValue = extract.extractEnergy(energyStored, true);
     if (extractValue <= 0) {
       return;
     }
@@ -91,7 +91,8 @@ public class ModUtil {
     if (receiveValue <= 0) {
       return;
     }
-    receive.receiveEnergy(extract.extractEnergy(extractValue, false), false);
+    extract.extractEnergy(receiveValue, false);
+    receive.receiveEnergy(receiveValue, false);
   }
 
   /**
@@ -107,5 +108,22 @@ public class ModUtil {
       arrayList.add(handler.getStackInSlot(i));
     }
     return arrayList;
+  }
+
+  public static BlockPos getBlockPos(final List<Integer> pos) {
+    return new BlockPos(pos.get(0), pos.get(1), pos.get(2));
+  }
+
+  public static BlockPos getBlockPos(final int... pos) {
+    return new BlockPos(pos[0], pos[1], pos[2]);
+  }
+
+  @NotNull
+  public static List<Integer> getPositionList(Vec3i blockPos) {
+    return List.of(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+  }
+
+  public static int @NotNull [] getPositionArray(Vec3i blockPos) {
+    return new int[]{blockPos.getX(), blockPos.getY(), blockPos.getZ()};
   }
 }

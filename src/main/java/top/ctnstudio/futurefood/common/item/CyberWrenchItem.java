@@ -57,10 +57,6 @@ public class CyberWrenchItem extends Item {
       .component(ModItemComponent.POSITION, new ArrayList<>()));
   }
 
-  public static @NotNull List<Integer> getPositionList(BlockPos blockPos) {
-    return List.of(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-  }
-
   public static void sendOverlayMessage(String text, Vec3i pos) {
     ModUtil.sendOverlayMessage(text, pos.getX(), pos.getY(), pos.getZ());
   }
@@ -69,7 +65,6 @@ public class CyberWrenchItem extends Item {
     ModUtil.sendOverlayMessage(text, pos.get(0), pos.get(1), pos.get(2));
   }
 
-  // TODO 处理链接动作，添加断开链接
   @Override
   public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand usedHand) {
     final ItemStack item = player.getItemInHand(usedHand);
@@ -83,8 +78,7 @@ public class CyberWrenchItem extends Item {
       return super.use(level, player, usedHand);
     }
 
-    final BlockPos diffuserPos = diffuserPosList.isEmpty() ? null :
-      new BlockPos(diffuserPosList.get(0), diffuserPosList.get(1), diffuserPosList.get(2));
+    final BlockPos diffuserPos = diffuserPosList.isEmpty() ? null : ModUtil.getBlockPos(diffuserPosList);
 
     // 移除绑定
     if (player.isShiftKeyDown() && diffuserPos != null) {
@@ -172,8 +166,7 @@ public class CyberWrenchItem extends Item {
       return super.useOn(context);
     }
 
-    final BlockPos diffuserPos = diffuserPosList.isEmpty() ? null :
-      new BlockPos(diffuserPosList.get(0), diffuserPosList.get(1), diffuserPosList.get(2));
+    final BlockPos diffuserPos = diffuserPosList.isEmpty() ? null : ModUtil.getBlockPos(diffuserPosList);
 
     if (diffuserPos != null && blockState.is(FfBlockTags.UNLIMITED_RECEIVE)) {
       return linkMode(level, diffuserPos, targetBlockPos) ?
@@ -199,7 +192,7 @@ public class CyberWrenchItem extends Item {
       return false;
     }
     sendOverlayMessage(BINDING_SUCCESS, targetBlockPos);
-    item.set(ModItemComponent.POSITION, getPositionList(targetBlockPos));
+    item.set(ModItemComponent.POSITION, ModUtil.getPositionList(targetBlockPos));
 
     return true;
   }

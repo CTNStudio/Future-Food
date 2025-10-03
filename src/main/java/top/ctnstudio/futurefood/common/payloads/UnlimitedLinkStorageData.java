@@ -11,6 +11,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModCapability;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -38,10 +39,6 @@ public record UnlimitedLinkStorageData(List<List<Integer>> linkPosSet, List<Inte
       player == null ? Optional.empty() : Optional.of(player.getUUID()));
   }
 
-  public static BlockPos getBlockPos(final List<Integer> pos) {
-    return new BlockPos(pos.get(0), pos.get(1), pos.get(2));
-  }
-
   /**
    * 客户端请求 该方法由玩家发送
    */
@@ -55,11 +52,11 @@ public record UnlimitedLinkStorageData(List<List<Integer>> linkPosSet, List<Inte
   public static void toClient(final UnlimitedLinkStorageData data, final IPayloadContext context) {
     context.enqueueWork(() -> {
       IUnlimitedLinkStorage capability = context.player().level()
-        .getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, getBlockPos(data.targetPos()));
+        .getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, ModUtil.getBlockPos(data.targetPos()));
       if (capability == null) {
         return;
       }
-      capability.setLinkList(data.linkPosSet.stream().map(UnlimitedLinkStorageData::getBlockPos).toList());
+      capability.setLinkList(data.linkPosSet.stream().map(ModUtil::getBlockPos).toList());
     });
   }
 
