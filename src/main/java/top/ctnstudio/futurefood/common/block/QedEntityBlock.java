@@ -39,6 +39,7 @@ import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 import top.ctnstudio.futurefood.util.BlockEntyUtil;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -164,17 +165,13 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
   @Override
   public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player,
                                      boolean willHarvest, FluidState fluid) {
-    if (world.isClientSide()) {
-      return true;
+    if (!world.isClientSide()) {
+      ServerLevel serverWorld = (ServerLevel) world;
+      var blockEntity = getBlockEntity(serverWorld, pos);
+      EntityItemUtil.summonLootItemStacks(serverWorld, pos, ModUtil.getItemStacks(blockEntity.externalGetItemHandler(null)));
+      blockEntity.clearContent();
     }
-
-    final ServerLevel serverWorld = (ServerLevel) world;
-    final var tile = getBlockEntity(serverWorld, pos);
-
-    EntityItemUtil.summonLootItems(serverWorld, pos, tile.getEnergyItemStack().copy());
-    tile.clearContent();
-
-    return true;
+    return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
   }
 
   @Override

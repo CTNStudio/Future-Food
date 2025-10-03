@@ -4,16 +4,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class ModUtil {
@@ -92,5 +92,20 @@ public class ModUtil {
       return;
     }
     receive.receiveEnergy(extract.extractEnergy(extractValue, false), false);
+  }
+
+  /**
+   * 获取 IItemHandler 中的物品
+   *
+   * @param handler IItemHandler 能力
+   * @return 限定大小的物品集合
+   */
+  public static List<ItemStack> getItemStacks(IItemHandler handler) {
+    int slots = handler.getSlots();
+    ArrayList<ItemStack> arrayList = new ArrayList<>(slots);
+    for (int i = 0; i < slots; i++) {
+      arrayList.add(handler.getStackInSlot(i));
+    }
+    return arrayList;
   }
 }

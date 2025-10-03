@@ -26,6 +26,7 @@ import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.util.BlockEntyUtil;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 // TODO 完成状态变化
 public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBlock
@@ -57,17 +58,13 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
   @Override
   public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player,
                                      boolean willHarvest, FluidState fluid) {
-    if (world.isClientSide()) {
-      return true;
+    if (!world.isClientSide()) {
+      ServerLevel serverWorld = (ServerLevel) world;
+      var blockEntity = getBlockEntity(serverWorld, pos);
+      EntityItemUtil.summonLootItemStacks(serverWorld, pos, ModUtil.getItemStacks(blockEntity.externalGetItemHandler(null)));
+      blockEntity.clearContent();
     }
-
-    final ServerLevel serverWorld = (ServerLevel) world;
-    final var tile = getBlockEntity(serverWorld, pos);
-
-    EntityItemUtil.summonLootItems(serverWorld, pos, tile.getEnergyItemStack().copy());
-    tile.clearContent();
-
-    return true;
+    return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
   }
 
   public @NotNull ParticleColliderBlockEntity getBlockEntity(Level level, BlockPos pos) {

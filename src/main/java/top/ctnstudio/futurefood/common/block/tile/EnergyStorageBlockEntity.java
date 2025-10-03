@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
-import top.ctnstudio.futurefood.util.EntityItemUtil;
 import top.ctnstudio.futurefood.util.ModUtil;
 
 import javax.annotation.Nonnull;
@@ -187,7 +185,7 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     return !this.isRemoved() && player.canInteractWithEntity(new AABB(getBlockPos()), 4.0);
   }
 
-  protected List<ItemStack> getItems() {
+  public List<ItemStack> getItems() {
     List<ItemStack> list = new ArrayList<>();
     int slots = itemHandler.getSlots();
     for (int i = 0; i < slots; i++) {
@@ -201,14 +199,12 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
    */
   @Override
   public void clearContent() {
-    if (getLevel() != null && getLevel().isClientSide) {
-      return;
-    }
-    ServerLevel serverLevel = (ServerLevel) getLevel();
-    for (ItemStack stack : getItems()) {
-      EntityItemUtil.summonLootItems(serverLevel, getBlockPos(), stack);
+    int slots = itemHandler.getSlots();
+    for (int i = 0; i < slots; i++) {
+      itemHandler.setStackInSlot(i, ItemStack.EMPTY);
     }
   }
+
 
   @Override
   public Component getDisplayName() {
