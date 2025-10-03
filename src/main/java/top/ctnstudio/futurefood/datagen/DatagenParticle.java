@@ -18,6 +18,10 @@ public class DatagenParticle extends ParticleDescriptionProvider {
     super(output, fileHelper);
   }
 
+  private static ResourceLocation getPath(String name) {
+    return ResourceLocation.fromNamespaceAndPath(FutureFood.ID, name);
+  }
+
   @Override
   protected void addDescriptions() {
   }
@@ -34,10 +38,6 @@ public class DatagenParticle extends ParticleDescriptionProvider {
       list.add(getPath(name));
     }
     spriteSet(type.get(), list);
-  }
-
-  private static ResourceLocation getPath(String name) {
-    return ResourceLocation.fromNamespaceAndPath(FutureFood.ID, name);
   }
 
 }

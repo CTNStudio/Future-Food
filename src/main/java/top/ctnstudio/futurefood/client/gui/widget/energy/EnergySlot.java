@@ -12,6 +12,7 @@ import top.ctnstudio.futurefood.core.FutureFood;
 
 public abstract class EnergySlot extends SlotItemHandler {
   public static final ResourceLocation ENERGY_ICON = FutureFood.modRL("container/energy_bar/energy_icon");
+
   public EnergySlot(IItemHandler itemHandler, int slot, int x, int y) {
     super(itemHandler, slot, x, y);
   }

@@ -15,7 +15,7 @@ public class WeaklyInteractingWaterBottle extends Item {
     .build();
 
   public WeaklyInteractingWaterBottle() {
-    super(new  Item.Properties()
+    super(new Item.Properties()
       .food(foodProperties)
       .stacksTo(1)
       .craftRemainder(Items.GLASS_BOTTLE));

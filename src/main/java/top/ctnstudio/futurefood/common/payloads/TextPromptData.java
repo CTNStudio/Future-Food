@@ -14,12 +14,7 @@ import top.ctnstudio.futurefood.util.ModUtil;
 import java.util.UUID;
 
 public record TextPromptData(String text, UUID playerUUID) implements CustomPacketPayload {
-  public TextPromptData(String text, ServerPlayer player) {
-    this(text, player.getUUID());
-  }
-
   public static final CustomPacketPayload.Type<TextPromptData> TYPE = new CustomPacketPayload.Type<>(FutureFood.modRL("text_prompt_data"));
-
   public static final StreamCodec<ByteBuf, TextPromptData> STREAM_CODEC = StreamCodec.composite(
     ByteBufCodecs.STRING_UTF8,
     TextPromptData::text,
@@ -27,6 +22,10 @@ public record TextPromptData(String text, UUID playerUUID) implements CustomPack
     TextPromptData::playerUUID,
     TextPromptData::new
   );
+
+  public TextPromptData(String text, ServerPlayer player) {
+    this(text, player.getUUID());
+  }
 
   /**
    * 发送到客户端

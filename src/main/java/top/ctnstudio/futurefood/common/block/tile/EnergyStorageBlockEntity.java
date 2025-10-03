@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,34 +30,25 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
-import top.ctnstudio.futurefood.util.EntityItemUtil;
 import top.ctnstudio.futurefood.util.ModUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extends BlockEntity
   implements Container, MenuProvider {
-  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE =
-    () -> new ModEnergyStorage(10240, 1024, 1024);
+
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
   protected final BasicEnergyMenu.EnergyData energyData;
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-    BlockState blockState) {
-    this(type, pos, blockState, new ItemStackHandler(1),
-      DEFAULT_ENERGY_STORAGE.get());
-  }
-
-  public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-    BlockState blockState, ItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
+                                  BlockState blockState, ItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
-    energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
+    this.energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
   }
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -81,12 +71,9 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
   @Override
   protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
     super.loadAdditional(nbt, provider);
-    if (nbt.contains("energyStorage")) {
+    if (nbt.contains("energyStorage"))
       energyStorage.deserializeNBT(provider, nbt.getCompound("energyStorage"));
-    }
-    if (nbt.contains("items")) {
-      itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
-    }
+    if (nbt.contains("items")) itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
   }
 
   /**
@@ -198,7 +185,7 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     return !this.isRemoved() && player.canInteractWithEntity(new AABB(getBlockPos()), 4.0);
   }
 
-  protected List<ItemStack> getItems() {
+  public List<ItemStack> getItems() {
     List<ItemStack> list = new ArrayList<>();
     int slots = itemHandler.getSlots();
     for (int i = 0; i < slots; i++) {
@@ -207,16 +194,17 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     return list;
   }
 
+  /**
+   * 清空库存内容
+   */
   @Override
   public void clearContent() {
-    if (getLevel() != null && getLevel().isClientSide) {
-      return;
-    }
-    ServerLevel serverLevel = (ServerLevel) getLevel();
-    for (ItemStack stack : getItems()) {
-      EntityItemUtil.summonLootItems(serverLevel, getBlockPos(), stack);
+    int slots = itemHandler.getSlots();
+    for (int i = 0; i < slots; i++) {
+      itemHandler.setStackInSlot(i, ItemStack.EMPTY);
     }
   }
+
 
   @Override
   public Component getDisplayName() {

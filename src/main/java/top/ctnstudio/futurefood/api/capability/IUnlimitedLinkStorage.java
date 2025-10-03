@@ -14,6 +14,7 @@ import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -122,7 +123,7 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
    * @param pos 要获取的链接方块位置
    * @return 链接的方块
    */
-  BlockState getLinkedBlock(BlockPos pos);
+  BlockState getLinkBlock(BlockPos pos);
 
   /**
    * 加载链接列表
@@ -133,6 +134,28 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
    * 添加一个链接缓存
    */
   void addLinkCache(BlockPos pos);
+
+  /**
+   * 清空链接列表
+   */
+  void clear();
+
+  /**
+   * 修改链接
+   *
+   * @param level
+   * @param oldPos 旧链接方块位置
+   * @param newPos 新链接方块位置
+   * @return 是否成功
+   */
+  boolean setLink(Level level, BlockPos oldPos, BlockPos newPos);
+
+  /**
+   * 设置链接列表
+   *
+   * @param linkList 链接列表
+   */
+  void setLinkList(Collection<BlockPos> linkList);
 
   /**
    * 获取世界

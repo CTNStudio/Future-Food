@@ -4,6 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import org.jetbrains.annotations.NotNull;
+import top.ctnstudio.futurefood.common.block.tile.EnergyStorageBlockEntity;
+import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 
 import java.util.Optional;
 
@@ -20,8 +23,17 @@ public class BlockEntyUtil {
     return level.getBlockEntity(pos, type);
   }
 
+  public static @NotNull <M extends BasicEnergyMenu, T extends EnergyStorageBlockEntity<M>> T getBlockEntity(Level level, BlockPos pos, BlockEntityType<T> type) {
+    Optional<T> blockEntity = getBlockEntityFromLevel(level, pos, type);
+    if (blockEntity.isEmpty()) {
+      throw new IllegalStateException("BlockEntity not found at " + pos);
+    }
+    return blockEntity.get();
+  }
+
   /**
    * 获取方块实体
+   *
    * @return 获取方块实体
    */
   public static BlockEntity getBlockEntityFromLevel(Level level, BlockPos pos) {

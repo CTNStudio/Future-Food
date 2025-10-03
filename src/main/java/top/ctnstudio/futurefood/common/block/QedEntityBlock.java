@@ -37,18 +37,19 @@ import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
+import top.ctnstudio.futurefood.util.BlockEntyUtil;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
+import top.ctnstudio.futurefood.util.ModUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
-
+// TODO 完成状态变化
 public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
-  private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
   public static final EnumProperty<Light> LIGHT = EnumProperty.create("light", Light.class);
+  private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
+
   public QedEntityBlock() {
     this(Properties.of());
   }
@@ -73,7 +74,10 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
 
   /**
    * 与周围方块建立无限链接
+   *
+   * @deprecated 请使用能力系统的{@link IUnlimitedLinkStorage#linkBlock}方法
    */
+  @Deprecated
   public void buildUnlimitedLinks(Level level, BlockPos pos, BlockState state) {
     BoundingBox mutableBox = BoundingBox.fromCorners(pos.offset(5, 5, 5), pos.offset(-5, -5, -5));
     AABB aabb = AABB.of(mutableBox);
@@ -86,25 +90,24 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
       .forEach(entry -> linkBlock(level, entry.getKey(), blockEntity.getUnlimitedStorage()));
   }
 
-  public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {
-    Optional<QedBlockEntity> blockEntity = getBlockEntityFromLevel(level, pos,
-      ModTileEntity.QED.get());
-    if (blockEntity.isEmpty()) {
-      throw new IllegalStateException("QedBlockEntity not found at " + pos);
-    }
-    return blockEntity.get();
-  }
-
+  /**
+   * @deprecated 请使用能力系统的{@link IUnlimitedLinkStorage#isLink}方法
+   */
+  @Deprecated
   public boolean isLinkable(Level level, BlockPos pos, BlockState state) {
     return state.is(FfBlockTags.UNLIMITED_LAUNCH) || level.getBlockEntity(pos) instanceof IUnlimitedEntityReceive;
   }
 
   /**
-   * 链接方块
+   * @deprecated 请使用能力系统的{@link IUnlimitedLinkStorage#linkBlock}方法
    */
-  // TODO 添加配置功能 进行链接条件判断
+  @Deprecated
   public boolean linkBlock(Level level, BlockPos pos, IUnlimitedLinkStorage linkStorage) {
     return linkStorage.linkBlock(level, pos);
+  }
+
+  public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {
+    return BlockEntyUtil.getBlockEntity(level, pos, ModTileEntity.QED.get());
   }
 
   @Override
@@ -149,7 +152,7 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
 
   @Override
   protected float getShadeBrightness(BlockState blockState, BlockGetter getter,
-    BlockPos pos) {
+                                     BlockPos pos) {
     return 1.0F;
   }
 
@@ -162,25 +165,18 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
   @Override
   public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player,
                                      boolean willHarvest, FluidState fluid) {
-    if (world.isClientSide()) {
-      return true;
+    if (!world.isClientSide()) {
+      ServerLevel serverWorld = (ServerLevel) world;
+      var blockEntity = getBlockEntity(serverWorld, pos);
+      EntityItemUtil.summonLootItemStacks(serverWorld, pos, ModUtil.getItemStacks(blockEntity.externalGetItemHandler(null)));
+      blockEntity.clearContent();
     }
-
-    final ServerLevel serverWorld = (ServerLevel) world;
-    final var tile = getBlockEntity(serverWorld, pos);
-    if (!(tile instanceof QedBlockEntity)) {
-      return true;
-    }
-
-    EntityItemUtil.summonLootItems(serverWorld, pos, tile.getEnergyItemStack().copy());
-    tile.clearContent();
-
-    return true;
+    return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
   }
 
   @Override
   protected boolean propagatesSkylightDown(BlockState state, BlockGetter getter,
-    BlockPos pos) {
+                                           BlockPos pos) {
     return true;
   }
 

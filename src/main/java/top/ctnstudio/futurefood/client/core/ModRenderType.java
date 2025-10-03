@@ -42,9 +42,9 @@ public final class ModRenderType {
       1536, false, false, RenderType.CompositeState.builder()
         .setShaderState(RENDERTYPE_TEXT_SHADER)
         .setTextureState(new TextureStateShard(texture, false, false))
-      .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-      .setLightmapState(LIGHTMAP)
-      .setOverlayState(OVERLAY)
+        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+        .setLightmapState(LIGHTMAP)
+        .setOverlayState(OVERLAY)
         .createCompositeState(false)));
 
   public static RenderType getHighlighted(DepthTestStateShard depth) {

@@ -8,6 +8,8 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import top.ctnstudio.futurefood.client.core.ModRender;
+import top.ctnstudio.futurefood.client.gui.screen.ParticleColliderScreen;
+import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
 import top.ctnstudio.futurefood.common.item.CyberWrenchItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
@@ -20,10 +22,18 @@ public class DatagenI18ZhCn extends LanguageProvider {
     super(output, FutureFood.ID, "zh_cn");
   }
 
+  public static String translationKey(String string) {
+    return FutureFood.ID + ".configgui." + string;
+  }
+
+  public static String commentKey(String string) {
+    return FutureFood.ID + ".configgui." + string + ".tooltip";
+  }
+
   @Override
   protected void addTranslations() {
     add("itemGroup.futurefood", "未来食物");
-    add("futurefood.gui.energy.tooltip", "能量存储：%s/%s");
+    add(EnergyBar.TOOLTIP, "能量存储：%s/%s");
     add(ModRender.ITEM_TOOLTIP_POSITION, "绑定的方块坐标：%s %s %s");
     add(ModRender.ITEM_TOOLTIP_POSITION_EMPTY, "没有绑定方块坐标");
     add(CyberWrenchItem.BINDING_SUCCESS, "绑定成功，坐标： x %s y %s z %s");
@@ -33,6 +43,7 @@ public class DatagenI18ZhCn extends LanguageProvider {
     add(CyberWrenchItem.LINK_REMOVE, "已断开链接，坐标： x %s y %s z %s");
     add(CyberWrenchItem.LINK_REMOVE_FAILURE, "断开链接失败，坐标： x %s y %s z %s");
     add(CyberWrenchItem.LINK_FAILURE, "链接失败坐标： x %s y %s z %s");
+    add(ParticleColliderScreen.ProgressBar.TOOLTIP, "剩余时间：%s");
     addItem(ModItem.CYBER_WRENCH, "赛博扳手");
     addBlock(ModBlock.QED, "量子能源扩散器");
     addBlock(ModBlock.QER, "量子能源接收器");
@@ -42,14 +53,6 @@ public class DatagenI18ZhCn extends LanguageProvider {
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {
     add(translationKey(configKey), translationDescribe);
     add(commentKey(configKey), commentDescribe);
-  }
-
-  public static String translationKey(String string) {
-    return FutureFood.ID + ".configgui." + string;
-  }
-
-  public static String commentKey(String string) {
-    return FutureFood.ID + ".configgui." + string + ".tooltip";
   }
 
   public void addConfig(String configKey, String translationDescribe) {

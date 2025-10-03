@@ -28,20 +28,6 @@ public class SchrodingersCan extends Item {
     super(new Item.Properties().food(foodProperties).stacksTo(16));
   }
 
-  @Override
-  public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity livingEntity) {
-    final int sum = addAnEffect + removeAnEffect + none;
-    final int odd = world.getRandom().nextInt(sum);
-
-    if (odd < addAnEffect) {
-      upEffect(livingEntity);
-    } else if (odd < removeAnEffect) {
-      dowEffect(livingEntity);
-    }
-
-    return super.finishUsingItem(stack, world, livingEntity);
-  }
-
   private static void upEffect(LivingEntity entity) {
     final var list = entity.getActiveEffects().stream()
       .filter(it -> {
@@ -72,5 +58,19 @@ public class SchrodingersCan extends Item {
     final var newEffect = new MobEffectInstance(effect.getEffect(), effect.getDuration(),
       effect.getAmplifier() + 1);
     effect.update(newEffect);
+  }
+
+  @Override
+  public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity livingEntity) {
+    final int sum = addAnEffect + removeAnEffect + none;
+    final int odd = world.getRandom().nextInt(sum);
+
+    if (odd < addAnEffect) {
+      upEffect(livingEntity);
+    } else if (odd < removeAnEffect) {
+      dowEffect(livingEntity);
+    }
+
+    return super.finishUsingItem(stack, world, livingEntity);
   }
 }
