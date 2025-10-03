@@ -30,7 +30,6 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
     if (level.isClientSide) {
       return;
     }
-    super.tick(level, pos, bs);
 
     // TODO 输入到通用机械的能源转换有误差
     controlItemEnergy(itemHandler, true);

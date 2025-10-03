@@ -13,7 +13,7 @@ import top.ctnstudio.futurefood.core.FutureFood;
 public class EnergyScreen<T extends BasicEnergyMenu> extends AbstractContainerScreen<T> {
   public static final ResourceLocation BG = FutureFood.modRL("textures/gui/container/energy.png");
   private final ResourceLocation textureBg;
-  protected EnergyBar listener;
+  protected EnergyBar energyBar;
 
   public EnergyScreen(T menu, Inventory playerInventory, Component title) {
     this(menu, playerInventory, title, BG);
@@ -29,14 +29,14 @@ public class EnergyScreen<T extends BasicEnergyMenu> extends AbstractContainerSc
   @Override
   protected void init() {
     super.init();
-    this.listener = new EnergyBar(leftPos + 1, topPos + 14, menu.getEnergy(), menu.getMaxEnergy());
-    addRenderableWidget(listener);
+    this.energyBar = new EnergyBar(leftPos + 2, topPos + 15, menu.getEnergy(), menu.getMaxEnergy());
+    addRenderableWidget(energyBar);
   }
 
   @Override
   public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    if (listener != null) {
-      listener.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
+    if (energyBar != null) {
+      energyBar.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
     }
     super.render(guiGraphics, mouseX, mouseY, partialTick);
     renderTooltip(guiGraphics, mouseX, mouseY);
@@ -53,8 +53,8 @@ public class EnergyScreen<T extends BasicEnergyMenu> extends AbstractContainerSc
   @Override
   protected void containerTick() {
     super.containerTick();
-    if (listener != null) {
-      listener.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
+    if (energyBar != null) {
+      energyBar.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
     }
   }
 
