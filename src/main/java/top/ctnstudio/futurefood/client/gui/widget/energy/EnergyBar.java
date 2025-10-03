@@ -17,7 +17,7 @@ public class EnergyBar extends ImageWidget.Sprite {
   private int maxEnergy;
 
   public EnergyBar(int x, int y, int energy, int maxEnergy) {
-    this(x, y, 12, 39, TEXTURE, energy, maxEnergy);
+    this(x, y, 10, 37, TEXTURE, energy, maxEnergy);
   }
 
   public EnergyBar(int x, int y, int width, int height, ResourceLocation sprite, int energy, int maxEnergy) {
@@ -53,14 +53,16 @@ public class EnergyBar extends ImageWidget.Sprite {
       guiGraphics.renderTooltip(minecraft.font, translatable, mouseX, mouseY);
     }
     if (this.maxEnergy > 0) {
+      int spriteHeight = this.getHeight();
+      int spriteWidth = this.getWidth();
+
       int energy = Math.max(0, this.energy);
-      int height = (int) ((Math.min(energy, this.maxEnergy) / (float) this.maxEnergy) * this.getHeight());
-      int yPosition = this.getHeight() - height;
-      guiGraphics.blitSprite(this.sprite,
-        this.getWidth(), this.getHeight(),
-        0, yPosition,
-        this.getX(), this.getY() + yPosition,
-        this.getWidth(), height);
+      int uHeight = (int) ((Math.min(energy, this.maxEnergy) / (float) this.maxEnergy) * spriteHeight);
+      int yPosition = spriteHeight - uHeight;
+      int x = this.getX();
+      int y = this.getY() + yPosition;
+
+      guiGraphics.blitSprite(this.sprite, spriteWidth, spriteHeight, 0, yPosition, x, y, spriteWidth, uHeight);
     }
   }
 

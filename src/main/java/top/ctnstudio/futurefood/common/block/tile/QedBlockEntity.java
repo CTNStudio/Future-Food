@@ -54,15 +54,10 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   @Override
   protected void loadAdditional(CompoundTag nbt, Provider provider) {
     super.loadAdditional(nbt, provider);
-    linkStorage.deserializeNBT(provider, nbt.getCompound("linkStorage"));
-    remainingTime = nbt.getInt("remainingTime");
-    if (!nbt.contains("maxRemainingTime")) {
-      maxRemainingTime = DEFAULT_MAX_REMAINING_TIME;
-    } else {
-      maxRemainingTime = nbt.getInt("maxRemainingTime");
-    }
-
-    final var pos = this.getBlockPos();
+    if (nbt.contains("linkStorage"))
+      linkStorage.deserializeNBT(provider, nbt.getCompound("linkStorage"));
+    if (nbt.contains("remainingTime")) remainingTime = nbt.getInt("remainingTime");
+    maxRemainingTime = !nbt.contains("maxRemainingTime") ? DEFAULT_MAX_REMAINING_TIME : nbt.getInt("maxRemainingTime");
   }
 
   @Override
@@ -89,8 +84,6 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
     }
     // 使用方法方便重写逻辑
     int time = getRemainingTime();
-
-    super.tick(level, pos, bs);
 
     // 提取物品方块的能量
     controlItemEnergy(itemHandler, false);

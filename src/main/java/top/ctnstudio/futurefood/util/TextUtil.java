@@ -36,4 +36,26 @@ public class TextUtil {
     formatted = formatted.replaceAll("\\.?0+$", "");
     return formatted + " " + unit;
   }
+
+  /**
+   * 将游戏刻度转换为时间格式
+   * 每20刻度等于1秒
+   *
+   * @param ticks 游戏刻度数
+   * @return 格式化后的时间字符串
+   */
+  public static String formatGameTime(long ticks) {
+    long seconds = ticks / 20;
+    long minutes = seconds / 60;
+    long hours = minutes / 60;
+
+    if (hours > 0) {
+      return String.format("%dh %dm %ds", hours, minutes % 60, seconds % 60);
+    } else if (minutes > 0) {
+      return String.format("%dm %ds", minutes, seconds % 60);
+    } else {
+      return String.format("%ds", seconds);
+    }
+  }
+
 }

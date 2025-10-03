@@ -37,28 +37,20 @@ import top.ctnstudio.futurefood.util.ModUtil;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extends BlockEntity
   implements Container, MenuProvider {
-  public static final Supplier<ModEnergyStorage> DEFAULT_ENERGY_STORAGE =
-    () -> new ModEnergyStorage(10240, 1024, 1024);
+
   protected final ModEnergyStorage energyStorage;
   protected final ItemStackHandler itemHandler;
   protected final BasicEnergyMenu.EnergyData energyData;
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-    BlockState blockState) {
-    this(type, pos, blockState, new ItemStackHandler(1),
-      DEFAULT_ENERGY_STORAGE.get());
-  }
-
-  public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-    BlockState blockState, ItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
+                                  BlockState blockState, ItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
-    energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
+    this.energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
   }
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -81,12 +73,9 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
   @Override
   protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
     super.loadAdditional(nbt, provider);
-    if (nbt.contains("energyStorage")) {
+    if (nbt.contains("energyStorage"))
       energyStorage.deserializeNBT(provider, nbt.getCompound("energyStorage"));
-    }
-    if (nbt.contains("items")) {
-      itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
-    }
+    if (nbt.contains("items")) itemHandler.deserializeNBT(provider, nbt.getCompound("items"));
   }
 
   /**
