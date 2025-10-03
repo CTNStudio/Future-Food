@@ -12,16 +12,14 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.util.ModUtil;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 无限连接存储
@@ -177,4 +175,25 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     linkSet.clear();
     linkSet.addAll(linkList);
   }
+
+  @Override
+  public abstract void linkFailure(BlockPos pos);
+
+  /**
+   * 获取链接的列表
+   *
+   * @return 不可修改的链接列表
+   */
+  @Override
+  public List<BlockPos> getLinkPosList() {
+    return linkSet.stream().toList();
+  }
+
+  @Override
+  public int getSize() {
+    return linkSet.size();
+  }
+
+  @Override
+  public abstract @Nullable Level getLevel();
 }

@@ -15,6 +15,7 @@ import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -86,6 +87,20 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
    * @param pos 要移除的链接方块位置
    */
   boolean removeLink(BlockPos pos);
+
+  /**
+   * 获取链接的列表
+   *
+   * @return 链接列表
+   */
+  List<BlockPos> getLinkPosList();
+
+  /**
+   * 获取链接数量
+   *
+   * @return 链接数量
+   */
+  int getSize();
 
   /**
    * 链接一个方块

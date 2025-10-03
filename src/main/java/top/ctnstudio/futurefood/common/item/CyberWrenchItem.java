@@ -90,22 +90,26 @@ public class CyberWrenchItem extends Item {
     // 获取目标方块信息
     final var targetBlock = getTargetBlockPos(level, player);
 
-    Map.Entry<BlockPos, BlockState> launchEntry;
-    Map.Entry<BlockPos, BlockState> receiveEntry = null;
-    if (targetBlock.isEmpty() || (
-      (launchEntry = targetBlock.get("launch")) == null && (receiveEntry = targetBlock.get("receive")) == null)) {
+    if (targetBlock.isEmpty()) {
       return super.use(level, player, usedHand);
     }
 
-    if (receiveEntry != null) {
-      return linkMode(level, diffuserPos, receiveEntry.getKey()) ?
-        InteractionResultHolder.sidedSuccess(item, level.isClientSide) : super.use(level, player, usedHand);
+    if (targetBlock.containsKey("receive")) {
+      if (diffuserPos != null) {
+        BlockPos receivePos = targetBlock.get("receive").getKey();
+        return linkMode(level, diffuserPos, receivePos) ?
+          InteractionResultHolder.sidedSuccess(item, level.isClientSide) : super.use(level, player, usedHand);
+      }
     }
-    BlockPos launchPos = launchEntry.getKey();
-    if (diffuserPos == null || !diffuserPos.equals(launchPos)) {
-      return bindingMode(level, launchPos, item) ?
-        InteractionResultHolder.sidedSuccess(item, level.isClientSide) : super.use(level, player, usedHand);
+
+    if (targetBlock.containsKey("launch")) {
+      BlockPos launchPos = targetBlock.get("launch").getKey();
+      if (diffuserPos == null || !diffuserPos.equals(launchPos)) {
+        return bindingMode(level, launchPos, item) ?
+          InteractionResultHolder.sidedSuccess(item, level.isClientSide) : super.use(level, player, usedHand);
+      }
     }
+
     return super.use(level, player, usedHand);
   }
 

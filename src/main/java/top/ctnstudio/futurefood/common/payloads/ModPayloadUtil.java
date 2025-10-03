@@ -11,7 +11,7 @@ public class ModPayloadUtil {
   /**
    * 发送文本提示
    *
-   * @param serverPlayer 发送的玩家
+   * @param serverPlayer 接收的玩家
    * @param text         发送的文本
    * @param clientPlayer 接收的玩家
    */
