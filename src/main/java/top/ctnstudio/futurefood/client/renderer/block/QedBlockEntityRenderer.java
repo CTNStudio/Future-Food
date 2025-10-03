@@ -102,6 +102,14 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     return LayerDefinition.create(md, 172, 26);
   }
 
+  private static Function<MultiBufferSource, VertexConsumer> createVertexConsumer(RenderType renderType) {
+    return mbs -> mbs.getBuffer(renderType);
+  }
+
+  protected static Material chestMaterial(String texture) {
+    return new Material(ModMaterialAtlases.ENERGY_BALL, FutureFood.modRL(texture));
+  }
+
   @Override
   public void render(T blockEntity, float partialTick, PoseStack poseStack,
                      MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
@@ -195,13 +203,5 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
       index = 0;
     }
     return workMaterials.get(index).buffer(bufferSource, ModRenderType::getEnergyBall);
-  }
-
-  private static Function<MultiBufferSource, VertexConsumer> createVertexConsumer(RenderType renderType) {
-    return mbs -> mbs.getBuffer(renderType);
-  }
-
-  protected static Material chestMaterial(String texture) {
-    return new Material(ModMaterialAtlases.ENERGY_BALL, FutureFood.modRL(texture));
   }
 }

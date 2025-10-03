@@ -113,7 +113,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   /**
    * 执行能量传递
    *
-   * @param qedLevel qed世界
+   * @param qedLevel      qed世界
    * @param qedBlockState qed方块状态
    */
   public void executeEnergyTransmission(Level qedLevel, BlockState qedBlockState) {

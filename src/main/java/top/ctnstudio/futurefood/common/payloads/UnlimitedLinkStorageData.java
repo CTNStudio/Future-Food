@@ -21,14 +21,7 @@ import java.util.UUID;
 // TODO 待完成
 public record UnlimitedLinkStorageData(List<List<Integer>> linkPosSet, List<Integer> targetPos,
                                        Optional<UUID> playerUUID) implements CustomPacketPayload {
-  public UnlimitedLinkStorageData(Set<BlockPos> linkPosSet, BlockPos targetPos, @Nullable Player player) {
-    this(linkPosSet.stream().map(pos -> List.of(pos.getX(), pos.getY(), pos.getZ())).toList(),
-      List.of(targetPos.getX(), targetPos.getY(), targetPos.getZ()),
-      player == null ? Optional.empty() : Optional.of(player.getUUID()));
-  }
-
   public static final CustomPacketPayload.Type<UnlimitedLinkStorageData> TYPE = new CustomPacketPayload.Type<>(FutureFood.modRL("unlimited_link_storage_data"));
-
   public static final StreamCodec<ByteBuf, UnlimitedLinkStorageData> STREAM_CODEC = StreamCodec.composite(
     ByteBufCodecs.<ByteBuf, List<Integer>>list().apply(ByteBufCodecs.<ByteBuf, Integer>list(3).apply(ByteBufCodecs.VAR_INT)),
     UnlimitedLinkStorageData::linkPosSet,
@@ -38,6 +31,12 @@ public record UnlimitedLinkStorageData(List<List<Integer>> linkPosSet, List<Inte
     UnlimitedLinkStorageData::playerUUID,
     UnlimitedLinkStorageData::new
   );
+
+  public UnlimitedLinkStorageData(Set<BlockPos> linkPosSet, BlockPos targetPos, @Nullable Player player) {
+    this(linkPosSet.stream().map(pos -> List.of(pos.getX(), pos.getY(), pos.getZ())).toList(),
+      List.of(targetPos.getX(), targetPos.getY(), targetPos.getZ()),
+      player == null ? Optional.empty() : Optional.of(player.getUUID()));
+  }
 
   public static BlockPos getBlockPos(final List<Integer> pos) {
     return new BlockPos(pos.get(0), pos.get(1), pos.get(2));

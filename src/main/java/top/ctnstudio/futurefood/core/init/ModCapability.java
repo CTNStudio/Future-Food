@@ -21,10 +21,6 @@ public final class ModCapability {
     return BlockCapability.createVoid(FutureFood.modRL(name), typeClass);
   }
 
-  public static class ModBlockCapability {
-    public static final BlockCapability<IUnlimitedLinkStorage, Void> UNLIMITED_LINK_STORAGE =
-      createVoid("unlimited_link_storage", IUnlimitedLinkStorage.class);
-  }
   @SubscribeEvent
   public static void register(final RegisterCapabilitiesEvent event) {
     ModTileEntity.TILES.getEntries().forEach(entry -> {
@@ -40,5 +36,10 @@ public final class ModCapability {
 
     event.registerBlockEntity(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, ModTileEntity.QED.get(),
       (be, v) -> be.getUnlimitedStorage());
+  }
+
+  public static class ModBlockCapability {
+    public static final BlockCapability<IUnlimitedLinkStorage, Void> UNLIMITED_LINK_STORAGE =
+      createVoid("unlimited_link_storage", IUnlimitedLinkStorage.class);
   }
 }

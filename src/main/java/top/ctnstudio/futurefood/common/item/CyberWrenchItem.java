@@ -57,6 +57,18 @@ public class CyberWrenchItem extends Item {
       .component(ModItemComponent.POSITION, new ArrayList<>()));
   }
 
+  public static @NotNull List<Integer> getPositionList(BlockPos blockPos) {
+    return List.of(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+  }
+
+  public static void sendOverlayMessage(String text, Vec3i pos) {
+    ModUtil.sendOverlayMessage(text, pos.getX(), pos.getY(), pos.getZ());
+  }
+
+  public static void sendOverlayMessage(String text, List<Integer> pos) {
+    ModUtil.sendOverlayMessage(text, pos.get(0), pos.get(1), pos.get(2));
+  }
+
   // TODO 处理链接动作，添加断开链接
   @Override
   public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand usedHand) {
@@ -105,8 +117,9 @@ public class CyberWrenchItem extends Item {
 
   /**
    * 链接模式
-   * @param level  世界
-   * @param diffuserPos 绑定方块位置
+   *
+   * @param level          世界
+   * @param diffuserPos    绑定方块位置
    * @param targetBlockPos 目标方块位置
    * @return
    */
@@ -174,9 +187,10 @@ public class CyberWrenchItem extends Item {
 
   /**
    * 绑定模式
-   * @param level  世界
+   *
+   * @param level          世界
    * @param targetBlockPos 目标方块位置
-   * @param item 玩家物品
+   * @param item           玩家物品
    * @return
    */
   public boolean bindingMode(Level level, BlockPos targetBlockPos, ItemStack item) {
@@ -188,10 +202,6 @@ public class CyberWrenchItem extends Item {
     item.set(ModItemComponent.POSITION, getPositionList(targetBlockPos));
 
     return true;
-  }
-
-  public static @NotNull List<Integer> getPositionList(BlockPos blockPos) {
-    return List.of(blockPos.getX(), blockPos.getY(), blockPos.getZ());
   }
 
   /**
@@ -234,13 +244,5 @@ public class CyberWrenchItem extends Item {
         return map;
       },
       (c) -> map);
-  }
-
-  public static void sendOverlayMessage(String text, Vec3i pos) {
-    ModUtil.sendOverlayMessage(text, pos.getX(), pos.getY(), pos.getZ());
-  }
-
-  public static void sendOverlayMessage(String text, List<Integer> pos) {
-    ModUtil.sendOverlayMessage(text, pos.get(0), pos.get(1), pos.get(2));
   }
 }

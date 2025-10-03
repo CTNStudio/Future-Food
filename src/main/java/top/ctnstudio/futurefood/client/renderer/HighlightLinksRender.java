@@ -50,6 +50,35 @@ public class HighlightLinksRender implements ModRender {
     return INSTANCE;
   }
 
+  private static @NotNull Map<BlockPos, BlockState> getBlock(ClientLevel level, Frustum frustum, BlockPos playerPos) {
+    return ModUtil.rangePos(level, playerPos, SCOPE, entry -> {
+      BlockPos pos = entry.getKey();
+      if (!frustum.isVisible(new AABB(pos))) {
+        return false;
+      }
+      BlockState blockState = level.getBlockState(pos);
+      return filterBlock(blockState);
+    });
+  }
+
+  private static boolean filterBlock(BlockState blockState) {
+    return !blockState.isEmpty() && (blockState.is(UNLIMITED_RECEIVE) || blockState.is(UNLIMITED_LAUNCH));
+  }
+
+  private static @NotNull Material chestMaterial(String texture) {
+    return chestMaterial(FutureFood.modRL(texture));
+  }
+
+  private static @NotNull Material chestMaterial(ResourceLocation rl) {
+    return new Material(ModMaterialAtlases.ICON, rl);
+  }
+
+  private static void renderIcon(PoseStack pose, MultiBufferSource.BufferSource bufferSource, Material material,
+                                 float x, float y, float z, float size, int rgb, float a) {
+    renderTextures(pose, material.buffer(bufferSource, ModRenderType::getIcon), size, x, y, z, 0, 0, 1, 1,
+      ARGB32.red(rgb), ARGB32.green(rgb), ARGB32.blue(rgb), colorValue(a));
+  }
+
   // TODO 更酷的渲染
   @Override
   public void levelRender(Minecraft minecraft, ClientLevel level, Frustum frustum, PoseStack pose, Camera camera) {
@@ -114,34 +143,5 @@ public class HighlightLinksRender implements ModRender {
     pose.popPose();
     buffer.endBatch();
     RenderSystem.disableDepthTest();
-  }
-
-  private static @NotNull Map<BlockPos, BlockState> getBlock(ClientLevel level, Frustum frustum, BlockPos playerPos) {
-    return ModUtil.rangePos(level, playerPos, SCOPE, entry -> {
-      BlockPos pos = entry.getKey();
-      if (!frustum.isVisible(new AABB(pos))) {
-        return false;
-      }
-      BlockState blockState = level.getBlockState(pos);
-      return filterBlock(blockState);
-    });
-  }
-
-  private static boolean filterBlock(BlockState blockState) {
-    return !blockState.isEmpty() && (blockState.is(UNLIMITED_RECEIVE) || blockState.is(UNLIMITED_LAUNCH));
-  }
-
-  private static @NotNull Material chestMaterial(String texture) {
-    return chestMaterial(FutureFood.modRL(texture));
-  }
-
-  private static @NotNull Material chestMaterial(ResourceLocation rl) {
-    return new Material(ModMaterialAtlases.ICON, rl);
-  }
-
-  private static void renderIcon(PoseStack pose, MultiBufferSource.BufferSource bufferSource, Material material,
-                                 float x, float y, float z, float size, int rgb, float a) {
-    renderTextures(pose, material.buffer(bufferSource, ModRenderType::getIcon), size, x, y, z, 0, 0, 1, 1,
-      ARGB32.red(rgb), ARGB32.green(rgb), ARGB32.blue(rgb), colorValue(a));
   }
 }

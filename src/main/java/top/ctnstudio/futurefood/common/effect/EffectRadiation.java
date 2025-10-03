@@ -20,11 +20,6 @@ public class EffectRadiation extends MobEffect {
     super(MobEffectCategory.HARMFUL, Color.GREEN.getRGB());
   }
 
-  @Override
-  public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
-    cures.clear();
-  }
-
   @SubscribeEvent
   public static void onFinishEffect(MobEffectEvent.Expired event) {
     final var effect = event.getEffectInstance();
@@ -36,7 +31,7 @@ public class EffectRadiation extends MobEffect {
     // TODO 添加一种伤害类型：辐射伤害
     final int lv = effect.getAmplifier();
     event.getEntity().addEffect(new MobEffectInstance(MobEffects.POISON,
-        20 * 60 * 5, lv));
+      20 * 60 * 5, lv));
     event.getEntity().hurt(event.getEntity().damageSources().magic(), lv * 5);
   }
 
@@ -48,5 +43,10 @@ public class EffectRadiation extends MobEffect {
     }
 
     event.setCanceled(true);
+  }
+
+  @Override
+  public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
+    cures.clear();
   }
 }

@@ -26,11 +26,6 @@ import java.util.function.Supplier;
 public final class ModMenu {
   public static final DeferredRegister<MenuType<?>> MENU = DeferredRegister.create(BuiltInRegistries.MENU, FutureFood.ID);
 
-  public static final Supplier<MenuType<EnergyMenu>> ENERGY_MENU =
-    MENU.register("energy_menu", () -> IMenuTypeExtension.create(EnergyMenu::new));
-  public static final Supplier<MenuType<ParticleColliderMenu>> PARTICLE_COLLIDER_MENU =
-    MENU.register("particle_collider_menu", () -> IMenuTypeExtension.create(ParticleColliderMenu::new));
-
   @SubscribeEvent
   public static void registerMenuScreens(RegisterMenuScreensEvent event) {
     FutureFood.LOGGER.info("Registering Menu Screens");
@@ -41,13 +36,21 @@ public final class ModMenu {
     FutureFood.LOGGER.info("Registering Menu Screens Completed");
   }
 
+  public static final Supplier<MenuType<EnergyMenu>> ENERGY_MENU =
+    MENU.register("energy_menu", () -> IMenuTypeExtension.create(EnergyMenu::new));
+
   private static <T extends AbstractContainerMenu> Supplier<MenuType<T>> register(String key, IContainerFactory<T> factory) {
     return MENU.register(key, () -> IMenuTypeExtension.create(factory));
   }
+
+  public static final Supplier<MenuType<ParticleColliderMenu>> PARTICLE_COLLIDER_MENU =
+    MENU.register("particle_collider_menu", () -> IMenuTypeExtension.create(ParticleColliderMenu::new));
 
   private static <M extends AbstractContainerMenu, E extends Screen & MenuAccess<M>> void registerScreen(
     RegisterMenuScreensEvent event,
     MenuType<M> menuType, Function3<M, Inventory, Component, E> screenConstructor) {
     event.register(menuType, screenConstructor::apply);
   }
+
+
 }

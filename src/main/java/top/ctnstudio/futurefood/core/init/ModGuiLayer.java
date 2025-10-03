@@ -25,7 +25,7 @@ public final class ModGuiLayer {
   }
 
   private static <T extends LayeredDraw.Layer> Supplier<T> register(RegisterGuiLayersEvent event, ResourceLocation other,
-    ResourceLocation id, Function3<GuiGraphics, DeltaTracker, Minecraft, T> layer) {
+                                                                    ResourceLocation id, Function3<GuiGraphics, DeltaTracker, Minecraft, T> layer) {
     Layer layer1 = (guiGraphics, deltaTracker) -> layer.apply(guiGraphics, deltaTracker, Minecraft.getInstance());
     event.registerBelow(other, id, layer1);
     return () -> (T) layer1;

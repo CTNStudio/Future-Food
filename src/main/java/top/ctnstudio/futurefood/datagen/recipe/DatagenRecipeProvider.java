@@ -44,6 +44,10 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
     return RecipeProvider.has(itemLike);
   }
 
+  public static String getItemName(ItemLike itemLike) {
+    return RecipeProvider.getItemName(itemLike);
+  }
+
   public ShapedBuilder buildingRecipeBuilder(ItemLike result) {
     return buildingRecipeBuilder(result, 1);
   }
@@ -118,10 +122,6 @@ public abstract class DatagenRecipeProvider extends RecipeProvider {
 
   private ResourceLocation getLocation(String unpackedName) {
     return ResourceLocation.fromNamespaceAndPath(modId, unpackedName);
-  }
-
-  public static String getItemName(ItemLike itemLike) {
-    return RecipeProvider.getItemName(itemLike);
   }
 
   /**

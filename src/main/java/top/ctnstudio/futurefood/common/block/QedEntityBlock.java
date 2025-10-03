@@ -37,19 +37,18 @@ import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
+import top.ctnstudio.futurefood.util.BlockEntyUtil;
 import top.ctnstudio.futurefood.util.EntityItemUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import static top.ctnstudio.futurefood.util.BlockEntyUtil.getBlockEntityFromLevel;
 
 // TODO 完成状态变化
 public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
-  private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
   public static final EnumProperty<Light> LIGHT = EnumProperty.create("light", Light.class);
+  private static final MapCodec<QedEntityBlock> CODEC = simpleCodec(QedEntityBlock::new);
+
   public QedEntityBlock() {
     this(Properties.of());
   }
@@ -74,6 +73,7 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
 
   /**
    * 与周围方块建立无限链接
+   *
    * @deprecated 请使用能力系统的{@link IUnlimitedLinkStorage#linkBlock}方法
    */
   @Deprecated
@@ -106,12 +106,7 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
   }
 
   public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {
-    Optional<QedBlockEntity> blockEntity = getBlockEntityFromLevel(level, pos,
-      ModTileEntity.QED.get());
-    if (blockEntity.isEmpty()) {
-      throw new IllegalStateException("QedBlockEntity not found at " + pos);
-    }
-    return blockEntity.get();
+    return BlockEntyUtil.getBlockEntity(level, pos, ModTileEntity.QED.get());
   }
 
   @Override
@@ -156,7 +151,7 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
 
   @Override
   protected float getShadeBrightness(BlockState blockState, BlockGetter getter,
-    BlockPos pos) {
+                                     BlockPos pos) {
     return 1.0F;
   }
 
@@ -175,9 +170,6 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
 
     final ServerLevel serverWorld = (ServerLevel) world;
     final var tile = getBlockEntity(serverWorld, pos);
-    if (!(tile instanceof QedBlockEntity)) {
-      return true;
-    }
 
     EntityItemUtil.summonLootItems(serverWorld, pos, tile.getEnergyItemStack().copy());
     tile.clearContent();
@@ -187,7 +179,7 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
 
   @Override
   protected boolean propagatesSkylightDown(BlockState state, BlockGetter getter,
-    BlockPos pos) {
+                                           BlockPos pos) {
     return true;
   }
 

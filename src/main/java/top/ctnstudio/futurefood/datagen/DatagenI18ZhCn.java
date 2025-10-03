@@ -20,6 +20,14 @@ public class DatagenI18ZhCn extends LanguageProvider {
     super(output, FutureFood.ID, "zh_cn");
   }
 
+  public static String translationKey(String string) {
+    return FutureFood.ID + ".configgui." + string;
+  }
+
+  public static String commentKey(String string) {
+    return FutureFood.ID + ".configgui." + string + ".tooltip";
+  }
+
   @Override
   protected void addTranslations() {
     add("itemGroup.futurefood", "未来食物");
@@ -42,14 +50,6 @@ public class DatagenI18ZhCn extends LanguageProvider {
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {
     add(translationKey(configKey), translationDescribe);
     add(commentKey(configKey), commentDescribe);
-  }
-
-  public static String translationKey(String string) {
-    return FutureFood.ID + ".configgui." + string;
-  }
-
-  public static String commentKey(String string) {
-    return FutureFood.ID + ".configgui." + string + ".tooltip";
   }
 
   public void addConfig(String configKey, String translationDescribe) {

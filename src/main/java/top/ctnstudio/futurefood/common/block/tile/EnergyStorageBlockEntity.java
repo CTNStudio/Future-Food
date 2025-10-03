@@ -196,6 +196,9 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     return list;
   }
 
+  /**
+   * 清空库存内容
+   */
   @Override
   public void clearContent() {
     if (getLevel() != null && getLevel().isClientSide) {

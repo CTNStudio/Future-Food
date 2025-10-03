@@ -25,21 +25,6 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
     super(ModTileEntity.QER.get(), pos, blockState, new ModEnergyStorage(20480));
   }
 
-  @Override
-  public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
-    if (level.isClientSide) {
-      return;
-    }
-
-    // TODO 输入到通用机械的能源转换有误差
-    controlItemEnergy(itemHandler, true);
-
-    IEnergyStorage energyStorage = getSurroundingEnergyStorage(level, pos, bs);
-    if (energyStorage != null) {
-      ModUtil.controlEnergy(this.energyStorage, energyStorage);
-    }
-  }
-
   @Nullable
   public static BlockState getSurroundingBlock(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
     Direction direction = getDirection(bs).orElse(null);
@@ -66,6 +51,21 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
 
   public static Optional<Direction> getDirection(@NotNull BlockState bs) {
     return bs.getOptionalValue(DirectionEntityBlock.FACING);
+  }
+
+  @Override
+  public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
+    if (level.isClientSide) {
+      return;
+    }
+
+    // TODO 输入到通用机械的能源转换有误差
+    controlItemEnergy(itemHandler, true);
+
+    IEnergyStorage energyStorage = getSurroundingEnergyStorage(level, pos, bs);
+    if (energyStorage != null) {
+      ModUtil.controlEnergy(this.energyStorage, energyStorage);
+    }
   }
 
   @Override

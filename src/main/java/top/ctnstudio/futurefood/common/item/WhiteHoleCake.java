@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class WhiteHoleCake extends Item{
+public class WhiteHoleCake extends Item {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .alwaysEdible()
     .build();
