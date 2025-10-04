@@ -30,7 +30,7 @@ public class ParticleColliderScreen extends EnergyScreen<ParticleColliderMenu> {
   @Override
   public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
     if (progressBar != null) {
-      progressBar.setTick(menu.getEnergy(), menu.getMaxEnergy());
+      progressBar.setTick(menu.getRemainingTick(), menu.getMaxWorkTick());
     }
     super.render(guiGraphics, mouseX, mouseY, partialTick);
   }
@@ -38,7 +38,7 @@ public class ParticleColliderScreen extends EnergyScreen<ParticleColliderMenu> {
   @Override
   protected void containerTick() {
     if (progressBar != null) {
-      progressBar.setTick(menu.getEnergy(), menu.getMaxEnergy());
+      progressBar.setTick(menu.getRemainingTick(), menu.getMaxWorkTick());
     }
     super.containerTick();
   }
@@ -59,8 +59,8 @@ public class ParticleColliderScreen extends EnergyScreen<ParticleColliderMenu> {
       this.maxWorkTick = maxWorkTick;
     }
 
-    public void setTick(int energy, int maxTick) {
-      this.remainingTick = energy;
+    public void setTick(int remainingTick, int maxTick) {
+      this.remainingTick = remainingTick;
       this.maxWorkTick = maxTick;
     }
 

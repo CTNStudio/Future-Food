@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -20,8 +21,12 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
+import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipeManager;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
+
+import java.util.Optional;
 
 // TODO 自定义配方
 public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<ParticleColliderMenu>
@@ -29,6 +34,11 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
 
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+  // 槽位
+  public static final int INPUT_SLOT_1 = 1;
+  public static final int INPUT_SLOT_2 = 2;
+  public static final int OUTPUT_SLOT = 3;
 
   private final WorkTick workTick;
   // 使用包装类以实现同步
@@ -46,6 +56,7 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
       return;
     }
     controlItemEnergy(itemHandler, false);
+    this.processRecipe();
   }
 
   @Override
@@ -81,7 +92,7 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   @Override
   protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
     super.loadAdditional(nbt, provider);
-    if (nbt.contains("remainingTick")) setRemainingTick(nbt.getInt("remainingTick"));
+    if (nbt.contains("processTick")) setProcessTick(nbt.getInt("processTick"));
     if (nbt.contains("maxWorkTick")) setMaxWorkTick(nbt.getInt("maxWorkTick"));
   }
 
@@ -91,15 +102,15 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   @Override
   protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
     super.saveAdditional(nbt, provider);
-    nbt.putInt("remainingTick", getRemainingTick());
+    nbt.putInt("processTick", getProcessTick());
     nbt.putInt("maxWorkTick", getMaxWorkTick());
   }
 
-  public int getRemainingTick() {
-    return workTick.getRemainingTick();
+  public int getProcessTick() {
+    return workTick.getProcessTick();
   }
 
-  public void setRemainingTick(int remainingTick) {
+  public void setProcessTick(int remainingTick) {
     this.workTick.setMaxWorkTick(remainingTick);
   }
 
@@ -123,7 +134,7 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
     @Override
     public int get(int index) {
       return switch (index) {
-        case 0 -> workTick.getRemainingTick();
+        case 0 -> workTick.getProcessTick();
         case 1 -> workTick.getMaxWorkTick();
         default -> 0;
       };
@@ -132,7 +143,7 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
     @Override
     public void set(int index, int value) {
       switch (index) {
-        case 0 -> workTick.setRemainingTick(value);
+        case 0 -> workTick.setProcessTick(value);
         case 1 -> workTick.setMaxWorkTick(value);
       }
     }
@@ -144,15 +155,15 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   }
 
   public static class WorkTick {
-    private int remainingTick;
+    private int processTick;
     private int maxWorkTick;
 
-    public int getRemainingTick() {
-      return remainingTick;
+    public int getProcessTick() {
+      return processTick;
     }
 
-    public void setRemainingTick(int remainingTick) {
-      this.remainingTick = remainingTick;
+    public void setProcessTick(int processTick) {
+      this.processTick = processTick;
     }
 
     public int getMaxWorkTick() {
@@ -162,5 +173,63 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
     public void setMaxWorkTick(int maxWorkTick) {
       this.maxWorkTick = maxWorkTick;
     }
+  }
+
+  private void processRecipe() {
+    ItemStack input1 = itemHandler.getStackInSlot(INPUT_SLOT_1);
+    ItemStack input2 = itemHandler.getStackInSlot(INPUT_SLOT_2);
+
+    Optional<ParticleColliderRecipe> recipe = ParticleColliderRecipeManager.findRecipe(input1, input2);
+
+    if (recipe.isPresent()) {
+      ParticleColliderRecipe currentRecipe = recipe.get();
+      if(canCraft(currentRecipe)){
+        workTick.setMaxWorkTick(currentRecipe.getProcessingTime());
+        int energyPerTick = currentRecipe.getEnergyPerTick();
+
+        if(energyStorage.getEnergyStored() >= energyPerTick){
+          energyStorage.extractEnergy(energyPerTick, false);
+          workTick.processTick++;
+          if(this.getProcessTick() >= this.getMaxWorkTick()){
+            craftItem(currentRecipe);
+            workTick.setProcessTick(0);
+          }
+          setChanged();
+        }
+      }else {
+        workTick.setProcessTick(0);
+      }
+    }else {
+      workTick.setProcessTick(0);
+    }
+  }
+
+  private boolean canCraft(ParticleColliderRecipe recipe) {
+    if(recipe == null)return false;
+    ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
+    ItemStack result = recipe.getOutput();
+
+    if(output.isEmpty())
+      return true;
+    if(!ItemStack.isSameItemSameComponents(output, result))
+      return false;
+    return output.getCount() + result.getCount() <= output.getMaxStackSize();
+  }
+
+  private void craftItem(ParticleColliderRecipe recipe) {
+    if(!canCraft(recipe))return;
+    ItemStack result = recipe.getOutput();
+    ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
+
+    if(output.isEmpty()){
+      itemHandler.setStackInSlot(OUTPUT_SLOT, result);
+    }else {
+      output.grow(result.getCount());
+    }
+
+    itemHandler.extractItem(INPUT_SLOT_1, 1, false);
+    itemHandler.extractItem(INPUT_SLOT_2, 1, false);
+
+    workTick.setProcessTick(0);
   }
 }
