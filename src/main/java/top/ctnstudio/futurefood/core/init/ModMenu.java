@@ -14,12 +14,8 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import top.ctnstudio.futurefood.client.gui.screen.EnergyScreen;
-import top.ctnstudio.futurefood.client.gui.screen.GluttonyScreen;
-import top.ctnstudio.futurefood.client.gui.screen.ParticleColliderScreen;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu;
-import top.ctnstudio.futurefood.common.menu.GluttonyMenu;
-import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
+import top.ctnstudio.futurefood.client.gui.screen.*;
+import top.ctnstudio.futurefood.common.menu.*;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.function.Supplier;
@@ -29,6 +25,12 @@ public final class ModMenu {
   public static final DeferredRegister<MenuType<?>> MENU = DeferredRegister.create(BuiltInRegistries.MENU, FutureFood.ID);
   public static final Supplier<MenuType<EnergyMenu>> ENERGY_MENU = register(
     "energy_menu", EnergyMenu::new);
+  public static final Supplier<MenuType<InputEnergyMenu>> INPUT_ENERGY_MENU = register(
+    "input_energy_menu", InputEnergyMenu::new);
+  public static final Supplier<MenuType<OutputEnergyMenu>> OUTPUT_ENERGY_MENU = register(
+    "output_energy_menu", OutputEnergyMenu::new);
+  public static final Supplier<MenuType<InputOutputEnergyMenu>> INPUT_OUTPUT_ENERGY_MENU = register(
+    "input_output_energy_menu", InputOutputEnergyMenu::new);
   public static final Supplier<MenuType<ParticleColliderMenu>> PARTICLE_COLLIDER_MENU = register(
     "particle_collider_menu", ParticleColliderMenu::new);
   public static final Supplier<MenuType<GluttonyMenu>> GLUTTONY_MENU = register(
@@ -41,6 +43,9 @@ public final class ModMenu {
     registerScreen(event, ModMenu.PARTICLE_COLLIDER_MENU.get(), ParticleColliderScreen::new);
     registerScreen(event, ModMenu.GLUTTONY_MENU.get(), GluttonyScreen::new);
     registerScreen(event, ModMenu.ENERGY_MENU.get(), EnergyScreen::new);
+    registerScreen(event, ModMenu.INPUT_ENERGY_MENU.get(), InputEnergyScreen::new);
+    registerScreen(event, ModMenu.OUTPUT_ENERGY_MENU.get(), OutputEnergyScreen::new);
+    registerScreen(event, ModMenu.INPUT_OUTPUT_ENERGY_MENU.get(), InputOutputEnergyScreen::new);
 
     FutureFood.LOGGER.info("Registering Menu Screens Completed");
   }

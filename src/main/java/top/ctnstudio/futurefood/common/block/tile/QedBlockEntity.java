@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,7 +14,7 @@ import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.TileEntityUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.menu.OutputEnergyMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.util.BlockUtil;
 import top.ctnstudio.futurefood.util.EnergyUtil;
@@ -23,7 +25,8 @@ import java.util.Queue;
 
 // TODO 添加配置功能
 // TODO 让外部无法提取能源
-public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
+// TODO 添加主动抽取
+public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMenu> {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
   public float sphereTick;
@@ -142,5 +145,13 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
 
   public IUnlimitedLinkStorage getUnlimitedStorage() {
     return linkStorage;
+  }
+
+  @Override
+  public @Nullable OutputEnergyMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+    if (!player.isAlive()) {
+      return null;
+    }
+    return new OutputEnergyMenu(containerId, playerInventory, itemHandler, energyData);
   }
 }

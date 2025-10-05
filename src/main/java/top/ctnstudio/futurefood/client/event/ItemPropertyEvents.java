@@ -16,7 +16,6 @@ import top.ctnstudio.futurefood.core.init.ModItem;
  */
 @EventBusSubscriber
 public class ItemPropertyEvents {
-  // TODO 待完善 后续改为自定义
   // 物品堆叠 0~0.63 对应1~64
   public static final ResourceLocation STACKING = FutureFood.modRL("stacking");
 

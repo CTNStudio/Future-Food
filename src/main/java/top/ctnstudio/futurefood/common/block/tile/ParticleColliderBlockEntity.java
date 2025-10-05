@@ -31,7 +31,7 @@ import java.util.Optional;
 // TODO 自定义配方
 // TODO 让外部无法提取能源
 // TODO 根据方向调整物品抽入
-public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<ParticleColliderMenu>
+public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<ParticleColliderMenu>
   implements GeoBlockEntity, IUnlimitedEntityReceive {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
   private int remainingTick;

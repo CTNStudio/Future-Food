@@ -8,7 +8,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 /**
  * 能量输入槽
  */
-public class EnergyInputSlot extends EnergySlot {
+public class EnergyInputSlot extends BasicEnergySlot {
   public EnergyInputSlot(IItemHandler itemHandler, int slot, int x, int y) {
     super(itemHandler, slot, x, y);
   }

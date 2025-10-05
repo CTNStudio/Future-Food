@@ -26,7 +26,7 @@ import java.util.Objects;
 // TODO 添加配置功能
 // TODO 让外部无法输入能源
 // TODO 根据方向调整物品抽入
-public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> {
+public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMenu> {
   private int remainingTick;
   private int maxWorkTick;
   private final ContainerData workProgress;

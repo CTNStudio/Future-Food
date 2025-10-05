@@ -6,10 +6,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
-import top.ctnstudio.futurefood.common.block.GluttonyEntityBlock;
-import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
-import top.ctnstudio.futurefood.common.block.QedEntityBlock;
-import top.ctnstudio.futurefood.common.block.QerEntityBlock;
+import top.ctnstudio.futurefood.common.block.*;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.function.Supplier;
@@ -25,8 +22,8 @@ public final class ModBlock {
     "particle_collider", ParticleColliderEntityBlock::new);
   public static final DeferredBlock<Block> GLUTTONY = register(
     "gluttony", GluttonyEntityBlock::new);
-//  public static final DeferredBlock<Block> BATTERY = register( // TODO 储蓄方块
-//    "battery", BatteryEntityBlock::new);
+  public static final DeferredBlock<Block> BATTERY = register(
+    "battery", BatteryEntityBlock::new);
 
 
 

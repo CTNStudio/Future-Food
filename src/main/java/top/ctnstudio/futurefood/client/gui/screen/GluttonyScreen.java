@@ -10,7 +10,7 @@ import top.ctnstudio.futurefood.common.menu.GluttonyMenu;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.util.TextUtil;
 
-public class GluttonyScreen extends EnergyScreen<GluttonyMenu> {
+public class GluttonyScreen extends BasicEnergyScreen<GluttonyMenu> {
   public static final ResourceLocation BG = FutureFood.modRL("textures/gui/container/gluttony.png");
   public static final ResourceLocation PROGRESS_BAR_TEXTURE = FutureFood.modRL("container/gluttony/progresso");
   public static final String TOOLTIP = FutureFood.ID + ".gui.gluttony.progress.tooltip";

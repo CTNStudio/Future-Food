@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
-import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyInputSlot;
+import top.ctnstudio.futurefood.client.gui.widget.energy.EnergySlot;
 
 public abstract class BasicEnergyMenu extends AbstractContainerMenu {
   private final Inventory container;
@@ -46,7 +46,7 @@ public abstract class BasicEnergyMenu extends AbstractContainerMenu {
   }
 
   protected void addOtherSlot(IItemHandler dataInventory) {
-    addSlot(new EnergyInputSlot(dataInventory, 0, 8, 58));
+    addSlot(new EnergySlot(dataInventory, 0, 8, 58));
   }
 
   @Override

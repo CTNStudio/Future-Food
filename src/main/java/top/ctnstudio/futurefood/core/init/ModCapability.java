@@ -12,7 +12,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
-import top.ctnstudio.futurefood.common.block.tile.EnergyStorageBlockEntity;
+import top.ctnstudio.futurefood.common.block.tile.BaseEnergyStorageBlockEntity;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 @EventBusSubscriber
@@ -26,11 +26,11 @@ public final class ModCapability {
     ModTileEntity.TILES.getEntries().forEach(entry -> {
       Block validBlock = entry.get().getValidBlocks().stream().iterator().next();
       BlockEntity blockEntity = entry.get().create(BlockPos.ZERO, validBlock.defaultBlockState());
-      if (blockEntity instanceof EnergyStorageBlockEntity) {
+      if (blockEntity instanceof BaseEnergyStorageBlockEntity) {
         event.registerBlockEntity(EnergyStorage.BLOCK, entry.get(), (be1, d) ->
-          ((EnergyStorageBlockEntity) be1).externalGetEnergyStorage(d));
+          ((BaseEnergyStorageBlockEntity) be1).externalGetEnergyStorage(d));
         event.registerBlockEntity(ItemHandler.BLOCK, entry.get(), (be1, d) ->
-          ((EnergyStorageBlockEntity) be1).externalGetItemHandler(d));
+          ((BaseEnergyStorageBlockEntity) be1).externalGetItemHandler(d));
       }
     });
 

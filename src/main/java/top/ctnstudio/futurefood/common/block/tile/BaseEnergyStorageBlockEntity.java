@@ -37,15 +37,15 @@ import top.ctnstudio.futurefood.util.EnergyUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extends ModBlockEntity
+public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> extends ModBlockEntity
   implements MenuProvider, IModStackModify {
 
   protected final ModEnergyStorage energyStorage;
   protected final ModItemStackHandler itemHandler;
   protected final BasicEnergyMenu.EnergyData energyData;
 
-  public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-                                  BlockState blockState, ModItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
+  public BaseEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
+                                      BlockState blockState, ModItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
@@ -53,8 +53,8 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     itemHandler.setOn(this);
   }
 
-  public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-                                  BlockState blockState, ModEnergyStorage energyStorage) {
+  public BaseEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
+                                      BlockState blockState, ModEnergyStorage energyStorage) {
     this(type, pos, blockState, new ModItemStackHandler(1), energyStorage);
   }
 
@@ -114,12 +114,7 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
   }
 
   @Override
-  public @Nullable T createMenu(int containerId, Inventory playerInventory, Player player) {
-    if (!player.isAlive()) {
-      return null;
-    }
-    return (T) new EnergyMenu(containerId, playerInventory, itemHandler, energyData);
-  }
+  public abstract @Nullable T createMenu(int containerId, Inventory playerInventory, Player player);
 
   @Override
   public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {

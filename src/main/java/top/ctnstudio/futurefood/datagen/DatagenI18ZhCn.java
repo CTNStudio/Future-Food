@@ -51,7 +51,7 @@ public class DatagenI18ZhCn extends LanguageProvider {
     addBlock(ModBlock.QER, "量子能源接收器");
     addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");
     addBlock(ModBlock.GLUTTONY, "暴食者");
-//    addBlock(ModBlock.BATTERY, "储蓄方块"); TODO 添加储蓄方块
+    addBlock(ModBlock.BATTERY, "储蓄方块");
     addItem(ModItem.FOOD_ESSENCE, "食物源质");
   }
 

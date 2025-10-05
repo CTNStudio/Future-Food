@@ -7,10 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import top.ctnstudio.futurefood.common.block.tile.GluttonyBlockEntity;
-import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
-import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
-import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
+import top.ctnstudio.futurefood.common.block.tile.*;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.Arrays;
@@ -28,6 +25,8 @@ public final class ModTileEntity {
     "particle_collider", ParticleColliderBlockEntity::new, ModBlock.PARTICLE_COLLIDER);
   public static final Supplier<BlockEntityType<GluttonyBlockEntity>> GLUTTONY = register(
     "gluttony", GluttonyBlockEntity::new, ModBlock.GLUTTONY);
+  public static final Supplier<BlockEntityType<BatteryBlockEntity>> BATTERY = register(
+    "battery", BatteryBlockEntity::new, ModBlock.BATTERY);
 
   @SafeVarargs
   private static <T extends BlockEntity>

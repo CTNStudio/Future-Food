@@ -2,6 +2,8 @@ package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -9,14 +11,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
-import top.ctnstudio.futurefood.common.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.menu.InputEnergyMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.util.BlockUtil;
 import top.ctnstudio.futurefood.util.EnergyUtil;
 
 // TODO 添加配置功能
 // TODO 让外部无法输入能源
-public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> implements IUnlimitedEntityReceive {
+public class QerBlockEntity extends BaseEnergyStorageBlockEntity<InputEnergyMenu> implements IUnlimitedEntityReceive {
 
   public QerBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.QER.get(), pos, blockState, new ModEnergyStorage(20480));
@@ -74,5 +76,13 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
   @Override
   public IEnergyStorage getEnergyStorage() {
     return energyStorage;
+  }
+
+  @Override
+  public @Nullable InputEnergyMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+    if (!player.isAlive()) {
+      return null;
+    }
+    return new InputEnergyMenu(containerId, playerInventory, itemHandler, energyData);
   }
 }
