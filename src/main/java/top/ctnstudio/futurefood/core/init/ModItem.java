@@ -16,15 +16,19 @@ import java.util.function.Supplier;
 
 public final class ModItem {
   public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(FutureFood.ID);
-  public static final DeferredItem<Item> CYBER_WRENCH =
-    ITEMS.registerItem("cyber_wrench", CyberWrenchItem::new);
-  public static final DeferredItem<Item> QED =
-    ITEMS.register("quantum_energy_diffuser", createBlockItem(ModBlock.QED));
-  public static final DeferredItem<Item> QER =
-    ITEMS.register("quantum_energy_receiver", createBlockItem(ModBlock.QER));
-  public static final DeferredItem<Item> PARTICLE_COLLIDER =
-    ITEMS.register("particle_collider", createGeoBlockItem(ModBlock.PARTICLE_COLLIDER,
+  public static final DeferredItem<Item> CYBER_WRENCH = ITEMS.registerItem(
+    "cyber_wrench", CyberWrenchItem::new);
+  public static final DeferredItem<Item> QED = ITEMS.register(
+    "quantum_energy_diffuser", createBlockItem(ModBlock.QED));
+  public static final DeferredItem<Item> QER = ITEMS.register(
+    "quantum_energy_receiver", createBlockItem(ModBlock.QER));
+  public static final DeferredItem<Item> PARTICLE_COLLIDER = ITEMS.register(
+    "particle_collider", createGeoBlockItem(ModBlock.PARTICLE_COLLIDER,
       ParticleColliderBlockItemRenderer::new));
+  public static final DeferredItem<Item> GLUTTONY = ITEMS.register(
+    "gluttony", createBlockItem(ModBlock.GLUTTONY));
+  public static final DeferredItem<Item> FOOD_ESSENCE = ITEMS.registerSimpleItem(
+    "food_essence");
 
   private static Supplier<BlockItem> createBlockItem(Supplier<Block> block) {
     return () -> new BlockItem(block.get(), new Item.Properties());

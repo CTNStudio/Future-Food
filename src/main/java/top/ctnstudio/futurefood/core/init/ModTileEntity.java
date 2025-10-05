@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import top.ctnstudio.futurefood.common.block.tile.GluttonyBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
@@ -18,6 +19,15 @@ import java.util.function.Supplier;
 public final class ModTileEntity {
   public static final DeferredRegister<BlockEntityType<?>> TILES =
     DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, FutureFood.ID);
+
+  public static final Supplier<BlockEntityType<QedBlockEntity>> QED = register(
+    "quantum_energy_diffuser", QedBlockEntity::new, ModBlock.QED);
+  public static final Supplier<BlockEntityType<QerBlockEntity>> QER = register(
+    "quantum_energy_receiver", QerBlockEntity::new, ModBlock.QER);
+  public static final Supplier<BlockEntityType<ParticleColliderBlockEntity>> PARTICLE_COLLIDER = register(
+    "particle_collider", ParticleColliderBlockEntity::new, ModBlock.PARTICLE_COLLIDER);
+  public static final Supplier<BlockEntityType<GluttonyBlockEntity>> GLUTTONY = register(
+    "gluttony", GluttonyBlockEntity::new, ModBlock.GLUTTONY);
 
   @SafeVarargs
   private static <T extends BlockEntity>
@@ -31,13 +41,4 @@ public final class ModTileEntity {
           .toArray(new Block[0]))
       .build(null));
   }
-
-  public static final Supplier<BlockEntityType<QedBlockEntity>> QED = register(
-    "quantum_energy_diffuser", QedBlockEntity::new, ModBlock.QED);
-  public static final Supplier<BlockEntityType<QerBlockEntity>> QER = register(
-    "quantum_energy_receiver", QerBlockEntity::new, ModBlock.QER);
-  public static final Supplier<BlockEntityType<ParticleColliderBlockEntity>> PARTICLE_COLLIDER =
-    register("particle_collider", ParticleColliderBlockEntity::new, ModBlock.PARTICLE_COLLIDER);
-
-
 }

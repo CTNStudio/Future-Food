@@ -13,7 +13,7 @@ import top.ctnstudio.futurefood.common.item.CyberWrenchItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModCapability;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
-import top.ctnstudio.futurefood.util.ModUtil;
+import top.ctnstudio.futurefood.util.BlockUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,14 +38,6 @@ public record UnlimitedLinkStorageData(Optional<List<List<Integer>>> linkPosSet,
         Optional.of(List.of(targetPos.getX(), targetPos.getY(), targetPos.getZ())) : Optional.empty());
   }
 
-  public Optional<Set<BlockPos>> getLinkPosSet() {
-    return linkPosSet.map(list -> list.stream().map(ModUtil::getBlockPos).collect(Collectors.toSet()));
-  }
-
-  public Optional<BlockPos> getTargetPos() {
-    return targetPos.map(ModUtil::getBlockPos);
-  }
-
   /**
    * 客户端请求 该方法由玩家发送
    */
@@ -55,14 +47,14 @@ public record UnlimitedLinkStorageData(Optional<List<List<Integer>>> linkPosSet,
       ServerLevel level = (ServerLevel) player.level();
       Optional<List<Integer>> targetPos = data.targetPos;
       if (targetPos.isEmpty()) {
-        ModUtil.rangePos(level, BlockPos.containing(player.getEyePosition()), CyberWrenchItem.SCOPE, (entry) ->
+        BlockUtil.rangePos(level, BlockPos.containing(player.getEyePosition()), CyberWrenchItem.SCOPE, (entry) ->
             entry.getValue().is(FfBlockTags.UNLIMITED_LAUNCH)).keySet().stream()
           .map(pos -> Map.entry(pos, Optional.ofNullable(level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, pos))))
           .filter(entry -> entry.getValue().isPresent())
           .forEach(entry ->
             ModPayloadUtil.sendToPlayer(player, new UnlimitedLinkStorageData(entry.getValue().get().getLinkPosList(), entry.getKey())));
       } else {
-        BlockPos target = ModUtil.getBlockPos(targetPos.get());
+        BlockPos target = BlockUtil.getBlockPos(targetPos.get());
         IUnlimitedLinkStorage capability = level.getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, target);
         if (capability == null) {
           return;
@@ -78,14 +70,21 @@ public record UnlimitedLinkStorageData(Optional<List<List<Integer>>> linkPosSet,
   public static void toClient(final UnlimitedLinkStorageData data, final IPayloadContext context) {
     context.enqueueWork(() -> {
       IUnlimitedLinkStorage capability = context.player().level()
-        .getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, ModUtil.getBlockPos(data.targetPos().get()));
+        .getCapability(ModCapability.ModBlockCapability.UNLIMITED_LINK_STORAGE, BlockUtil.getBlockPos(data.targetPos().get()));
       if (capability == null) {
         return;
       }
-      capability.setLinkList(data.linkPosSet.get().stream().map(ModUtil::getBlockPos).toList());
+      capability.setLinkList(data.linkPosSet.get().stream().map(BlockUtil::getBlockPos).toList());
     });
   }
 
+  public Optional<Set<BlockPos>> getLinkPosSet() {
+    return linkPosSet.map(list -> list.stream().map(BlockUtil::getBlockPos).collect(Collectors.toSet()));
+  }
+
+  public Optional<BlockPos> getTargetPos() {
+    return targetPos.map(BlockUtil::getBlockPos);
+  }
 
   @Override
   public Type<? extends CustomPacketPayload> type() {

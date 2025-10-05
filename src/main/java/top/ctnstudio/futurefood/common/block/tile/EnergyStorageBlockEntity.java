@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +17,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -26,34 +24,45 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
+import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
+import top.ctnstudio.futurefood.api.capability.IModStackModify;
 import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
-import top.ctnstudio.futurefood.util.ModUtil;
+import top.ctnstudio.futurefood.util.BlockUtil;
+import top.ctnstudio.futurefood.util.EnergyUtil;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extends BlockEntity
-  implements Container, MenuProvider {
+public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extends ModBlockEntity
+  implements MenuProvider, IModStackModify {
 
   protected final ModEnergyStorage energyStorage;
-  protected final ItemStackHandler itemHandler;
+  protected final ModItemStackHandler itemHandler;
   protected final BasicEnergyMenu.EnergyData energyData;
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
-                                  BlockState blockState, ItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
+                                  BlockState blockState, ModItemStackHandler itemHandler, ModEnergyStorage energyStorage) {
     super(type, pos, blockState);
     this.energyStorage = energyStorage;
     this.itemHandler = itemHandler;
     this.energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
+    itemHandler.setOn(this);
   }
 
   public EnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
                                   BlockState blockState, ModEnergyStorage energyStorage) {
-    this(type, pos, blockState, new ItemStackHandler(1), energyStorage);
+    this(type, pos, blockState, new ModItemStackHandler(1), energyStorage);
+  }
+
+  @Nullable
+  public static IEnergyStorage getSurroundingEnergyStorage(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
+    Direction direction = BlockUtil.getFacingDirection(bs).orElse(null);
+    if (direction == null) return null;
+    return EnergyUtil.getSurroundingEnergyDirectionStorage(level, pos, direction);
   }
 
   /**
@@ -144,43 +153,43 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
   public ItemStack getEnergyItemStack() {
     return itemHandler.getStackInSlot(0);
   }
+//
+//  @Override
+//  public int getContainerSize() {
+//    return itemHandler.getSlots();
+//  }
+//
+//  @Override
+//  public boolean isEmpty() {
+//    for (ItemStack stack : getItems()) {
+//      if (stack.isEmpty()) {
+//        return false;
+//      }
+//    }
+//    return true;
+//  }
+//
+//  @Override
+//  public ItemStack getItem(int slot) {
+//    return itemHandler.getStackInSlot(slot);
+//  }
+//
+//  @Override
+//  public ItemStack removeItem(int slot, int amount) {
+//    return itemHandler.extractItem(slot, amount, false);
+//  }
+//
+//  @Override
+//  public ItemStack removeItemNoUpdate(int slot) {
+//    return itemHandler.extractItem(slot, getItem(slot).getCount(), false);
+//  }
+//
+//  @Override
+//  public void setItem(int slot, ItemStack stack) {
+//    itemHandler.setStackInSlot(slot, stack);
+//  }
 
-  @Override
-  public int getContainerSize() {
-    return itemHandler.getSlots();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    for (ItemStack stack : getItems()) {
-      if (stack.isEmpty()) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  @Override
-  public ItemStack getItem(int slot) {
-    return itemHandler.getStackInSlot(slot);
-  }
-
-  @Override
-  public ItemStack removeItem(int slot, int amount) {
-    return itemHandler.extractItem(slot, amount, false);
-  }
-
-  @Override
-  public ItemStack removeItemNoUpdate(int slot) {
-    return itemHandler.extractItem(slot, getItem(slot).getCount(), false);
-  }
-
-  @Override
-  public void setItem(int slot, ItemStack stack) {
-    itemHandler.setStackInSlot(slot, stack);
-  }
-
-  @Override
+  //  @Override
   public boolean stillValid(Player player) {
     return !this.isRemoved() && player.canInteractWithEntity(new AABB(getBlockPos()), 4.0);
   }
@@ -194,24 +203,9 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     return list;
   }
 
-  /**
-   * 清空库存内容
-   */
-  @Override
-  public void clearContent() {
-    int slots = itemHandler.getSlots();
-    for (int i = 0; i < slots; i++) {
-      itemHandler.setStackInSlot(i, ItemStack.EMPTY);
-    }
-  }
-
-
   @Override
   public Component getDisplayName() {
     return getBlockState().getBlock().getName();
-  }
-
-  public void tick(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState bs) {
   }
 
   /**
@@ -228,6 +222,14 @@ public abstract class EnergyStorageBlockEntity<T extends BasicEnergyMenu> extend
     }
     IEnergyStorage extract = isOutput ? this.energyStorage : capability;
     IEnergyStorage receive = isOutput ? capability : this.energyStorage;
-    ModUtil.controlEnergy(extract, receive);
+    EnergyUtil.controlEnergy(extract, receive);
+  }
+
+  @Override
+  public void onStackContentsChanged(int slot) {
+  }
+
+  @Override
+  public void onStackLoad() {
   }
 }

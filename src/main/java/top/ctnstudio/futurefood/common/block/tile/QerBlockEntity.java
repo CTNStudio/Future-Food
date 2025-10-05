@@ -4,20 +4,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
-import top.ctnstudio.futurefood.common.block.DirectionEntityBlock;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
-import top.ctnstudio.futurefood.util.ModUtil;
-
-import java.util.Optional;
-
-import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
+import top.ctnstudio.futurefood.util.BlockUtil;
+import top.ctnstudio.futurefood.util.EnergyUtil;
 
 public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> implements IUnlimitedEntityReceive {
 
@@ -25,32 +20,24 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
     super(ModTileEntity.QER.get(), pos, blockState, new ModEnergyStorage(20480));
   }
 
-  @Nullable
-  public static BlockState getSurroundingBlock(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
-    Direction direction = getDirection(bs).orElse(null);
+  /**
+   * 获取一个坐标的周围方块
+   *
+   * @param level 世界
+   * @param pos   坐标
+   * @param bs    方块状态
+   * @return 周围方块
+   */
+  @javax.annotation.Nullable
+  private static BlockState getSurroundingBlock(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
+    Direction direction = BlockUtil.getFacingDirection(bs).orElse(null);
     if (direction == null) return null;
     return getSurroundingDirectionBlock(level, pos, direction);
   }
 
   @NotNull
   private static BlockState getSurroundingDirectionBlock(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction direction) {
-    return level.getBlockState(pos.relative(direction.getOpposite(), 1));
-  }
-
-  @Nullable
-  public static IEnergyStorage getSurroundingEnergyStorage(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
-    Direction direction = getDirection(bs).orElse(null);
-    if (direction == null) return null;
-    return getSurroundingEnergyDirectionStorage(level, pos, direction);
-  }
-
-  @Nullable
-  private static IEnergyStorage getSurroundingEnergyDirectionStorage(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction direction) {
-    return level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction.getOpposite(), 1), direction);
-  }
-
-  public static Optional<Direction> getDirection(@NotNull BlockState bs) {
-    return bs.getOptionalValue(DirectionEntityBlock.FACING);
+    return BlockUtil.getSurroundingDirectionBlock(level, pos, direction.getOpposite());
   }
 
   @Override
@@ -61,9 +48,10 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
 
     controlItemEnergy(itemHandler, true);
 
+    // TODO 注意：未做优化 理论要根据方块更新进行缓存再传输，以避免过多的获取
     IEnergyStorage energyStorage = getSurroundingEnergyStorage(level, pos, bs);
     if (energyStorage != null) {
-      ModUtil.controlEnergy(this.energyStorage, energyStorage);
+      EnergyUtil.controlEnergy(this.energyStorage, energyStorage);
     }
   }
 
@@ -72,8 +60,7 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
     if (direction == null) {
       return energyStorage;
     }
-    return !getOppositeDirection(this, direction) ? null :
-      super.externalGetEnergyStorage(direction);
+    return BlockUtil.getOppositeDirection(this, direction) ? super.externalGetEnergyStorage(direction) : null;
   }
 
   /**

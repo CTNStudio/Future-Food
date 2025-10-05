@@ -15,20 +15,21 @@ import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyInputSlot;
 
 public abstract class BasicEnergyMenu extends AbstractContainerMenu {
   private final Inventory container;
-  private ContainerData energyData;
+  private final ContainerData energyData;
 
   public BasicEnergyMenu(MenuType<?> menuType, int containerId, Inventory container,
-                         IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data, FriendlyByteBuf buf) {
-    this(menuType, containerId, container, dataInventory, energyData, data);
+                         IItemHandler dataInventory, ContainerData energyData, FriendlyByteBuf buf) {
+    this(menuType, containerId, container, dataInventory, energyData);
   }
 
   public BasicEnergyMenu(MenuType<?> menuType, int containerId, Inventory container,
-                         IItemHandler dataInventory, ContainerData energyData, @Nullable ContainerData data) {
+                         IItemHandler dataInventory, ContainerData energyData) {
     super(menuType, containerId);
     this.container = container;
-    addOtherSlot(dataInventory, data);
+    this.energyData = energyData;
     addSlot(container);
-    addDataSlots(energyData, data);
+    addDataSlots(energyData);
+    addOtherSlot(dataInventory);
   }
 
   protected void addSlot(Inventory container) {
@@ -44,16 +45,7 @@ public abstract class BasicEnergyMenu extends AbstractContainerMenu {
     }
   }
 
-  protected void addDataSlots(ContainerData energyData, @Nullable ContainerData data) {
-    if (energyData.getCount() > 0) {
-      addDataSlots(energyData);
-      this.energyData = energyData;
-    } else if (data != null && data.getCount() > 0) {
-      addDataSlots(data);
-    }
-  }
-
-  protected void addOtherSlot(IItemHandler dataInventory, ContainerData data) {
+  protected void addOtherSlot(IItemHandler dataInventory) {
     addSlot(new EnergyInputSlot(dataInventory, 0, 8, 58));
   }
 
@@ -154,7 +146,6 @@ public abstract class BasicEnergyMenu extends AbstractContainerMenu {
   }
 
   public record EnergyData(ModEnergyStorage energyStorage) implements ContainerData {
-
     @Override
     public int get(int index) {
       return switch (index) {

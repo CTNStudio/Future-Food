@@ -9,10 +9,10 @@ import top.ctnstudio.futurefood.core.init.ModMenu;
 
 public class EnergyMenu extends BasicEnergyMenu {
   public EnergyMenu(int containerId, Inventory container, FriendlyByteBuf buf) {
-    super(ModMenu.ENERGY_MENU.get(), containerId, container, new ItemStackHandler(1), new SimpleContainerData(2), null, buf);
+    super(ModMenu.ENERGY_MENU.get(), containerId, container, new ItemStackHandler(1), new SimpleContainerData(2), buf);
   }
 
   public EnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData) {
-    super(ModMenu.ENERGY_MENU.get(), containerId, container, dataInventory, energyData, null);
+    super(ModMenu.ENERGY_MENU.get(), containerId, container, dataInventory, energyData);
   }
 }

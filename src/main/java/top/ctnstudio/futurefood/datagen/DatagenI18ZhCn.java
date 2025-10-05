@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import top.ctnstudio.futurefood.client.core.ModRender;
+import top.ctnstudio.futurefood.client.gui.screen.GluttonyScreen;
 import top.ctnstudio.futurefood.client.gui.screen.ParticleColliderScreen;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
 import top.ctnstudio.futurefood.common.item.CyberWrenchItem;
@@ -43,11 +44,15 @@ public class DatagenI18ZhCn extends LanguageProvider {
     add(CyberWrenchItem.LINK_REMOVE, "已断开链接，坐标： x %s y %s z %s");
     add(CyberWrenchItem.LINK_REMOVE_FAILURE, "断开链接失败，坐标： x %s y %s z %s");
     add(CyberWrenchItem.LINK_FAILURE, "链接失败坐标： x %s y %s z %s");
-    add(ParticleColliderScreen.ProgressBar.TOOLTIP, "剩余时间：%s");
+    add(ParticleColliderScreen.TOOLTIP, "剩余时间：%s");
+    add(GluttonyScreen.TOOLTIP, "剩余时间：%s");
     addItem(ModItem.CYBER_WRENCH, "赛博扳手");
     addBlock(ModBlock.QED, "量子能源扩散器");
     addBlock(ModBlock.QER, "量子能源接收器");
     addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");
+    addBlock(ModBlock.GLUTTONY, "暴食者");
+//    addBlock(ModBlock.BATTERY, "储蓄方块"); TODO 添加储蓄方块
+    addItem(ModItem.FOOD_ESSENCE, "食物源质");
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {

@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
+import top.ctnstudio.futurefood.common.block.GluttonyEntityBlock;
 import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QerEntityBlock;
@@ -16,14 +17,18 @@ import java.util.function.Supplier;
 public final class ModBlock {
   public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(FutureFood.ID);
 
-  public static final DeferredBlock<Block> QED =
-    register("quantum_energy_diffuser", QedEntityBlock::new);
-  public static final DeferredBlock<Block> QER =
-    register("quantum_energy_receiver", QerEntityBlock::new);
-  public static final DeferredBlock<Block> PARTICLE_COLLIDER =
-    register("particle_collider", ParticleColliderEntityBlock::new);
-  // TODO 添加能源方块
-  // TODO 添加食物粉碎机
+  public static final DeferredBlock<Block> QED = register(
+    "quantum_energy_diffuser", QedEntityBlock::new);
+  public static final DeferredBlock<Block> QER = register(
+    "quantum_energy_receiver", QerEntityBlock::new);
+  public static final DeferredBlock<Block> PARTICLE_COLLIDER = register(
+    "particle_collider", ParticleColliderEntityBlock::new);
+  public static final DeferredBlock<Block> GLUTTONY = register(
+    "gluttony", GluttonyEntityBlock::new);
+//  public static final DeferredBlock<Block> BATTERY = register( // TODO 储蓄方块
+//    "battery", BatteryEntityBlock::new);
+
+
 
   public static @NotNull BlockBehaviour.StatePredicate never() {
     return (blockState, blockGetter, blockPos) -> false;

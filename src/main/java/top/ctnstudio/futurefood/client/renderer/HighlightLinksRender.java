@@ -26,7 +26,7 @@ import top.ctnstudio.futurefood.client.core.ModMaterialAtlases;
 import top.ctnstudio.futurefood.client.core.ModRenderType;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModItem;
-import top.ctnstudio.futurefood.util.ModUtil;
+import top.ctnstudio.futurefood.util.BlockUtil;
 
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class HighlightLinksRender implements ModRender {
   }
 
   private static @NotNull Map<BlockPos, BlockState> getBlock(ClientLevel level, Frustum frustum, BlockPos playerPos) {
-    return ModUtil.rangePos(level, playerPos, SCOPE, entry -> {
+    return BlockUtil.rangePos(level, playerPos, SCOPE, entry -> {
       BlockPos pos = entry.getKey();
       if (!frustum.isVisible(new AABB(pos))) {
         return false;
@@ -116,7 +116,7 @@ public class HighlightLinksRender implements ModRender {
       final BlockState blockState = entry.getValue();
       final Vec3 blockCenterV3 = blockPos.getCenter();
       var size = 0.5f;
-      var alpha = isContainsRecentlyPos ? 0.4f : 0.6f;
+      var alpha = isContainsRecentlyPos ? 0.4f : 1f;
       var receiveColor = rgbColor("#af5300");
       var launchColor = rgbColor("#0083af");
       // 如果是眼前最近的方块，则高亮

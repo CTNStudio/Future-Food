@@ -1,4 +1,5 @@
 {
+  "block.futurefood.gluttony": "暴食者",
   "block.futurefood.particle_collider": "粒子对撞器",
   "block.futurefood.quantum_energy_diffuser": "量子能源扩散器",
   "block.futurefood.quantum_energy_receiver": "量子能源接收器",
@@ -10,8 +11,11 @@
   "futurefood.cyber_wrench.link.remove_failure": "断开链接失败，坐标： x %s y %s z %s",
   "futurefood.cyber_wrench.link.success": "链接成功，坐标： x %s y %s z %s",
   "futurefood.gui.energy.tooltip": "能量存储：%s/%s",
+  "futurefood.gui.gluttony.progress.tooltip": "剩余时间：%s",
+  "futurefood.gui.particle_collider.progress.tooltip": "剩余时间：%s",
   "futurefood.item.tooltip.position": "绑定的方块坐标：%s %s %s",
   "futurefood.item.tooltip.position.empty": "没有绑定方块坐标",
   "item.futurefood.cyber_wrench": "赛博扳手",
+  "item.futurefood.food_essence": "食物源质",
   "itemGroup.futurefood": "未来食物"
 }

@@ -35,9 +35,7 @@ public class EnergyScreen<T extends BasicEnergyMenu> extends AbstractContainerSc
 
   @Override
   public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    if (energyBar != null) {
-      energyBar.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
-    }
+    containerTick();
     super.render(guiGraphics, mouseX, mouseY, partialTick);
     renderTooltip(guiGraphics, mouseX, mouseY);
   }
@@ -54,7 +52,7 @@ public class EnergyScreen<T extends BasicEnergyMenu> extends AbstractContainerSc
   protected void containerTick() {
     super.containerTick();
     if (energyBar != null) {
-      energyBar.setEnergy(menu.getEnergy(), menu.getMaxEnergy());
+      energyBar.setValue(menu.getEnergy(), menu.getMaxEnergy());
     }
   }
 

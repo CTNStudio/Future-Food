@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  *
  * @author 尽
  */
-public class EntityItemUtil {
+public class ItemEntityUtil {
   public static void summonLootItems(ServerLevel serverLevel, BlockPos pos, Item... items) {
     ItemStack[] stacks = Arrays.stream(items)
       .map(ItemStack::new)

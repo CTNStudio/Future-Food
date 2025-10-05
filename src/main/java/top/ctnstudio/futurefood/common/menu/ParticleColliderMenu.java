@@ -4,31 +4,34 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
-import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
+import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.core.init.ModMenu;
 
 public class ParticleColliderMenu extends BasicEnergyMenu {
-  protected ParticleColliderBlockEntity.WorkProgress workProgress;
+  protected final ContainerData workProgress;
 
   public ParticleColliderMenu(int containerId, Inventory container, FriendlyByteBuf buf) {
     super(ModMenu.PARTICLE_COLLIDER_MENU.get(), containerId, container, new ItemStackHandler(4),
-      new SimpleContainerData(2), new SimpleContainerData(2), buf);
-    this.workProgress = new ParticleColliderBlockEntity.WorkProgress(new ParticleColliderBlockEntity.WorkTick());
+      new SimpleContainerData(2), buf);
+    this.workProgress = new SimpleContainerData(2);
+    addDataSlots(workProgress);
   }
 
   public ParticleColliderMenu(int containerId, Inventory container, IItemHandler dataInventory,
-                              EnergyData energyData, ParticleColliderBlockEntity.WorkProgress workProgress) {
-    super(ModMenu.PARTICLE_COLLIDER_MENU.get(), containerId, container, dataInventory, energyData, workProgress);
-    this.workProgress = workProgress;
+                              EnergyData energyData, ContainerData data) {
+    super(ModMenu.PARTICLE_COLLIDER_MENU.get(), containerId, container, dataInventory, energyData);
+    this.workProgress = data;
+    addDataSlots(workProgress);
   }
 
   @Override
-  protected void addOtherSlot(IItemHandler dataInventory, ContainerData data) {
-    super.addOtherSlot(dataInventory, data);
+  protected void addOtherSlot(IItemHandler dataInventory) {
+    super.addOtherSlot(dataInventory);
     addSlot(new SlotItemHandler(dataInventory, 1, 28, 35));
     addSlot(new SlotItemHandler(dataInventory, 2, 132, 35));
     addSlot(new SlotItemHandler(dataInventory, 3, 80, 35) {
@@ -38,6 +41,19 @@ public class ParticleColliderMenu extends BasicEnergyMenu {
         return false;
       }
     });
+  }
+
+  @Override
+  protected @Nullable ItemStack mobileItemLogic(int index, ItemStack movedItems, Slot slot, ItemStack movedItemsCopy) {
+    if (index >= 0 && index < 4) {
+      if (!this.moveItemStackTo(movedItems, 4, 31, true)) {
+        return ItemStack.EMPTY;
+      }
+      slot.onQuickCraft(movedItems, movedItemsCopy);
+    } else if (!this.moveItemStackTo(movedItems, 0, 4, false)) {
+      return ItemStack.EMPTY;
+    }
+    return null;
   }
 
   public int getRemainingTick() {

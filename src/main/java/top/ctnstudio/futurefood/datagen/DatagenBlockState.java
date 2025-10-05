@@ -25,6 +25,8 @@ public class DatagenBlockState extends BlockStateProvider {
   protected void registerStatesAndModels() {
     qedModel();
     qerModel();
+    // TODO 暴食者 模型
+    // TODO 储蓄方块 模型
     simpleParticleModels(ModBlock.PARTICLE_COLLIDER.get());
   }
 

@@ -15,7 +15,8 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
-import top.ctnstudio.futurefood.util.ModUtil;
+import top.ctnstudio.futurefood.util.BlockUtil;
+import top.ctnstudio.futurefood.util.EnergyUtil;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -83,7 +84,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
       return false;
     }
 
-    IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(level, pos);
+    IEnergyStorage capability = EnergyUtil.getEnergyStorageCapabilities(level, pos);
     if (capability == null) {
       linkFailure(pos);
       return false;
@@ -126,7 +127,7 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     }
     linkSet.clear();
     linkSet.addAll(tags.stream().map(tag ->
-        tag instanceof IntArrayTag intTags ? ModUtil.getBlockPos(intTags.getAsIntArray()) : null)
+        tag instanceof IntArrayTag intTags ? BlockUtil.getBlockPos(intTags.getAsIntArray()) : null)
       .filter(Objects::nonNull).toList());
   }
 

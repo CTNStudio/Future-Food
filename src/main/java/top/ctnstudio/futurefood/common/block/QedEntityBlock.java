@@ -3,7 +3,6 @@ package top.ctnstudio.futurefood.common.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
@@ -22,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -33,13 +31,11 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.common.block.tile.ModBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QedBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
-import top.ctnstudio.futurefood.util.BlockEntyUtil;
-import top.ctnstudio.futurefood.util.EntityItemUtil;
-import top.ctnstudio.futurefood.util.ModUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +55,7 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
       .isValidSpawn(ModBlock.argumentNever())
       .isRedstoneConductor(ModBlock.never())
       .isSuffocating(ModBlock.never())
-      .isViewBlocking(ModBlock.never()));
+            .isViewBlocking(ModBlock.never()), ModTileEntity.QED);
     this.registerDefaultState(this.stateDefinition.any()
       .setValue(ACTIVATE, Activate.DEFAULT)
       .setValue(LIGHT, Light.DEFAULT)
@@ -106,10 +102,6 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
     return linkStorage.linkBlock(level, pos);
   }
 
-  public @NotNull QedBlockEntity getBlockEntity(Level level, BlockPos pos) {
-    return BlockEntyUtil.getBlockEntity(level, pos, ModTileEntity.QED.get());
-  }
-
   @Override
   protected MapCodec<? extends BaseEntityBlock> codec() {
     return CODEC;
@@ -134,7 +126,7 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
                                                                 BlockEntityType<T> type) {
-    return createTickerHelper(type, ModTileEntity.QED.get(), (l, bp, bs, be) -> be.tick(level, bp, bs));
+    return createTickerHelper(type, ModTileEntity.QED.get(), ModBlockEntity::tick);
   }
 
   @Override
@@ -160,18 +152,6 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
   protected VoxelShape getVisualShape(BlockState state, BlockGetter getter,
                                       BlockPos pos, CollisionContext context) {
     return Shapes.empty();
-  }
-
-  @Override
-  public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player,
-                                     boolean willHarvest, FluidState fluid) {
-    if (!world.isClientSide()) {
-      ServerLevel serverWorld = (ServerLevel) world;
-      var blockEntity = getBlockEntity(serverWorld, pos);
-      EntityItemUtil.summonLootItemStacks(serverWorld, pos, ModUtil.getItemStacks(blockEntity.externalGetItemHandler(null)));
-      blockEntity.clearContent();
-    }
-    return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
   }
 
   @Override

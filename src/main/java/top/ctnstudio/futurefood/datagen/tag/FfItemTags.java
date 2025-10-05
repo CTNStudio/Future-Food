@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import top.ctnstudio.futurefood.core.FutureFood;
+import top.ctnstudio.futurefood.core.init.ModItem;
 
 import javax.annotation.CheckForNull;
 import java.util.concurrent.CompletableFuture;
@@ -24,6 +25,9 @@ public class FfItemTags extends ItemTagsProvider {
     super(output, lookupProvider, blockTags, FutureFood.ID, existingFileHelper);
   }
 
+  public static final TagKey<Item> FUELS = createGeneralTag("fuels");
+  public static final TagKey<Item> FUELS_BIO = createGeneralTag("fuels/bio");
+
   protected static TagKey<Item> createTag(String name) {
     return ItemTags.create(FutureFood.modRL(name));
   }
@@ -36,5 +40,7 @@ public class FfItemTags extends ItemTagsProvider {
   protected void addTags(HolderLookup.Provider capability) {
     tag(Tags.Items.TOOLS).add(CYBER_WRENCH.get());
     tag(Tags.Items.TOOLS_WRENCH).add(CYBER_WRENCH.get());
+    tag(FUELS).add(ModItem.FOOD_ESSENCE.get());
+    tag(FUELS_BIO).add(ModItem.FOOD_ESSENCE.get());
   }
 }

@@ -15,8 +15,10 @@ import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import top.ctnstudio.futurefood.client.gui.screen.EnergyScreen;
+import top.ctnstudio.futurefood.client.gui.screen.GluttonyScreen;
 import top.ctnstudio.futurefood.client.gui.screen.ParticleColliderScreen;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.menu.GluttonyMenu;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
 import top.ctnstudio.futurefood.core.FutureFood;
 
@@ -25,26 +27,27 @@ import java.util.function.Supplier;
 @EventBusSubscriber(modid = FutureFood.ID)
 public final class ModMenu {
   public static final DeferredRegister<MenuType<?>> MENU = DeferredRegister.create(BuiltInRegistries.MENU, FutureFood.ID);
+  public static final Supplier<MenuType<EnergyMenu>> ENERGY_MENU = register(
+    "energy_menu", EnergyMenu::new);
+  public static final Supplier<MenuType<ParticleColliderMenu>> PARTICLE_COLLIDER_MENU = register(
+    "particle_collider_menu", ParticleColliderMenu::new);
+  public static final Supplier<MenuType<GluttonyMenu>> GLUTTONY_MENU = register(
+    "gluttony_menu", GluttonyMenu::new);
 
   @SubscribeEvent
   public static void registerMenuScreens(RegisterMenuScreensEvent event) {
     FutureFood.LOGGER.info("Registering Menu Screens");
 
     registerScreen(event, ModMenu.PARTICLE_COLLIDER_MENU.get(), ParticleColliderScreen::new);
+    registerScreen(event, ModMenu.GLUTTONY_MENU.get(), GluttonyScreen::new);
     registerScreen(event, ModMenu.ENERGY_MENU.get(), EnergyScreen::new);
 
     FutureFood.LOGGER.info("Registering Menu Screens Completed");
   }
 
-  public static final Supplier<MenuType<EnergyMenu>> ENERGY_MENU =
-    MENU.register("energy_menu", () -> IMenuTypeExtension.create(EnergyMenu::new));
-
   private static <T extends AbstractContainerMenu> Supplier<MenuType<T>> register(String key, IContainerFactory<T> factory) {
     return MENU.register(key, () -> IMenuTypeExtension.create(factory));
   }
-
-  public static final Supplier<MenuType<ParticleColliderMenu>> PARTICLE_COLLIDER_MENU =
-    MENU.register("particle_collider_menu", () -> IMenuTypeExtension.create(ParticleColliderMenu::new));
 
   private static <M extends AbstractContainerMenu, E extends Screen & MenuAccess<M>> void registerScreen(
     RegisterMenuScreensEvent event,

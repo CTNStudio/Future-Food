@@ -14,13 +14,12 @@ import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
-import top.ctnstudio.futurefood.util.ModUtil;
+import top.ctnstudio.futurefood.util.BlockUtil;
+import top.ctnstudio.futurefood.util.EnergyUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Queue;
-
-import static top.ctnstudio.futurefood.util.ModUtil.getOppositeDirection;
 
 // TODO 添加配置功能
 public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
@@ -73,8 +72,7 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
     if (direction == null) {
       return energyStorage;
     }
-    return !getOppositeDirection(this, direction) ? null :
-      super.externalGetEnergyStorage(direction);
+    return BlockUtil.getOppositeDirection(this, direction) ? super.externalGetEnergyStorage(direction) : null;
   }
 
   @Override
@@ -122,11 +120,11 @@ public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
     }
 
     linkStorage.getLinkSet().forEach(bp -> {
-      IEnergyStorage capability = IUnlimitedLinkStorage.getEnergyStorageCapabilities(qedLevel, bp);
+      IEnergyStorage capability = EnergyUtil.getEnergyStorageCapabilities(qedLevel, bp);
       if (capability == null) {
         return;
       }
-      ModUtil.controlEnergy(energyStorage, capability);
+      EnergyUtil.controlEnergy(energyStorage, capability);
     });
   }
 
