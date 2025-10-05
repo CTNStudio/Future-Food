@@ -14,6 +14,8 @@ import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.util.BlockUtil;
 import top.ctnstudio.futurefood.util.EnergyUtil;
 
+// TODO 添加配置功能
+// TODO 让外部无法输入能源
 public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> implements IUnlimitedEntityReceive {
 
   public QerBlockEntity(BlockPos pos, BlockState blockState) {
@@ -47,7 +49,10 @@ public class QerBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> impleme
     }
 
     controlItemEnergy(itemHandler, true);
+    outputEnergy(level, pos, bs);
+  }
 
+  protected void outputEnergy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState bs) {
     // TODO 注意：未做优化 理论要根据方块更新进行缓存再传输，以避免过多的获取
     IEnergyStorage energyStorage = getSurroundingEnergyStorage(level, pos, bs);
     if (energyStorage != null) {

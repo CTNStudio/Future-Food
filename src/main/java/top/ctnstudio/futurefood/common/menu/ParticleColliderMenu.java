@@ -46,7 +46,7 @@ public class ParticleColliderMenu extends BasicEnergyMenu {
   @Override
   protected @Nullable ItemStack mobileItemLogic(int index, ItemStack movedItems, Slot slot, ItemStack movedItemsCopy) {
     if (index >= 0 && index < 4) {
-      if (!this.moveItemStackTo(movedItems, 4, 31, true)) {
+      if (!this.moveItemStackTo(movedItems, 4, 40, true)) {
         return ItemStack.EMPTY;
       }
       slot.onQuickCraft(movedItems, movedItemsCopy);

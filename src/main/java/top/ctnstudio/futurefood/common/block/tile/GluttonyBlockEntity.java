@@ -23,6 +23,9 @@ import top.ctnstudio.futurefood.util.EnergyUtil;
 
 import java.util.Objects;
 
+// TODO 添加配置功能
+// TODO 让外部无法输入能源
+// TODO 根据方向调整物品抽入
 public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> {
   private int remainingTick;
   private int maxWorkTick;
@@ -32,7 +35,7 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
 
   public GluttonyBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.GLUTTONY.get(), pos, blockState,
-      new ModItemStackHandler(4), new ModEnergyStorage(20480));
+      new ModItemStackHandler(4), new ModEnergyStorage(81920));
     this.workProgress = new Data(this);
   }
 
@@ -42,17 +45,10 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
       return;
     }
 
-    controlItemEnergy(itemHandler, false);
+    controlItemEnergy(itemHandler, true);
 
-    // TODO 注意：未做优化 理论要根据方块更新进行缓存再传输，以避免过多的获取
-    if (energyStorage.getEnergyStored() > 0 && energyStorage.canExtract()) {
-      EnergyUtil.getSurroundingEnergyStorage(level, pos).values().stream()
-        .filter(e -> e.getValue().isPresent())
-        .map(e -> e.getValue().get())
-        .forEach(energyStorage -> EnergyUtil.controlEnergy(this.energyStorage, energyStorage));
-    }
-
-    working();
+    outputEnergy(level, pos);
+    working(level, pos);
 
     BlockState blockState = level.getBlockState(pos);
     if (isWorking() && !blockState.getValue(GluttonyEntityBlock.WORK)) {
@@ -62,15 +58,26 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
     }
   }
 
+  protected void outputEnergy(@NotNull Level level, @NotNull BlockPos pos) {
+    // TODO 注意：未做优化 理论要根据方块更新进行缓存再传输，以避免过多的获取
+    if (energyStorage.getEnergyStored() > 0 && energyStorage.canExtract()) {
+      EnergyUtil.getSurroundingEnergyStorage(level, pos).values().stream()
+        .filter(e -> e.getValue().isPresent())
+        .map(e -> e.getValue().get())
+        .forEach(energyStorage -> EnergyUtil.controlEnergy(this.energyStorage, energyStorage));
+    }
+  }
+
   /**
    * 大部分都是没必要的在修改输入槽的那一刻就以及决定好了
    * <br>
    * 除非有人直接修改nbt :(
    */
-  private void working() {
+  private void working(@NotNull Level level, @NotNull BlockPos pos) {
     if (!isWorking()) {
       return;
     }
+
     if (remainingTick > 0) {
       remainingTick--;
       return;
@@ -79,7 +86,7 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
     // 此次是避免直接修改工作进度导致配方为空
     // 获取缓存配方
     if (cacheRecipeEntry == null) {
-      ItemStack stackInSlot = itemHandler.getStackInSlot(1);
+      ItemStack stackInSlot = itemHandler.getStackInSlot(1).copy();
       if (!stackInSlot.isEmpty()) {
         produceProducts(stackInSlot);
         if (cacheRecipeEntry == null) {
@@ -95,7 +102,7 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
     }
 
     // 存储值避免移除输入槽导致值为空
-    ItemStack outputItem = cacheRecipeEntry.outputItem;
+    ItemStack outputItem = cacheRecipeEntry.outputItem.copy();
     int outputEnergy = cacheRecipeEntry.outputEnergy;
     // 如果输入槽为空，则重置进度
     if (itemHandler.extractItem(1, 1, true).isEmpty()) {
@@ -105,7 +112,8 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
     }
 
     // 输出槽不为当前配方成品
-    if (ItemStack.isSameItemSameComponents(itemHandler.getStackInSlot(2), outputItem)) {
+    ItemStack stackInSlot = itemHandler.getStackInSlot(2).copy();
+    if (!stackInSlot.isEmpty() && !ItemStack.isSameItemSameComponents(stackInSlot, outputItem)) {
       // 保留当前进度
       return;
     }
@@ -116,7 +124,7 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
       return;
     }
 
-    if (!itemHandler.getStackInSlot(1).isEmpty()) {
+    if (!itemHandler.getStackInSlot(1).copy().isEmpty()) {
       // 重置进度
       remainingTick = maxWorkTick;
     } else {
@@ -130,10 +138,13 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
     itemHandler.insertItem(2, outputItem, false);
 
     // 避免满了还继续修改
-    if (energyStorage.canReceive() && energyStorage.getEnergyStored() != energyStorage.getMaxEnergyStored() &&
-      energyStorage.receiveEnergy(outputEnergy, true) > 0) {
-      energyStorage.receiveEnergy(outputEnergy, false);
+    if (!energyStorage.canReceive() || energyStorage.getEnergyStored() >= energyStorage.getMaxEnergyStored() ||
+      energyStorage.receiveEnergy(outputEnergy, true) <= 0) {
+      return;
     }
+
+    energyStorage.receiveEnergy(outputEnergy, false);
+    outputEnergy(level, pos);
   }
 
   public void resetProgress() {
@@ -165,13 +176,14 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
    *
    * @param item 输入
    */
-  private void produceProducts(ItemStack item) {
-    if (item.isEmpty() || !item.has(DataComponents.FOOD) ||
-      cacheRecipeEntry != null &&
-        (!ItemStack.isSameItem(item, cacheRecipeEntry.inputItem) ||
-          !item.get(DataComponents.FOOD).equals(cacheRecipeEntry.inputItem.get(DataComponents.FOOD)))) {
+  protected void produceProducts(ItemStack item) {
+    if (item.isEmpty() || !item.has(DataComponents.FOOD)) {
       resetProducts();
       resetProgress();
+      return;
+    }
+    if (cacheRecipeEntry != null && ItemStack.isSameItem(item, cacheRecipeEntry.inputItem) &&
+      item.get(DataComponents.FOOD).equals(cacheRecipeEntry.inputItem.get(DataComponents.FOOD))) {
       return;
     }
 
@@ -185,22 +197,24 @@ public class GluttonyBlockEntity extends EnergyStorageBlockEntity<GluttonyMenu> 
    *
    * @return 产物
    */
-  private RecipeEntry getProduct(ItemStack item) {
+  protected RecipeEntry getProduct(ItemStack item) {
     FoodProperties food = item.get(DataComponents.FOOD);
-    int nutrition = food.nutrition();
-    int saturation = (int) (2.0f * food.saturation());
-    int effect = food.effects().stream()
+    int nutritionFactor = food.nutrition();
+    int saturationFactor = (int) (food.saturation() * 5);
+    int effectFactor = food.effects().stream()
       .map(e -> e.probability() >= 1 ? e.effect() : null)
       .filter(Objects::nonNull)
-      .mapToInt(e -> e.getAmplifier() + 1 + e.getDuration()).sum();
+      .mapToInt(e -> (int) (Math.max(1, (e.getDuration() / 20.0)) * e.getAmplifier() + 1)).sum();
 
-    ItemStack defaultInstance = ModItem.FOOD_ESSENCE.get().getDefaultInstance();
-    defaultInstance.setCount(Math.max(1, Math.min(itemHandler.getSlotLimit(2), (int) ((nutrition + saturation) * (float) effect / 100.0f))));
-    return new RecipeEntry(item, (int) ((nutrition + saturation) * (float) effect / 5.0f), defaultInstance);
+    ItemStack outputItem = ModItem.FOOD_ESSENCE.get().getDefaultInstance();
+    int count = Math.max(1, Math.min(outputItem.getMaxStackSize(), (int) (((nutritionFactor * saturationFactor) / 3.5f + effectFactor / 5.0f) / 10.0f)));
+    outputItem.setCount(count);
+    int outputEnergy = ((nutritionFactor * saturationFactor) * 5 + effectFactor * 10) * 2;
+    return new RecipeEntry(item, outputEnergy, outputItem);
   }
 
   public boolean isWorking() {
-    return remainingTick > 0;
+    return maxWorkTick > 0;
   }
 
   /**

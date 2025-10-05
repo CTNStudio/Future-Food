@@ -52,7 +52,7 @@ public class GluttonyMenu extends BasicEnergyMenu {
   @Override
   protected @Nullable ItemStack mobileItemLogic(int index, ItemStack movedItems, Slot slot, ItemStack movedItemsCopy) {
     if (index >= 0 && index < 4) {
-      if (!this.moveItemStackTo(movedItems, 3, 30, true)) {
+      if (!this.moveItemStackTo(movedItems, 3, 39, true)) {
         return ItemStack.EMPTY;
       }
       slot.onQuickCraft(movedItems, movedItemsCopy);

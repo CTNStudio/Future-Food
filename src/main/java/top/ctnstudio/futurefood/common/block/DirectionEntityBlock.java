@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
+// TODO 让外部无法操控输入能源
 public abstract class DirectionEntityBlock<T extends BlockEntity> extends ModBaseEntityBlock<T> {
   public static final DirectionProperty FACING = BlockStateProperties.FACING;
 

@@ -109,21 +109,7 @@ public abstract class ImageProgressBar extends ImageWidget.Sprite {
     }
   }
 
-  private void renderTexture(@NotNull GuiGraphics guiGraphics) {
-    int value = getRenderValue();
-    int uWidth = getUWidth(value);
-    int vHeight = getVHeight(value);
-    int xPosition = getXPosition(uWidth);
-    int yPosition = getYPosition(vHeight);
-    int x = this.getX() + xPosition;
-    int y = this.getY() + yPosition;
-
-    guiGraphics.blitSprite(this.sprite,
-      this.getWidth(), this.getHeight(),
-      getUPosition(xPosition), getVPosition(yPosition),
-      x, y,
-      uWidth, vHeight);
-  }
+  protected abstract void renderTexture(@NotNull GuiGraphics guiGraphics);
 
   /**
    * 获取要渲染的进度值，确保不小于 0。
@@ -131,56 +117,8 @@ public abstract class ImageProgressBar extends ImageWidget.Sprite {
    * @return 渲染用的进度值
    */
   public int getRenderValue() {
-    return Math.max(0, this.getValue());
+    return Math.min(Math.max(0, this.getValue()), this.getMaxValue());
   }
-
-  /**
-   * 根据当前值计算垂直方向的高度。
-   *
-   * @param value 当前进度值
-   * @return 计算后的高度
-   */
-  public abstract int getVHeight(int value);
-
-  /**
-   * 根据宽度计算 X 方向的位置偏移。
-   *
-   * @param uWidth 宽度
-   * @return X 偏移量
-   */
-  public abstract int getXPosition(int uWidth);
-
-  /**
-   * 根据 Y 偏移量计算 V 坐标。
-   *
-   * @param yPosition Y 偏移量
-   * @return V 坐标
-   */
-  public abstract int getVPosition(int yPosition);
-
-  /**
-   * 根据当前值计算水平方向的宽度。
-   *
-   * @param value 当前进度值
-   * @return 计算后的宽度
-   */
-  public abstract int getUWidth(int value);
-
-  /**
-   * 根据高度计算 Y 方向的位置偏移。
-   *
-   * @param vHeight 高度
-   * @return Y 偏移量
-   */
-  public abstract int getYPosition(int vHeight);
-
-  /**
-   * 根据 X 偏移量计算 U 坐标。
-   *
-   * @param xPosition X 偏移量
-   * @return U 坐标
-   */
-  public abstract int getUPosition(int xPosition);
 
   /**
    * 渲染控件的工具提示。
@@ -189,7 +127,7 @@ public abstract class ImageProgressBar extends ImageWidget.Sprite {
    * @param mouseX      鼠标 X 坐标
    * @param mouseY      鼠标 Y 坐标
    */
-  public void renderWidgetTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+  protected void renderWidgetTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
     guiGraphics.renderTooltip(Minecraft.getInstance().font, getTooltipComponent(), mouseX, mouseY);
   }
 
@@ -236,33 +174,20 @@ public abstract class ImageProgressBar extends ImageWidget.Sprite {
     }
 
     @Override
-    public int getUPosition(int xPosition) {
-      return xPosition;
-    }
+    protected void renderTexture(@NotNull GuiGraphics guiGraphics) {
+      int value = (int) ((getRenderValue() / (float) this.getMaxValue()) * this.getWidth());
+      int uWidth = isToLeft ? value : this.getWidth() - value;
+      int vHeight = getHeight();
+      int xPosition = isToLeft ? 0 : uWidth;
+      int yPosition = 0;
+      int x = isToLeft ? this.getX() + xPosition : this.getX();
+      int y = this.getY() + yPosition;
 
-    @Override
-    public int getVPosition(int yPosition) {
-      return 0;
-    }
-
-    @Override
-    public int getUWidth(int value) {
-      return (int) ((Math.min(value, this.getMaxValue()) / (float) this.getMaxValue()) * this.getWidth());
-    }
-
-    @Override
-    public int getVHeight(int value) {
-      return getHeight();
-    }
-
-    @Override
-    public int getXPosition(int uWidth) {
-      return isToLeft ? 0 : getWidth() - uWidth;
-    }
-
-    @Override
-    public int getYPosition(int vHeight) {
-      return 0;
+      guiGraphics.blitSprite(this.sprite,
+              this.getWidth(), this.getHeight(),
+              isToLeft ? xPosition : 0, 0,
+              x, y,
+              uWidth, vHeight);
     }
   }
 
@@ -291,33 +216,20 @@ public abstract class ImageProgressBar extends ImageWidget.Sprite {
     }
 
     @Override
-    public int getUWidth(int value) {
-      return getWidth();
-    }
+    protected void renderTexture(@NotNull GuiGraphics guiGraphics) {
+      int uWidth = getWidth();
+      int value = (int) ((getRenderValue() / (float) this.getMaxValue()) * this.getHeight());
+      int vHeight = isToTop ? value : this.getHeight() - value;
+      int xPosition = 0;
+      int yPosition = isToTop ? getHeight() - vHeight : 0;
+      int x = this.getX() + xPosition;
+      int y = isToTop ? this.getY() + yPosition : this.getY();
 
-    @Override
-    public int getVHeight(int value) {
-      return (int) ((Math.min(value, this.getMaxValue()) / (float) this.getMaxValue()) * this.getHeight());
-    }
-
-    @Override
-    public int getXPosition(int uWidth) {
-      return 0;
-    }
-
-    @Override
-    public int getYPosition(int vHeight) {
-      return isToTop ? getHeight() - vHeight : 0;
-    }
-
-    @Override
-    public int getUPosition(int xPosition) {
-      return 0;
-    }
-
-    @Override
-    public int getVPosition(int yPosition) {
-      return yPosition;
+      guiGraphics.blitSprite(this.sprite,
+              this.getWidth(), this.getHeight(),
+              0, yPosition,
+              x, y,
+              uWidth, vHeight);
     }
   }
 }

@@ -24,6 +24,8 @@ import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 // TODO 自定义配方
+// TODO 让外部无法提取能源
+// TODO 根据方向调整物品抽入
 public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<ParticleColliderMenu>
   implements GeoBlockEntity, IUnlimitedEntityReceive {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
@@ -35,7 +37,7 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   private final ContainerData workProgress;
 
   public ParticleColliderBlockEntity(BlockPos pos, BlockState blockState) {
-    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModItemStackHandler(4), new ModEnergyStorage(102400));
+    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModItemStackHandler(4), new ModEnergyStorage(102400, 102400, 0));
     this.workProgress = new Data(this);
   }
 

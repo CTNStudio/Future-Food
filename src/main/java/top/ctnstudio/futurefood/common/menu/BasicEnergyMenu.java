@@ -27,9 +27,9 @@ public abstract class BasicEnergyMenu extends AbstractContainerMenu {
     super(menuType, containerId);
     this.container = container;
     this.energyData = energyData;
+    addOtherSlot(dataInventory);
     addSlot(container);
     addDataSlots(energyData);
-    addOtherSlot(dataInventory);
   }
 
   protected void addSlot(Inventory container) {
@@ -111,13 +111,11 @@ public abstract class BasicEnergyMenu extends AbstractContainerMenu {
    * @return 移动后的物品结果，如果移动失败则返回ItemStack.EMPTY，否则返回null表示移动成功
    */
   protected @Nullable ItemStack mobileItemLogic(int index, ItemStack movedItems, Slot slot, ItemStack movedItemsCopy) {
-    // 如果是能量输入槽(索引0)，将物品移动到玩家物品栏(索引1-27)
     if (index == 0) {
-      if (!this.moveItemStackTo(movedItems, 1, 28, true)) {
+      if (!this.moveItemStackTo(movedItems, 1, 37, true)) {
         return ItemStack.EMPTY;
       }
       slot.onQuickCraft(movedItems, movedItemsCopy);
-      // 如果是玩家物品栏中的物品槽(索引>=1)，将物品移动到能量输入槽(索引0)
     } else if (!this.moveItemStackTo(movedItems, 0, 1, false)) {
       return ItemStack.EMPTY;
     }

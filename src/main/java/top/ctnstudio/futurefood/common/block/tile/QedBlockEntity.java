@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import java.util.Queue;
 
 // TODO 添加配置功能
+// TODO 让外部无法提取能源
 public class QedBlockEntity extends EnergyStorageBlockEntity<EnergyMenu> {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储

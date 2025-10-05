@@ -27,7 +27,6 @@ public class ItemUtil {
    * 移除并返回 IItemHandler 中所有的物品
    * <br>
    * 不包含空物品
-   *
    * @param handler IItemHandler 能力
    * @return 不可修改的限定大小的被移除的物品集合
    */
