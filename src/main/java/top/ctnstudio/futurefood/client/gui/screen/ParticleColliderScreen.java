@@ -11,7 +11,7 @@ import top.ctnstudio.futurefood.util.TextUtil;
 
 public class ParticleColliderScreen extends EnergyScreen<ParticleColliderMenu> {
   public static final ResourceLocation BG = FutureFood.modRL("textures/gui/container/particle_collider.png");
-  public static final ResourceLocation PROGRESS_BAR_TEXTURE = FutureFood.modRL("container/particle_collider/progresso.png");
+  public static final ResourceLocation PROGRESS_BAR_TEXTURE = FutureFood.modRL("container/particle_collider/progresso");
   public static final String TOOLTIP = FutureFood.ID + ".gui.particle_collider.progress.tooltip";
 
   protected ImageProgressBar progressBar;

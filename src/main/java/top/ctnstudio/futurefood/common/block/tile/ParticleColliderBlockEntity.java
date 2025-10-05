@@ -46,7 +46,8 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   private final ContainerData workProgress;
 
   public ParticleColliderBlockEntity(BlockPos pos, BlockState blockState) {
-    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModItemStackHandler(4), new ModEnergyStorage(102400, 102400, 0));
+    super(ModTileEntity.PARTICLE_COLLIDER.get(), pos, blockState, new ModItemStackHandler(4),
+      new ModEnergyStorage(102400, 102400, 0));
     this.workProgress = new Data(this);
   }
 
@@ -144,49 +145,51 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
 
     Optional<ParticleColliderRecipe> recipe = ParticleColliderRecipeManager.findRecipe(input1, input2);
 
-    if (recipe.isPresent()) {
-      ParticleColliderRecipe currentRecipe = recipe.get();
-      if(canCraft(currentRecipe)){
-        maxWorkTick = currentRecipe.getProcessingTime(););
-        int energyPerTick = currentRecipe.getEnergyPerTick();
+    if (recipe.isEmpty()) {
+      remainingTick = 0;
+      return;
+    }
 
-        if(energyStorage.getEnergyStored() >= energyPerTick){
-          energyStorage.extractEnergy(energyPerTick, false);
-          remainingTick++;
-          if(this.remainingTick >= this.maxWorkTick){
-            craftItem(currentRecipe);
-            remainingTick = 0;;
-          }
-          setChanged();
-        }
-      }else {
-        remainingTick = 0;
-      }
-    }else {
+    ParticleColliderRecipe currentRecipe = recipe.get();
+    if (!canCraft(currentRecipe)) {
+      remainingTick = 0;
+      return;
+    }
+
+    maxWorkTick = currentRecipe.getProcessingTime();
+    int energyPerTick = currentRecipe.getEnergyPerTick();
+
+    if (energyStorage.getEnergyStored() < energyPerTick) {
+      return;
+    }
+
+    energyStorage.extractEnergy(energyPerTick, false);
+    remainingTick++;
+    if (this.remainingTick >= this.maxWorkTick) {
+      craftItem(currentRecipe);
       remainingTick = 0;
     }
+    setChanged();
   }
 
   private boolean canCraft(ParticleColliderRecipe recipe) {
-    if(recipe == null)return false;
+    if (recipe == null) return false;
     ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
     ItemStack result = recipe.getOutput();
 
-    if(output.isEmpty())
-      return true;
-    if(!ItemStack.isSameItemSameComponents(output, result))
-      return false;
+    if (output.isEmpty()) return true;
+    if (!ItemStack.isSameItemSameComponents(output, result)) return false;
     return output.getCount() + result.getCount() <= output.getMaxStackSize();
   }
 
   private void craftItem(ParticleColliderRecipe recipe) {
-    if(!canCraft(recipe))return;
+    if (!canCraft(recipe)) return;
     ItemStack result = recipe.getOutput();
     ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
 
-    if(output.isEmpty()){
+    if (output.isEmpty()) {
       itemHandler.setStackInSlot(OUTPUT_SLOT, result);
-    }else {
+    } else {
       output.grow(result.getCount());
     }
 
