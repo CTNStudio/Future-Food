@@ -7,6 +7,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipeManager;
 import top.ctnstudio.futurefood.core.init.*;
 
 import javax.annotation.CheckForNull;
@@ -27,6 +28,9 @@ public class FutureFood {
     ModTileEntity.TILES.register(modEventBus);
     ModCreativeModeTab.TABS.register(modEventBus);
     ModEffect.EFFECT.register(modEventBus);
+
+    //配方
+    ParticleColliderRecipeManager.initRecipes();
   }
 
   /**

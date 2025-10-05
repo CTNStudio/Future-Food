@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -20,8 +21,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
+import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipeManager;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
+
+import java.util.Optional;
 
 // TODO 自定义配方
 // TODO 让外部无法提取能源
@@ -33,6 +38,10 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
   private int maxWorkTick;
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+  // 槽位
+  public static final int INPUT_SLOT_1 = 1;
+  public static final int INPUT_SLOT_2 = 2;
+  public static final int OUTPUT_SLOT = 3;
   // 使用包装类以实现同步
   private final ContainerData workProgress;
 
@@ -47,6 +56,7 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
       return;
     }
     controlItemEnergy(itemHandler, false);
+    this.processRecipe();
   }
 
   @Override
@@ -126,5 +136,63 @@ public class ParticleColliderBlockEntity extends EnergyStorageBlockEntity<Partic
     public int getCount() {
       return 2;
     }
+  }
+
+  private void processRecipe() {
+    ItemStack input1 = itemHandler.getStackInSlot(INPUT_SLOT_1);
+    ItemStack input2 = itemHandler.getStackInSlot(INPUT_SLOT_2);
+
+    Optional<ParticleColliderRecipe> recipe = ParticleColliderRecipeManager.findRecipe(input1, input2);
+
+    if (recipe.isPresent()) {
+      ParticleColliderRecipe currentRecipe = recipe.get();
+      if(canCraft(currentRecipe)){
+        maxWorkTick = currentRecipe.getProcessingTime(););
+        int energyPerTick = currentRecipe.getEnergyPerTick();
+
+        if(energyStorage.getEnergyStored() >= energyPerTick){
+          energyStorage.extractEnergy(energyPerTick, false);
+          remainingTick++;
+          if(this.remainingTick >= this.maxWorkTick){
+            craftItem(currentRecipe);
+            remainingTick = 0;;
+          }
+          setChanged();
+        }
+      }else {
+        remainingTick = 0;
+      }
+    }else {
+      remainingTick = 0;
+    }
+  }
+
+  private boolean canCraft(ParticleColliderRecipe recipe) {
+    if(recipe == null)return false;
+    ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
+    ItemStack result = recipe.getOutput();
+
+    if(output.isEmpty())
+      return true;
+    if(!ItemStack.isSameItemSameComponents(output, result))
+      return false;
+    return output.getCount() + result.getCount() <= output.getMaxStackSize();
+  }
+
+  private void craftItem(ParticleColliderRecipe recipe) {
+    if(!canCraft(recipe))return;
+    ItemStack result = recipe.getOutput();
+    ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
+
+    if(output.isEmpty()){
+      itemHandler.setStackInSlot(OUTPUT_SLOT, result);
+    }else {
+      output.grow(result.getCount());
+    }
+
+    itemHandler.extractItem(INPUT_SLOT_1, 1, false);
+    itemHandler.extractItem(INPUT_SLOT_2, 1, false);
+
+    remainingTick = 0;
   }
 }

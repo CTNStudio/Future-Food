@@ -57,7 +57,7 @@ public class ParticleColliderMenu extends BasicEnergyMenu {
   }
 
   public int getRemainingTick() {
-    return workProgress.get(0);
+    return workProgress.get(1) - workProgress.get(0);
   }
 
   public void setRemainingTick(int remainingTick) {
