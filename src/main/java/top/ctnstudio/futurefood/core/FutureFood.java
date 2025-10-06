@@ -21,7 +21,7 @@ public class FutureFood {
 
   public FutureFood(IEventBus modEventBus, ModContainer modContainer) {
     LOGGER.info("Starting FutureFood");
-    ModItemComponent.ITEM_COMPONENTS.register(modEventBus);
+    ModDataComponent.ITEM_COMPONENTS.register(modEventBus);
     ModMenu.MENU.register(modEventBus);
     ModItem.ITEMS.register(modEventBus);
     ModBlock.BLOCKS.register(modEventBus);

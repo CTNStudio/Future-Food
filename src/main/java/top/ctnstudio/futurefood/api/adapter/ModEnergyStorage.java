@@ -80,4 +80,17 @@ public class ModEnergyStorage extends EnergyStorage implements IModEnergyStorage
     maxReceive = compoundTag.getInt("maxReceive");
     maxExtract = compoundTag.getInt("maxExtract");
   }
+
+  @Override
+  public String toString() {
+    return "EnergyStorage:{" +
+      "energy=" + energy +
+      "capacity=" + capacity +
+      "maxReceive=" + maxReceive +
+      "maxExtract=" + maxExtract + "}";
+  }
+
+  public int getPercentage() {
+    return Math.round((float) energy / capacity * 100.0f);
+  }
 }

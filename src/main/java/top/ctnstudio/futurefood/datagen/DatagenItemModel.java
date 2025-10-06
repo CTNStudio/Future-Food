@@ -32,8 +32,8 @@ public class DatagenItemModel extends ItemModelProvider {
   protected void registerModels() {
     item(ModBlock.QED.get(), FutureFood.modRL("block/quantum_energy_diffuser/work"));
     item(ModBlock.QER.get(), FutureFood.modRL("block/quantum_energy_receiver/work"));
-    // TODO 暴食者 模型
-    // TODO 储蓄方块 模型
+    item(ModBlock.GLUTTONY.get(), FutureFood.modRL("block/gluttony_activate"));
+    simpleBlockItem(ModBlock.BATTERY.get());
     handheldItem(ModItem.CYBER_WRENCH.get());
     createModelFile(ModItem.FOOD_ESSENCE.get(), Map.of(0.00f, "", 0.07f, "1"), ItemPropertyEvents.STACKING);
   }

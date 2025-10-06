@@ -10,6 +10,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.jetbrains.annotations.NotNull;
 import top.ctnstudio.futurefood.datagen.*;
+import top.ctnstudio.futurefood.datagen.loot.DatagenLootTableProvider;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 import top.ctnstudio.futurefood.datagen.tag.FfEntityTags;
 import top.ctnstudio.futurefood.datagen.tag.FfItemTags;
@@ -42,6 +43,7 @@ public class FfDatagen {
     buildServer(event, generator, new FfItemTags(output, lookupProvider,
       pmBlockTags.contentsGetter(), exFileHelper));
     buildServer(event, generator, new FfEntityTags(output, lookupProvider, exFileHelper));
+    buildServer(event, generator, new DatagenLootTableProvider(output, lookupProvider));
   }
 
   private static <T extends DataProvider> @NotNull T buildClient(GatherDataEvent event,

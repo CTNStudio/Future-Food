@@ -5,7 +5,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -17,8 +16,9 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import top.ctnstudio.futurefood.client.renderer.HighlightLinksRender;
 import top.ctnstudio.futurefood.client.util.ColorUtil;
+import top.ctnstudio.futurefood.common.item.data_component.ItemBlockPosData;
 import top.ctnstudio.futurefood.core.FutureFood;
-import top.ctnstudio.futurefood.core.init.ModItemComponent;
+import top.ctnstudio.futurefood.core.init.ModDataComponent;
 
 import java.util.List;
 
@@ -52,17 +52,16 @@ public final class ModRender {
   }
 
   private static void itemTooltipPosition(ItemStack itemStack, List<Component> tooltip, int tooltipSize) {
-    DataComponentType<List<Integer>> component = ModItemComponent.POSITION.get();
-    if (!itemStack.has(component)) {
+    if (!itemStack.has(ModDataComponent.BLOCK_POS)) {
       return;
     }
-    List<Integer> integers = itemStack.get(component);
+    ItemBlockPosData integers = itemStack.get(ModDataComponent.BLOCK_POS);
     final MutableComponent text;
-    if (integers != null && integers.size() == 3) {
+    if (integers != null && !integers.isEmpty()) {
       text = Component.translatable(ITEM_TOOLTIP_POSITION,
-        Component.literal("X " + integers.get(0)).withColor(ColorUtil.rgbColor("#FF0000")),
-        Component.literal("Y " + integers.get(1)).withColor(ColorUtil.rgbColor("#4CAF50")),
-        Component.literal("Z " + integers.get(2)).withColor(ColorUtil.rgbColor("#2196F3")));
+        Component.literal("X " + integers.getX()).withColor(ColorUtil.rgbColor("#FF0000")),
+        Component.literal("Y " + integers.getY()).withColor(ColorUtil.rgbColor("#4CAF50")),
+        Component.literal("Z " + integers.getZ()).withColor(ColorUtil.rgbColor("#2196F3")));
     } else {
       text = Component.translatable(ITEM_TOOLTIP_POSITION_EMPTY);
     }

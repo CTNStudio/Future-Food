@@ -1,6 +1,8 @@
-// 1.21.1	2025-10-04T18:03:46.7849285	Item Models: futurefood
+// 1.21.1	2025-10-06T21:28:50.1447389	Item Models: futurefood
+8f780145ad2000b0300eb2dfb01eb5f356276c2e assets/futurefood/models/item/battery.json
 d0a59be612dbaf93cb4d5963ff91c314b55fde23 assets/futurefood/models/item/cyber_wrench.json
-9a7633c527c0e8844bacf67659be721449eaa758 assets/futurefood/models/item/food_essence.json
+939de49376d8b37f26c3602097e6469f28ca3333 assets/futurefood/models/item/food_essence.json
 558b99d41471bba5ece3ff7c757173383db95d30 assets/futurefood/models/item/food_essence1.json
+92955f95517826b1a46f49009ebf9252b894998d assets/futurefood/models/item/gluttony.json
 cf22bfb9e3b1a3f6751185b38846e707c90e2b8e assets/futurefood/models/item/quantum_energy_diffuser.json
 ebe5021677af67de7a7528e7cb59bc3cd1b0cab7 assets/futurefood/models/item/quantum_energy_receiver.json

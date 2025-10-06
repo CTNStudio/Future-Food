@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "activate=false,facing=east": {
+      "model": "futurefood:block/gluttony",
+      "y": 90
+    },
+    "activate=false,facing=north": {
+      "model": "futurefood:block/gluttony"
+    },
+    "activate=false,facing=south": {
+      "model": "futurefood:block/gluttony",
+      "y": 180
+    },
+    "activate=false,facing=west": {
+      "model": "futurefood:block/gluttony",
+      "y": 270
+    },
+    "activate=true,facing=east": {
+      "model": "futurefood:block/gluttony_activate",
+      "y": 90
+    },
+    "activate=true,facing=north": {
+      "model": "futurefood:block/gluttony_activate"
+    },
+    "activate=true,facing=south": {
+      "model": "futurefood:block/gluttony_activate",
+      "y": 180
+    },
+    "activate=true,facing=west": {
+      "model": "futurefood:block/gluttony_activate",
+      "y": 270
+    }
+  }
+}

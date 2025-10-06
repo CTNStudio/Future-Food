@@ -33,7 +33,7 @@ import java.util.Map;
 import static top.ctnstudio.futurefood.client.util.ColorUtil.colorValue;
 import static top.ctnstudio.futurefood.client.util.ColorUtil.rgbColor;
 import static top.ctnstudio.futurefood.client.util.GraphicsPlaneRenderUtil.renderTextures;
-import static top.ctnstudio.futurefood.common.item.CyberWrenchItem.SCOPE;
+import static top.ctnstudio.futurefood.common.item.tool.CyberWrenchItem.SCOPE;
 import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_LAUNCH;
 import static top.ctnstudio.futurefood.datagen.tag.FfBlockTags.UNLIMITED_RECEIVE;
 

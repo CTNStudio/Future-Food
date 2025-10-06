@@ -25,8 +25,6 @@ public final class ModBlock {
   public static final DeferredBlock<Block> BATTERY = register(
     "battery", BatteryEntityBlock::new);
 
-
-
   public static @NotNull BlockBehaviour.StatePredicate never() {
     return (blockState, blockGetter, blockPos) -> false;
   }

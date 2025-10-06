@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,11 +20,11 @@ import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
 import top.ctnstudio.futurefood.common.block.tile.GluttonyBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.ModBlockEntity;
+import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
-// TODO 完成状态变化
 public class GluttonyEntityBlock extends HorizontalDirectionalEntityBlock<GluttonyBlockEntity> implements IEntityStorageBlock {
-  public static final BooleanProperty WORK = BooleanProperty.create("work");
+  public static final BooleanProperty ACTIVATE = BooleanProperty.create("activate");
   private static final MapCodec<GluttonyEntityBlock> CODEC = simpleCodec(GluttonyEntityBlock::new);
 
   public GluttonyEntityBlock() {
@@ -31,14 +32,24 @@ public class GluttonyEntityBlock extends HorizontalDirectionalEntityBlock<Glutto
   }
 
   public GluttonyEntityBlock(Properties properties) {
-    super(properties, ModTileEntity.GLUTTONY);
-    this.registerDefaultState(this.stateDefinition.any().setValue(WORK, false));
+    super(properties
+      .noOcclusion()
+      .isValidSpawn(ModBlock.argumentNever())
+      .isRedstoneConductor(ModBlock.never())
+      .isSuffocating(ModBlock.never())
+      .isViewBlocking(ModBlock.never()), ModTileEntity.GLUTTONY);
+    this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVATE, false));
+  }
+
+  @Override
+  protected RenderShape getRenderShape(BlockState state) {
+    return RenderShape.MODEL;
   }
 
   @Override
   protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
     super.createBlockStateDefinition(builder);
-    builder.add(WORK);
+    builder.add(ACTIVATE);
   }
 
   @Override

@@ -22,7 +22,8 @@ public class BatteryBlockEntity extends BaseEnergyStorageBlockEntity<InputOutput
     if (level.isClientSide()) {
       return;
     }
-    controlItemEnergy(itemHandler, true);
+    controlItemEnergy(itemHandler.getStackInSlot(0), true);
+    controlItemEnergy(itemHandler.getStackInSlot(1), false);
   }
 
   @Override

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "futurefood:block/battery",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "futurefood:block/battery"
+    },
+    "facing=south": {
+      "model": "futurefood:block/battery",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "futurefood:block/battery",
+      "y": 270
+    }
+  }
+}

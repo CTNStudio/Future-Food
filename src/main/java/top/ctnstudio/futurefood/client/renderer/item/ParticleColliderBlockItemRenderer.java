@@ -3,7 +3,7 @@ package top.ctnstudio.futurefood.client.renderer.item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import top.ctnstudio.futurefood.common.item.ModGeoBlockItem;
+import top.ctnstudio.futurefood.common.item.food.ModGeoBlockItem;
 
 @OnlyIn(Dist.CLIENT)
 public class ParticleColliderBlockItemRenderer<T extends ModGeoBlockItem> extends BasicGeoBlockItemRenderer<T> {

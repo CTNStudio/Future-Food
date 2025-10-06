@@ -14,17 +14,17 @@ import top.ctnstudio.futurefood.core.init.ModMenu;
 
 public class InputOutputEnergyMenu extends BasicEnergyMenu {
   public InputOutputEnergyMenu(int containerId, Inventory container, FriendlyByteBuf buf) {
-    super(ModMenu.ENERGY_MENU.get(), containerId, container, new ItemStackHandler(2), new SimpleContainerData(2), buf);
+    super(ModMenu.INPUT_OUTPUT_ENERGY_MENU.get(), containerId, container, new ItemStackHandler(2), new SimpleContainerData(2), buf);
   }
 
   public InputOutputEnergyMenu(int containerId, Inventory container, IItemHandler dataInventory, EnergyData energyData) {
-    super(ModMenu.ENERGY_MENU.get(), containerId, container, dataInventory, energyData);
+    super(ModMenu.INPUT_OUTPUT_ENERGY_MENU.get(), containerId, container, dataInventory, energyData);
   }
 
   @Override
   protected void addOtherSlot(IItemHandler dataInventory) {
     addSlot(new EnergyOutputSlot(dataInventory, 0, 8, 58));
-    addSlot(new EnergyInputSlot(dataInventory, 0, 26, 58));
+    addSlot(new EnergyInputSlot(dataInventory, 1, 26, 58));
   }
 
   @Override

@@ -7,9 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
+import top.ctnstudio.futurefood.common.block.GluttonyEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock.Light;
 import top.ctnstudio.futurefood.common.block.QerEntityBlock;
@@ -25,9 +27,34 @@ public class DatagenBlockState extends BlockStateProvider {
   protected void registerStatesAndModels() {
     qedModel();
     qerModel();
-    // TODO 暴食者 模型
-    // TODO 储蓄方块 模型
+    batteryModel();
+    gluttonyModel();
     simpleParticleModels(ModBlock.PARTICLE_COLLIDER.get());
+  }
+
+  private void gluttonyModel() {
+    Block block = ModBlock.GLUTTONY.get();
+    var modelActivate = getExistingFile(blockTexture(block).withSuffix("_activate"));
+    var model = getExistingFile(blockTexture(block));
+    getVariantBuilder(block)
+      .forAllStates(state -> ConfiguredModel.builder()
+        .modelFile(state.getValue(GluttonyEntityBlock.ACTIVATE) ? modelActivate : model)
+        .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
+        .build());
+  }
+
+  private void batteryModel() {
+    Block block = ModBlock.BATTERY.get();
+    var modelFunc = getExistingFile(blockTexture(block));
+    getVariantBuilder(block)
+      .forAllStates(state -> ConfiguredModel.builder()
+        .modelFile(modelFunc)
+        .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
+        .build());
+  }
+
+  private void simpleBlockExistingFile(Block block) {
+    simpleBlock(block, getExistingFile(blockTexture(ModBlock.BATTERY.get())));
   }
 
   private void qerModel() {

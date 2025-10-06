@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
-import top.ctnstudio.futurefood.common.item.CyberWrenchItem;
+import top.ctnstudio.futurefood.common.item.tool.CyberWrenchItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModCapability;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;

@@ -51,10 +51,10 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
     working(level, pos);
 
     BlockState blockState = level.getBlockState(pos);
-    if (isWorking() && !blockState.getValue(GluttonyEntityBlock.WORK)) {
-      level.setBlockAndUpdate(pos, blockState.setValue(GluttonyEntityBlock.WORK, true));
-    } else if (!isWorking() && blockState.getValue(GluttonyEntityBlock.WORK)) {
-      level.setBlockAndUpdate(pos, blockState.setValue(GluttonyEntityBlock.WORK, false));
+    if (isWorking() && !blockState.getValue(GluttonyEntityBlock.ACTIVATE)) {
+      level.setBlockAndUpdate(pos, blockState.setValue(GluttonyEntityBlock.ACTIVATE, true));
+    } else if (!isWorking() && blockState.getValue(GluttonyEntityBlock.ACTIVATE)) {
+      level.setBlockAndUpdate(pos, blockState.setValue(GluttonyEntityBlock.ACTIVATE, false));
     }
   }
 

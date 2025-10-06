@@ -11,7 +11,7 @@ import top.ctnstudio.futurefood.client.core.ModRender;
 import top.ctnstudio.futurefood.client.gui.screen.GluttonyScreen;
 import top.ctnstudio.futurefood.client.gui.screen.ParticleColliderScreen;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
-import top.ctnstudio.futurefood.common.item.CyberWrenchItem;
+import top.ctnstudio.futurefood.common.item.tool.CyberWrenchItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModItem;

@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.common.item;
+package top.ctnstudio.futurefood.common.item.food;
 
 import net.minecraft.world.item.Item;
 

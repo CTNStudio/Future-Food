@@ -7,8 +7,9 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import top.ctnstudio.futurefood.client.renderer.item.ParticleColliderBlockItemRenderer;
-import top.ctnstudio.futurefood.common.item.CyberWrenchItem;
-import top.ctnstudio.futurefood.common.item.ModGeoBlockItem;
+import top.ctnstudio.futurefood.common.item.BatteryItem;
+import top.ctnstudio.futurefood.common.item.food.ModGeoBlockItem;
+import top.ctnstudio.futurefood.common.item.tool.CyberWrenchItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.function.Function;
@@ -27,6 +28,8 @@ public final class ModItem {
       ParticleColliderBlockItemRenderer::new));
   public static final DeferredItem<Item> GLUTTONY = ITEMS.register(
     "gluttony", createBlockItem(ModBlock.GLUTTONY));
+  public static final DeferredItem<Item> BATTERY = ITEMS.register(
+    "battery", () -> new BatteryItem(ModBlock.BATTERY.get()));
   public static final DeferredItem<Item> FOOD_ESSENCE = ITEMS.registerSimpleItem(
     "food_essence");
 

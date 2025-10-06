@@ -148,43 +148,7 @@ public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> ex
   public ItemStack getEnergyItemStack() {
     return itemHandler.getStackInSlot(0);
   }
-//
-//  @Override
-//  public int getContainerSize() {
-//    return itemHandler.getSlots();
-//  }
-//
-//  @Override
-//  public boolean isEmpty() {
-//    for (ItemStack stack : getItems()) {
-//      if (stack.isEmpty()) {
-//        return false;
-//      }
-//    }
-//    return true;
-//  }
-//
-//  @Override
-//  public ItemStack getItem(int slot) {
-//    return itemHandler.getStackInSlot(slot);
-//  }
-//
-//  @Override
-//  public ItemStack removeItem(int slot, int amount) {
-//    return itemHandler.extractItem(slot, amount, false);
-//  }
-//
-//  @Override
-//  public ItemStack removeItemNoUpdate(int slot) {
-//    return itemHandler.extractItem(slot, getItem(slot).getCount(), false);
-//  }
-//
-//  @Override
-//  public void setItem(int slot, ItemStack stack) {
-//    itemHandler.setStackInSlot(slot, stack);
-//  }
 
-  //  @Override
   public boolean stillValid(Player player) {
     return !this.isRemoved() && player.canInteractWithEntity(new AABB(getBlockPos()), 4.0);
   }
@@ -208,6 +172,10 @@ public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> ex
    */
   public void controlItemEnergy(ItemStackHandler itemHandler, boolean isOutput) {
     ItemStack stack = itemHandler.getStackInSlot(0);
+    controlItemEnergy(stack, isOutput);
+  }
+
+  public void controlItemEnergy(ItemStack stack, boolean isOutput) {
     if (stack.isEmpty()) {
       return;
     }

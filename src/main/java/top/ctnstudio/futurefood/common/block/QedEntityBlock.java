@@ -51,11 +51,12 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
   }
 
   public QedEntityBlock(Properties properties) {
-    super(properties.noOcclusion()
+    super(properties
+      .noOcclusion()
       .isValidSpawn(ModBlock.argumentNever())
       .isRedstoneConductor(ModBlock.never())
       .isSuffocating(ModBlock.never())
-            .isViewBlocking(ModBlock.never()), ModTileEntity.QED);
+      .isViewBlocking(ModBlock.never()), ModTileEntity.QED);
     this.registerDefaultState(this.stateDefinition.any()
       .setValue(ACTIVATE, Activate.DEFAULT)
       .setValue(LIGHT, Light.DEFAULT)

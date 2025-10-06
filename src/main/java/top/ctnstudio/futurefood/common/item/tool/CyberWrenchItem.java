@@ -1,11 +1,7 @@
-package top.ctnstudio.futurefood.common.item;
+package top.ctnstudio.futurefood.common.item.tool;
 
-import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,14 +14,13 @@ import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import top.ctnstudio.futurefood.common.item.data_component.ItemBlockPosData;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModCapability;
-import top.ctnstudio.futurefood.core.init.ModItemComponent;
+import top.ctnstudio.futurefood.core.init.ModDataComponent;
 import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
-import top.ctnstudio.futurefood.util.BlockUtil;
 import top.ctnstudio.futurefood.util.ModUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -45,20 +40,13 @@ public class CyberWrenchItem extends Item {
   // 绑定范围
   public static final int SCOPE = 10; // TODO 添加配置功能
 
-  // 物品组件解码器
-  // 这是一个可以存储整数列表的物品组件
-  public static final StreamCodec<ByteBuf, List<Integer>> POSITION_STREAM =
-    ByteBufCodecs.<ByteBuf, Integer>list(3).apply(ByteBufCodecs.VAR_INT);
-  public static final Codec<List<Integer>> POSITION_CODEC =
-    Codec.list(Codec.INT, 0, 3);
-
   // 可以进行链接绑定方块判断的函数
   private static final Predicate<BlockState> PREDICATE = blockState ->
     blockState.is(FfBlockTags.UNLIMITED_RECEIVE) || blockState.is(FfBlockTags.UNLIMITED_LAUNCH);
 
   public CyberWrenchItem(Properties properties) {
     super(properties.stacksTo(1)
-      .component(ModItemComponent.POSITION, new ArrayList<>()));
+      .component(ModDataComponent.BLOCK_POS, ItemBlockPosData.EMPTY));
   }
 
   /**
@@ -82,17 +70,15 @@ public class CyberWrenchItem extends Item {
   public @NotNull InteractionResultHolder<ItemStack> use(final @NotNull Level level, final Player player, final @NotNull InteractionHand usedHand) {
     // 先判断是否带有物品物品组件
     final var item = player.getItemInHand(usedHand);
-    if (!item.has(ModItemComponent.POSITION)) {
+    if (!item.has(ModDataComponent.BLOCK_POS)) {
       return super.use(level, player, usedHand);
     }
 
     // 获取组件参数
-    final var diffuserPosList = item.get(ModItemComponent.POSITION);
-    if (diffuserPosList == null) {
+    final var diffuserPos = item.get(ModDataComponent.BLOCK_POS);
+    if (diffuserPos == null) {
       return super.use(level, player, usedHand);
     }
-
-    final var diffuserPos = diffuserPosList.isEmpty() ? null : BlockUtil.getBlockPos(diffuserPosList);
 
     // 获取目标方块信息
     final var targetBlock = getTargetBlockPos(level, player);
@@ -100,18 +86,18 @@ public class CyberWrenchItem extends Item {
     // 如果没有判断目标方块，则进行移除绑定
     if (targetBlock.isEmpty() || (targetBlock.containsKey("targetLinkBlock") && targetBlock.containsKey("targetBindingBlock"))) {
       // 如果没有绑定方块，则返回
-      if (!player.isShiftKeyDown() || diffuserPos == null) {
+      if (!player.isShiftKeyDown() || diffuserPos.isEmpty()) {
         return super.use(level, player, usedHand);
       }
 
       // 如果按了Shift键，则进行移除绑定
-      unbind(diffuserPos, item);
+      unbind(diffuserPos.getBlockPos(), item);
       return InteractionResultHolder.sidedSuccess(item, level.isClientSide);
     }
 
     // 在目标方块中获取要链接的方块
-    if (targetBlock.containsKey("targetLinkBlock") && diffuserPos != null) {
-      if (!linkMode(level, diffuserPos, targetBlock.get("targetLinkBlock").getKey())) {
+    if (targetBlock.containsKey("targetLinkBlock") && !diffuserPos.isEmpty()) {
+      if (!linkMode(level, diffuserPos.getBlockPos(), targetBlock.get("targetLinkBlock").getKey())) {
         return super.use(level, player, usedHand);
       }
 
@@ -125,7 +111,7 @@ public class CyberWrenchItem extends Item {
 
     // 判断绑定方块是否与原来绑定方块相同
     final var targetBindingBlock = targetBlock.get("targetBindingBlock").getKey();
-    if (diffuserPos != null && diffuserPos.equals(targetBindingBlock)) {
+    if (!diffuserPos.isEmpty() && diffuserPos.getBlockPos().equals(targetBindingBlock)) {
       return super.use(level, player, usedHand);
     }
 
@@ -142,7 +128,7 @@ public class CyberWrenchItem extends Item {
   public void unbind(@NotNull BlockPos diffuserPos, @NotNull ItemStack item) {
     sendOverlayMessage(BINDING_CANCEL, diffuserPos);
     // 将组件参数设置为空以表示移除绑定
-    item.set(ModItemComponent.POSITION, new ArrayList<>());
+    item.set(ModDataComponent.BLOCK_POS, ItemBlockPosData.EMPTY);
   }
 
   /**
@@ -151,17 +137,14 @@ public class CyberWrenchItem extends Item {
   @Override
   public @NotNull InteractionResult onItemUseFirst(ItemStack stack, @NotNull UseOnContext context) {
     // 判断组件
-    if (!stack.has(ModItemComponent.POSITION)) {
+    if (!stack.has(ModDataComponent.BLOCK_POS)) {
       return super.onItemUseFirst(stack, context);
     }
 
     // 获取参数
-    final var diffuserPosList = stack.get(ModItemComponent.POSITION);
-    final var diffuserPos = diffuserPosList == null ||
-      diffuserPosList.isEmpty() ? null :
-      BlockUtil.getBlockPos(diffuserPosList);
+    final var diffuserPos = stack.get(ModDataComponent.BLOCK_POS);
 
-    if (diffuserPosList == null) {
+    if (diffuserPos == null) {
       return super.onItemUseFirst(stack, context);
     }
 
@@ -177,8 +160,8 @@ public class CyberWrenchItem extends Item {
       }
 
       // 如果按了Shift键，则进行移除绑定
-      if (diffuserPos != null) {
-        unbind(diffuserPos, stack);
+      if (!diffuserPos.isEmpty()) {
+        unbind(diffuserPos.getBlockPos(), stack);
       }
       return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
     }
@@ -186,8 +169,8 @@ public class CyberWrenchItem extends Item {
     // 判断是否是可链接方块
     if (blockState.is(FfBlockTags.UNLIMITED_RECEIVE)) {
       // 无论如何都挥动
-      if (diffuserPos != null) {
-        linkMode(level, diffuserPos, targetBlockPos);
+      if (!diffuserPos.isEmpty()) {
+        linkMode(level, diffuserPos.getBlockPos(), targetBlockPos);
       }
       return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
     }
@@ -195,7 +178,7 @@ public class CyberWrenchItem extends Item {
     // 判断是否是可绑定方块, 是否按了Shift键, 绑定方块是否与原来绑定方块相同
     if (blockState.is(FfBlockTags.UNLIMITED_LAUNCH) &&
       player != null && !player.isShiftKeyDown() ||
-      (diffuserPos == null || diffuserPos.equals(targetBlockPos))) {
+      (diffuserPos.isEmpty() || diffuserPos.equals(targetBlockPos))) {
       bindingMode(level, targetBlockPos, stack);
     }
 
@@ -260,7 +243,7 @@ public class CyberWrenchItem extends Item {
 
     // 如果不为空，则进行进行绑定
     sendOverlayMessage(BINDING_SUCCESS, targetBlockPos);
-    item.set(ModItemComponent.POSITION, BlockUtil.getPositionList(targetBlockPos));
+    item.set(ModDataComponent.BLOCK_POS, new ItemBlockPosData(targetBlockPos));
     return true;
   }
 
