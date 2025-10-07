@@ -24,7 +24,6 @@ import top.ctnstudio.futurefood.util.EnergyUtil;
 import java.util.Objects;
 
 // TODO 添加配置功能
-// TODO 让外部无法输入能源
 // TODO 根据方向调整物品抽入
 public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMenu> {
   private int remainingTick;
@@ -35,7 +34,7 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
 
   public GluttonyBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.GLUTTONY.get(), pos, blockState,
-      new ModItemStackHandler(4), new ModEnergyStorage(81920));
+      new ModItemStackHandler(4), new ModEnergyStorage(81920, 0, 81920));
     this.workProgress = new Data(this);
   }
 
@@ -58,8 +57,8 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
     }
   }
 
+  // TODO 注意：未做优化 理论要根据方块更新进行缓存再传输，以避免过多的获取
   protected void outputEnergy(@NotNull Level level, @NotNull BlockPos pos) {
-    // TODO 注意：未做优化 理论要根据方块更新进行缓存再传输，以避免过多的获取
     if (energyStorage.getEnergyStored() > 0 && energyStorage.canExtract()) {
       EnergyUtil.getSurroundingEnergyStorage(level, pos).values().stream()
         .filter(e -> e.getValue().isPresent())
@@ -157,8 +156,8 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
   }
 
   @Override
-  public void onStackContentsChanged(int slot) {
-    super.onStackContentsChanged(slot);
+  public void onItemChanged(int slot) {
+    super.onItemChanged(slot);
     if (slot != 1) {
       return;
     }
@@ -166,8 +165,8 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
   }
 
   @Override
-  public void onStackLoad() {
-    super.onStackLoad();
+  public void onItemLoad() {
+    super.onItemLoad();
     produceProducts(itemHandler.getStackInSlot(1));
   }
 

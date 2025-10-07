@@ -9,12 +9,12 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import top.ctnstudio.futurefood.client.model.BasicGeoModel;
 
 @OnlyIn(Dist.CLIENT)
-public class BasicGeoBlockRenderer<T extends BlockEntity & GeoAnimatable> extends GeoBlockRenderer<T> {
-  public BasicGeoBlockRenderer(GeoModel<T> model) {
+public class BasicGeoBlockRender<T extends BlockEntity & GeoAnimatable> extends GeoBlockRenderer<T> {
+  public BasicGeoBlockRender(GeoModel<T> model) {
     super(model);
   }
 
-  public BasicGeoBlockRenderer(String path) {
+  public BasicGeoBlockRender(String path) {
     super(new BasicGeoModel.BlockModel<>(path));
   }
 }

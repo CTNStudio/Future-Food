@@ -11,7 +11,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
-import top.ctnstudio.futurefood.client.event.ItemPropertyEvents;
+import top.ctnstudio.futurefood.client.ItemPropertyEvents;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModItem;
@@ -34,6 +34,7 @@ public class DatagenItemModel extends ItemModelProvider {
     item(ModBlock.QER.get(), FutureFood.modRL("block/quantum_energy_receiver/work"));
     item(ModBlock.GLUTTONY.get(), FutureFood.modRL("block/gluttony_activate"));
     simpleBlockItem(ModBlock.BATTERY.get());
+    item(ModBlock.INFINITE_BATTERY.get(), getBlockRl(ModBlock.BATTERY.get()));
     handheldItem(ModItem.CYBER_WRENCH.get());
     createModelFile(ModItem.FOOD_ESSENCE.get(), Map.of(0.00f, "", 0.07f, "1"), ItemPropertyEvents.STACKING);
   }
@@ -91,8 +92,13 @@ public class DatagenItemModel extends ItemModelProvider {
     return Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item)).withSuffix(name);
   }
 
-  private ResourceLocation getItemResourceLocation(Item item, String name) {
+  private ResourceLocation getItemRl(Item item, String name) {
     return Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item)).withSuffix("_" + name);
+  }
+
+  private ResourceLocation getBlockRl(Block block) {
+    ResourceLocation key = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
+    return ResourceLocation.fromNamespaceAndPath(key.getNamespace(), "block/" + key.getPath());
   }
 
   public void createModelFile(Item item, Map<Float, String> texture, ModelFile parent,

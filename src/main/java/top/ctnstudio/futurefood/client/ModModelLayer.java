@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.core;
+package top.ctnstudio.futurefood.client;
 
 import com.google.common.collect.Sets;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -8,7 +8,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import top.ctnstudio.futurefood.client.renderer.block.QedBlockEntityRenderer;
+import top.ctnstudio.futurefood.client.renderer.block.BatteryBlockEntityRender;
+import top.ctnstudio.futurefood.client.renderer.block.QedBlockEntityRender;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.Set;
@@ -19,12 +20,18 @@ import java.util.stream.Stream;
 public final class ModModelLayer {
   private static final Set<ModelLayerLocation> ALL_MODELS = Sets.newHashSet();
   public static final ModelLayerLocation ENERGY_BALL = register("energy_ball");
+  public static final ModelLayerLocation BATTERY_FULL = register("battery_full");
+  public static final ModelLayerLocation BATTERY_UNDERAGE = register("battery_underage");
+  public static final ModelLayerLocation BATTERY_EMPTY = register("battery_empty");
 
   @SubscribeEvent
   public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
     FutureFood.LOGGER.info("Registering Layer Definitions");
 
-    event.registerLayerDefinition(ModModelLayer.ENERGY_BALL, QedBlockEntityRenderer::createBodyLayer);
+    event.registerLayerDefinition(ModModelLayer.ENERGY_BALL, QedBlockEntityRender::createBodyLayer);
+    event.registerLayerDefinition(ModModelLayer.BATTERY_FULL, BatteryBlockEntityRender::createFullBodyLayer);
+    event.registerLayerDefinition(ModModelLayer.BATTERY_UNDERAGE, BatteryBlockEntityRender::createUnderageBodyLayer);
+    event.registerLayerDefinition(ModModelLayer.BATTERY_EMPTY, BatteryBlockEntityRender::createEmptyBodyLayer);
 
     FutureFood.LOGGER.info("Registering Layer Definitions Completed");
   }

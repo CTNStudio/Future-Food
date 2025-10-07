@@ -9,6 +9,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.api.capability.IModEnergyStorage;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -110,5 +111,19 @@ public class EnergyUtil {
       capabilities.put(direction, Map.entry(pos.relative(direction.getOpposite(), 1), Optional.ofNullable(capability)));
     }
     return capabilities;
+  }
+
+  /**
+   * 复制能量
+   *
+   * @param receive 接收的
+   * @param extract 被复制的
+   * @return 能接收能量的能量接口
+   */
+  public static void copyEnergy(IModEnergyStorage receive, IModEnergyStorage extract) {
+    receive.setEnergy(extract.getEnergyStored());
+    receive.setMaxEnergyStored(extract.getMaxEnergyStored());
+    receive.setMaxExtract(extract.getMaxExtract());
+    receive.setMaxReceive(extract.getMaxReceive());
   }
 }

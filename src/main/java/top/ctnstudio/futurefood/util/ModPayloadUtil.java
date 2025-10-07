@@ -1,8 +1,9 @@
-package top.ctnstudio.futurefood.common.payloads;
+package top.ctnstudio.futurefood.util;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
+import top.ctnstudio.futurefood.common.payloads.TextPromptData;
 
 /// 数据包集
 public class ModPayloadUtil {
@@ -16,7 +17,7 @@ public class ModPayloadUtil {
    * @param clientPlayer 接收的玩家
    */
   public static void textPromptData(ServerPlayer serverPlayer, String text, ServerPlayer clientPlayer) {
-    sendToPlayer(serverPlayer, new TextPromptData(text, clientPlayer));
+    sendToClient(serverPlayer, new TextPromptData(text, clientPlayer));
   }
 
   /// 同步玩家数据-客户端到服务端 ///
@@ -28,7 +29,7 @@ public class ModPayloadUtil {
   /// 工具 ///
 
   /// 发送玩家数据包（服务端到客户端）
-  public static void sendToPlayer(ServerPlayer serverPlayer, CustomPacketPayload customPacketPayload) {
+  public static void sendToClient(ServerPlayer serverPlayer, CustomPacketPayload customPacketPayload) {
     PacketDistributor.sendToPlayer(serverPlayer, customPacketPayload);
   }
 

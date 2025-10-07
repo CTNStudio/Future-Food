@@ -14,7 +14,7 @@ import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import top.ctnstudio.futurefood.common.item.data_component.ItemBlockPosData;
+import top.ctnstudio.futurefood.common.data_component.ItemBlockPosData;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModCapability;
 import top.ctnstudio.futurefood.core.init.ModDataComponent;

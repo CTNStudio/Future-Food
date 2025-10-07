@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.common.block.tile.BaseEnergyStorageBlockEntity;
+import top.ctnstudio.futurefood.common.data_component.ModComponentEnergyStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 @EventBusSubscriber
@@ -23,7 +24,8 @@ public final class ModCapability {
   @SubscribeEvent
   public static void register(final RegisterCapabilitiesEvent event) {
     event.registerItem(Capabilities.EnergyStorage.ITEM, (item, v) ->
-      item.get(ModDataComponent.ENERGY_STORAGE), ModItem.BATTERY);
+      item.getCount() == 1 && item.has(ModDataComponent.ENERGY_STORAGE) ?
+        new ModComponentEnergyStorage(item, ModDataComponent.ENERGY_STORAGE) : null, ModItem.BATTERY, ModItem.INFINITE_BATTERY);
 
     ModTileEntity.TILES.getEntries().forEach(entry -> {
       Block validBlock = entry.get().getValidBlocks().stream().iterator().next();

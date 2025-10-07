@@ -22,8 +22,10 @@ public final class ModBlock {
     "particle_collider", ParticleColliderEntityBlock::new);
   public static final DeferredBlock<Block> GLUTTONY = register(
     "gluttony", GluttonyEntityBlock::new);
-  public static final DeferredBlock<Block> BATTERY = register(
+  public static final DeferredBlock<BatteryEntityBlock> BATTERY = register(
     "battery", BatteryEntityBlock::new);
+  public static final DeferredBlock<BatteryEntityBlock> INFINITE_BATTERY = register(
+    "infinite_battery", () -> new BatteryEntityBlock(true));
 
   public static @NotNull BlockBehaviour.StatePredicate never() {
     return (blockState, blockGetter, blockPos) -> false;
@@ -33,7 +35,7 @@ public final class ModBlock {
     return (state, level, pos, value) -> false;
   }
 
-  private static DeferredBlock<Block> register(final String name, final Supplier<? extends Block> sup) {
+  private static <T extends Block> DeferredBlock<T> register(final String name, final Supplier<? extends T> sup) {
     return BLOCKS.register(name, sup);
   }
 }

@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.neoforge.common.data.LanguageProvider;
-import top.ctnstudio.futurefood.client.core.ModRender;
+import top.ctnstudio.futurefood.client.ModItemTooltipRender;
 import top.ctnstudio.futurefood.client.gui.screen.GluttonyScreen;
 import top.ctnstudio.futurefood.client.gui.screen.ParticleColliderScreen;
 import top.ctnstudio.futurefood.client.gui.widget.energy.EnergyBar;
@@ -35,8 +35,9 @@ public class DatagenI18ZhCn extends LanguageProvider {
   protected void addTranslations() {
     add("itemGroup.futurefood", "未来食物");
     add(EnergyBar.TOOLTIP, "能量存储：%s/%s");
-    add(ModRender.ITEM_TOOLTIP_POSITION, "绑定的方块坐标：%s %s %s");
-    add(ModRender.ITEM_TOOLTIP_POSITION_EMPTY, "没有绑定方块坐标");
+    add(ModItemTooltipRender.ITEM_TOOLTIP_POSITION, "绑定的方块坐标：%s %s %s");
+    add(ModItemTooltipRender.ITEM_TOOLTIP_POSITION_EMPTY, "没有绑定方块坐标");
+    add(ModItemTooltipRender.ITEM_TOOLTIP_ENERGY_STORAGE, "能量存储：%s/%s");
     add(CyberWrenchItem.BINDING_SUCCESS, "绑定成功，坐标： x %s y %s z %s");
     add(CyberWrenchItem.BINDING_CANCEL, "已取消绑定，坐标： x %s y %s z %s");
     add(CyberWrenchItem.BINDING_FAILURE, "绑定失败，坐标： x %s y %s z %s");
@@ -52,6 +53,7 @@ public class DatagenI18ZhCn extends LanguageProvider {
     addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");
     addBlock(ModBlock.GLUTTONY, "暴食者");
     addBlock(ModBlock.BATTERY, "储蓄方块");
+    addBlock(ModBlock.INFINITE_BATTERY, "无限储蓄方块");
     addItem(ModItem.FOOD_ESSENCE, "食物源质");
   }
 

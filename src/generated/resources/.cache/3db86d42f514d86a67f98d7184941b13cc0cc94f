@@ -1,6 +1,7 @@
-// 1.21.1	2025-10-06T21:11:09.6337847	Block States: futurefood
+// 1.21.1	2025-10-07T19:57:49.1641773	Block States: futurefood
 f412ed10afdce23d06a36e689c211885265ae88e assets/futurefood/blockstates/battery.json
 c5ba86ad7431689cdf47724d1fef847975b1e4ce assets/futurefood/blockstates/gluttony.json
+f412ed10afdce23d06a36e689c211885265ae88e assets/futurefood/blockstates/infinite_battery.json
 92f590ca2adbb247d6063d6578f248d7ed238c17 assets/futurefood/blockstates/particle_collider.json
 9a1a1546abb8707a2f1ebf184920e60b0794ed42 assets/futurefood/blockstates/quantum_energy_diffuser.json
 3a8b6dfb82a35cc32067cc7213cd0f3ee90b7c1a assets/futurefood/blockstates/quantum_energy_receiver.json

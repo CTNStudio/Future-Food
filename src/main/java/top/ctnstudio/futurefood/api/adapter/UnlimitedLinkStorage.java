@@ -13,14 +13,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
+import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkModify;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.core.FutureFood;
-import top.ctnstudio.futurefood.util.BlockUtil;
 import top.ctnstudio.futurefood.util.EnergyUtil;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.*;
+
+import static top.ctnstudio.futurefood.util.BlockUtil.getBlockPos;
 
 /**
  * 无限连接存储
@@ -37,6 +39,9 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
    * @see top.ctnstudio.futurefood.event.ModBlockEvent
    */
   private final Queue<BlockPos> cacheData;
+
+  @Nullable
+  protected IUnlimitedLinkModify onContentsChanged;
 
   public UnlimitedLinkStorage() {
     this.linkSet = Sets.newHashSet();
@@ -74,7 +79,9 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
 
   @Override
   public final boolean removeLink(BlockPos pos) {
-    return linkSet.remove(pos);
+    boolean is = linkSet.remove(pos);
+    onChanged();
+    return is;
   }
 
   @Override
@@ -84,13 +91,13 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
       return false;
     }
 
-    IEnergyStorage capability = EnergyUtil.getEnergyStorageCapabilities(level, pos);
-    if (capability == null) {
+    if (EnergyUtil.getEnergyStorageCapabilities(level, pos) == null) {
       linkFailure(pos);
       return false;
     }
 
     linkSet.add(pos);
+    onChanged();
     return true;
   }
 
@@ -127,8 +134,9 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     }
     linkSet.clear();
     linkSet.addAll(tags.stream().map(tag ->
-        tag instanceof IntArrayTag intTags ? BlockUtil.getBlockPos(intTags.getAsIntArray()) : null)
+        tag instanceof IntArrayTag intTags ? getBlockPos(intTags.getAsIntArray()) : null)
       .filter(Objects::nonNull).toList());
+    onLoad();
   }
 
   /**
@@ -168,13 +176,16 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
     if (level == null || isContainLink(newPos) || !removeLink(oldPos)) {
       return false;
     }
-    return linkBlock(level, newPos);
+    boolean is = linkBlock(level, newPos);
+    onChanged();
+    return is;
   }
 
   @Override
   public void setLinkList(Collection<BlockPos> linkList) {
     linkSet.clear();
     linkSet.addAll(linkList);
+    onChanged();
   }
 
   @Override
@@ -197,4 +208,21 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
 
   @Override
   public abstract @Nullable Level getLevel();
+
+  public void setOn(IUnlimitedLinkModify onContentsChanged) {
+    this.onContentsChanged = onContentsChanged;
+  }
+
+  @Nullable
+  public IUnlimitedLinkModify getOnContentsChanged() {
+    return onContentsChanged;
+  }
+
+  public void onChanged() {
+    if (onContentsChanged != null) onContentsChanged.onLinkChanged();
+  }
+
+  public void onLoad() {
+    if (onContentsChanged != null) onContentsChanged.onLinkLoad();
+  }
 }

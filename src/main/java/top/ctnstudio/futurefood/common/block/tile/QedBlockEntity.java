@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -13,20 +14,25 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.TileEntityUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.api.adapter.UnlimitedLinkStorage;
+import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkModify;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
+import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.menu.OutputEnergyMenu;
+import top.ctnstudio.futurefood.common.payloads.UnlimitedLinkStorageData;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.util.BlockUtil;
 import top.ctnstudio.futurefood.util.EnergyUtil;
+import top.ctnstudio.futurefood.util.ModPayloadUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Queue;
 
 // TODO 添加配置功能
 // TODO 让外部无法提取能源
 // TODO 添加主动抽取
-public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMenu> {
+public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMenu> implements IUnlimitedLinkModify {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
   public float sphereTick;
@@ -52,6 +58,7 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
     super(type, pos, blockState, energyStorage);
     this.maxRemainingTime = maxRemainingTime;
     linkStorage = new TileEntityUnlimitedLinkStorage(this);
+    linkStorage.setOn(this);
   }
 
   @Override
@@ -84,8 +91,6 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
     if (level.isClientSide) {
       return;
     }
-    // 使用方法方便重写逻辑
-    int time = getRemainingTime();
 
     // 提取物品方块的能量
     controlItemEnergy(itemHandler, false);
@@ -101,7 +106,8 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
       }
     }
 
-    if (time <= 0) {
+    // 使用方法方便重写逻辑
+    if (getRemainingTime() <= 0) {
       executeEnergyTransmission(level, bs);
       resetRemainingTime();
     }
@@ -153,5 +159,59 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
       return null;
     }
     return new OutputEnergyMenu(containerId, playerInventory, itemHandler, energyData);
+  }
+
+  @Override
+  public void onLinkChanged() {
+    if (level == null) {
+      return;
+    }
+    if (level instanceof ServerLevel serverLevel) {
+      serverLevel.players().stream()
+        .filter(Objects::nonNull)
+        .forEach(p -> ModPayloadUtil.sendToClient(p, new UnlimitedLinkStorageData(getUnlimitedStorage().getLinkPosList(), getBlockPos())));
+    }
+    BlockPos pos = getBlockPos();
+    BlockState blockState = level.getBlockState(pos);
+    BlockState newBlockState = level.getBlockState(pos);
+    IEnergyStorage iEnergyStorage = externalGetEnergyStorage(null);
+    if (getUnlimitedStorage().getSize() > 0) {
+      if (iEnergyStorage.getEnergyStored() > 0) {
+        newBlockState = newBlockState.setValue(QedEntityBlock.ACTIVATE, QedEntityBlock.Activate.WORK);
+      }
+      newBlockState = newBlockState.setValue(QedEntityBlock.LIGHT, QedEntityBlock.Light.WORK);
+    } else {
+      if (iEnergyStorage.getEnergyStored() <= 0) {
+        newBlockState = newBlockState.setValue(QedEntityBlock.LIGHT, QedEntityBlock.Light.ABNORMAL);
+        newBlockState = newBlockState.setValue(QedEntityBlock.ACTIVATE, QedEntityBlock.Activate.DEFAULT);
+      } else {
+        newBlockState = newBlockState.setValue(QedEntityBlock.LIGHT, QedEntityBlock.Light.DEFAULT);
+      }
+    }
+    if (!blockState.equals(newBlockState)) {
+      level.setBlockAndUpdate(pos, newBlockState);
+    }
+  }
+
+  @Override
+  public void onEnergyChanged() {
+    super.onEnergyChanged();
+    if (level == null) {
+      return;
+    }
+    BlockPos pos = getBlockPos();
+    BlockState blockState = level.getBlockState(pos);
+    BlockState newBlockState = level.getBlockState(pos);
+    IEnergyStorage iEnergyStorage = externalGetEnergyStorage(null);
+    newBlockState = newBlockState.setValue(QedEntityBlock.ACTIVATE, iEnergyStorage.getEnergyStored() > 0 ?
+      QedEntityBlock.Activate.WORK : QedEntityBlock.Activate.DEFAULT);
+    if (!blockState.equals(newBlockState)) {
+      level.setBlockAndUpdate(pos, newBlockState);
+    }
+  }
+
+  @Override
+  public void onLinkLoad() {
+    onLinkChanged();
   }
 }

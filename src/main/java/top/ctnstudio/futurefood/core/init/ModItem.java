@@ -30,6 +30,8 @@ public final class ModItem {
     "gluttony", createBlockItem(ModBlock.GLUTTONY));
   public static final DeferredItem<Item> BATTERY = ITEMS.register(
     "battery", () -> new BatteryItem(ModBlock.BATTERY.get()));
+  public static final DeferredItem<Item> INFINITE_BATTERY = ITEMS.register(
+    "infinite_battery", () -> new BatteryItem(ModBlock.INFINITE_BATTERY.get()));
   public static final DeferredItem<Item> FOOD_ESSENCE = ITEMS.registerSimpleItem(
     "food_essence");
 

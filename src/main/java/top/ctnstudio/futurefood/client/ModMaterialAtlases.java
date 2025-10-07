@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.core;
+package top.ctnstudio.futurefood.client;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -14,6 +14,7 @@ import java.util.Map;
 @EventBusSubscriber(modid = FutureFood.ID, value = Dist.CLIENT)
 public final class ModMaterialAtlases {
   public static final ResourceLocation ENERGY_BALL = FutureFood.modRL("textures/atlas/energy_ball.png");
+  public static final ResourceLocation BATTERY = FutureFood.modRL("textures/atlas/battery.png");
   public static final ResourceLocation ICON = FutureFood.modRL("textures/atlas/icon.png");
   public static final ResourceLocation SPRITES = FutureFood.modRL("textures/atlas/sprites.png");
 
@@ -22,6 +23,8 @@ public final class ModMaterialAtlases {
     FutureFood.modRL("icon"),
     ENERGY_BALL,
     FutureFood.modRL("energy_ball"),
+    BATTERY,
+    FutureFood.modRL("battery"),
     SPRITES,
     FutureFood.modRL("sprites")
   );

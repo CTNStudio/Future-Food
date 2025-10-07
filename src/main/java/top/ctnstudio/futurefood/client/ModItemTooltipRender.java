@@ -1,10 +1,5 @@
-package top.ctnstudio.futurefood.client.core;
+package top.ctnstudio.futurefood.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -12,35 +7,21 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import top.ctnstudio.futurefood.client.renderer.HighlightLinksRender;
 import top.ctnstudio.futurefood.client.util.ColorUtil;
-import top.ctnstudio.futurefood.common.item.data_component.ItemBlockPosData;
+import top.ctnstudio.futurefood.common.data_component.ItemBlockPosData;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModDataComponent;
+import top.ctnstudio.futurefood.util.TextUtil;
 
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = FutureFood.ID, value = Dist.CLIENT)
-public final class ModRender {
+public final class ModItemTooltipRender {
   public static final String ITEM_TOOLTIP_POSITION = FutureFood.ID + ".item.tooltip.position";
   public static final String ITEM_TOOLTIP_POSITION_EMPTY = FutureFood.ID + ".item.tooltip.position.empty";
-
-  @SubscribeEvent
-  public static void levelRender(final RenderLevelStageEvent event) {
-    final RenderLevelStageEvent.Stage stage = event.getStage();
-    final Minecraft minecraft = Minecraft.getInstance();
-    final ClientLevel level = minecraft.level;
-    final Frustum frustum = event.getFrustum();
-    final PoseStack pose = event.getPoseStack();
-    final Camera camera = event.getCamera();
-
-    if (stage == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-      HighlightLinksRender.get().levelRender(minecraft, level, frustum, pose, camera);
-    }
-  }
+  public static final String ITEM_TOOLTIP_ENERGY_STORAGE = FutureFood.ID + ".item.tooltip.energyStorage";
 
   @SubscribeEvent
   public static void itemTooltipRender(final ItemTooltipEvent event) {
@@ -48,10 +29,23 @@ public final class ModRender {
     final var tooltip = event.getToolTip();
     final int tooltipSize = tooltip.size();
 
-    itemTooltipPosition(itemStack, tooltip, tooltipSize);
+    position(itemStack, tooltip, tooltipSize);
+    energyStorage(itemStack, tooltip, tooltipSize);
   }
 
-  private static void itemTooltipPosition(ItemStack itemStack, List<Component> tooltip, int tooltipSize) {
+  private static void energyStorage(ItemStack itemStack, List<Component> tooltip, int tooltipSize) {
+    var energyStorageData = itemStack.get(ModDataComponent.ENERGY_STORAGE);
+    if (energyStorageData == null) {
+      return;
+    }
+    MutableComponent text = Component.translatable(ITEM_TOOLTIP_ENERGY_STORAGE,
+      Component.literal(TextUtil.getDigitalText(energyStorageData.energyStored())).withColor(ColorUtil.rgbColor("#ffffff")),
+      Component.literal(TextUtil.getDigitalText(energyStorageData.maxEnergyStored())).withColor(ColorUtil.rgbColor("#ffffff")));
+    text.withColor(ColorUtil.rgbColor("#808080"));
+    tooltip.add(tooltipSize >= 1 ? 1 : 0, text);
+  }
+
+  private static void position(ItemStack itemStack, List<Component> tooltip, int tooltipSize) {
     if (!itemStack.has(ModDataComponent.BLOCK_POS)) {
       return;
     }
@@ -65,6 +59,7 @@ public final class ModRender {
     } else {
       text = Component.translatable(ITEM_TOOLTIP_POSITION_EMPTY);
     }
-    tooltip.add(tooltipSize >= 1 ? 1 : 0, text.withColor(ColorUtil.rgbColor("#808080")));
+    text.withColor(ColorUtil.rgbColor("#808080"));
+    tooltip.add(tooltipSize >= 1 ? 1 : 0, text);
   }
 }

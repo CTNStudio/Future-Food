@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.core;
+package top.ctnstudio.futurefood.client;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;

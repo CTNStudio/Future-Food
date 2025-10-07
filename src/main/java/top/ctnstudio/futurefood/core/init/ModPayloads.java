@@ -3,7 +3,6 @@ package top.ctnstudio.futurefood.core.init;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import top.ctnstudio.futurefood.common.payloads.EnergyStorageData;
 import top.ctnstudio.futurefood.common.payloads.TextPromptData;
@@ -18,15 +17,12 @@ public final class ModPayloads {
 
     final PayloadRegistrar registrar = event.registrar("1");
     /// 接收来自服务端和客户端的数据
-    registrar.commonBidirectional(UnlimitedLinkStorageData.TYPE,
-      UnlimitedLinkStorageData.STREAM_CODEC,
-      new DirectionalPayloadHandler<>(UnlimitedLinkStorageData::toClient,
-        UnlimitedLinkStorageData::requestToServer));
     //..
 
     /// 接收来自服务端的数据
     registrar.commonToClient(EnergyStorageData.TYPE, EnergyStorageData.STREAM_CODEC, EnergyStorageData::toClient);
     registrar.commonToClient(TextPromptData.TYPE, TextPromptData.STREAM_CODEC, TextPromptData::toClient);
+    registrar.commonToClient(UnlimitedLinkStorageData.TYPE, UnlimitedLinkStorageData.STREAM_CODEC, UnlimitedLinkStorageData::toClient);
     //..
 
     /// 接收来自客户端的数据

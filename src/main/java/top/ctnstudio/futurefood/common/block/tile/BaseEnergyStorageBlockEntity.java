@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,17 +29,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
-import top.ctnstudio.futurefood.api.capability.IModStackModify;
+import top.ctnstudio.futurefood.api.capability.IEnergyStorageModify;
+import top.ctnstudio.futurefood.api.capability.IItemStackModify;
 import top.ctnstudio.futurefood.common.menu.BasicEnergyMenu;
 import top.ctnstudio.futurefood.common.menu.EnergyMenu;
+import top.ctnstudio.futurefood.common.payloads.EnergyStorageData;
 import top.ctnstudio.futurefood.util.BlockUtil;
 import top.ctnstudio.futurefood.util.EnergyUtil;
+import top.ctnstudio.futurefood.util.ModPayloadUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> extends ModBlockEntity
-  implements MenuProvider, IModStackModify {
+  implements MenuProvider, IItemStackModify, IEnergyStorageModify {
 
   protected final ModEnergyStorage energyStorage;
   protected final ModItemStackHandler itemHandler;
@@ -51,6 +56,7 @@ public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> ex
     this.itemHandler = itemHandler;
     this.energyData = new BasicEnergyMenu.EnergyData(this.energyStorage);
     itemHandler.setOn(this);
+    energyStorage.setOn(this);
   }
 
   public BaseEnergyStorageBlockEntity(BlockEntityType<?> type, BlockPos pos,
@@ -189,10 +195,24 @@ public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> ex
   }
 
   @Override
-  public void onStackContentsChanged(int slot) {
+  public void onItemChanged(int slot) {
   }
 
   @Override
-  public void onStackLoad() {
+  public void onItemLoad() {
+  }
+
+  @Override
+  public void onEnergyChanged() {
+    if (getLevel() instanceof ServerLevel serverLevel) {
+      serverLevel.players().stream()
+        .filter(Objects::nonNull)
+        .forEach(p -> ModPayloadUtil.sendToClient(p, new EnergyStorageData(getBlockPos(), energyStorage)));
+    }
+  }
+
+  @Override
+  public void onEnergyLoad() {
+    onEnergyChanged();
   }
 }

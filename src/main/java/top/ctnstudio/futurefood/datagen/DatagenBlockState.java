@@ -27,7 +27,8 @@ public class DatagenBlockState extends BlockStateProvider {
   protected void registerStatesAndModels() {
     qedModel();
     qerModel();
-    batteryModel();
+    batteryModel(ModBlock.BATTERY.get());
+    batteryModel(ModBlock.INFINITE_BATTERY.get());
     gluttonyModel();
     simpleParticleModels(ModBlock.PARTICLE_COLLIDER.get());
   }
@@ -43,18 +44,13 @@ public class DatagenBlockState extends BlockStateProvider {
         .build());
   }
 
-  private void batteryModel() {
-    Block block = ModBlock.BATTERY.get();
-    var modelFunc = getExistingFile(blockTexture(block));
+  private void batteryModel(Block block) {
+    var modelFunc = getExistingFile(blockTexture(ModBlock.BATTERY.get()));
     getVariantBuilder(block)
       .forAllStates(state -> ConfiguredModel.builder()
         .modelFile(modelFunc)
         .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
         .build());
-  }
-
-  private void simpleBlockExistingFile(Block block) {
-    simpleBlock(block, getExistingFile(blockTexture(ModBlock.BATTERY.get())));
   }
 
   private void qerModel() {

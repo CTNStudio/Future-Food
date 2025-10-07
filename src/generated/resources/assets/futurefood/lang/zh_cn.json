@@ -1,6 +1,7 @@
 {
   "block.futurefood.battery": "储蓄方块",
   "block.futurefood.gluttony": "暴食者",
+  "block.futurefood.infinite_battery": "无限储蓄方块",
   "block.futurefood.particle_collider": "粒子对撞器",
   "block.futurefood.quantum_energy_diffuser": "量子能源扩散器",
   "block.futurefood.quantum_energy_receiver": "量子能源接收器",
@@ -14,6 +15,7 @@
   "futurefood.gui.energy.tooltip": "能量存储：%s/%s",
   "futurefood.gui.gluttony.progress.tooltip": "剩余时间：%s",
   "futurefood.gui.particle_collider.progress.tooltip": "剩余时间：%s",
+  "futurefood.item.tooltip.energyStorage": "能量存储：%s/%s",
   "futurefood.item.tooltip.position": "绑定的方块坐标：%s %s %s",
   "futurefood.item.tooltip.position.empty": "没有绑定方块坐标",
   "item.futurefood.cyber_wrench": "赛博扳手",

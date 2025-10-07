@@ -9,7 +9,6 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
@@ -19,9 +18,9 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import top.ctnstudio.futurefood.client.core.ModMaterialAtlases;
-import top.ctnstudio.futurefood.client.core.ModModelLayer;
-import top.ctnstudio.futurefood.client.core.ModRenderType;
+import top.ctnstudio.futurefood.client.ModMaterialAtlases;
+import top.ctnstudio.futurefood.client.ModModelLayer;
+import top.ctnstudio.futurefood.client.ModRenderType;
 import top.ctnstudio.futurefood.common.block.DirectionEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock;
 import top.ctnstudio.futurefood.common.block.QedEntityBlock.Activate;
@@ -32,10 +31,9 @@ import top.ctnstudio.futurefood.core.FutureFood;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
-public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEntityRenderer<T> {
+public final class QedBlockEntityRender implements BlockEntityRenderer<QedBlockEntity> {
   private static final String RL = "textures/block/quantum_energy_diffuser/energy_ball/";
   public final List<Material> flashMaterials;
   public final List<Material> flash1Materials;
@@ -43,7 +41,7 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
 
   private final ModelPart sphere;
 
-  public QedBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+  public QedBlockEntityRender(BlockEntityRendererProvider.Context context) {
     ModelPart modelpart = context.bakeLayer(ModModelLayer.ENERGY_BALL);
     this.sphere = modelpart.getChild("sphere");
 
@@ -83,14 +81,14 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
       CubeListBuilder.create()
         .texOffs(72, 20)
         .addBox(-1, -11, -1, -10, -10, -10,
-          new CubeDeformation(0.01f, 0.01f, 0.01f)),
+          new CubeDeformation(0.01f)),
       PartPose.offset(10, 20, 10));
 
     pd1.addOrReplaceChild("outer_ring1",
       CubeListBuilder.create()
         .texOffs(120, 24)
         .addBox(-2, -10, -2, -12, -12, -12,
-          new CubeDeformation(0.01f, 0.01f, 0.01f)),
+          new CubeDeformation(0.01f)),
       PartPose.offset(12, 20, 12));
 
     pd1.addOrReplaceChild("outer_ring2",
@@ -102,16 +100,12 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     return LayerDefinition.create(md, 172, 26);
   }
 
-  private static Function<MultiBufferSource, VertexConsumer> createVertexConsumer(RenderType renderType) {
-    return mbs -> mbs.getBuffer(renderType);
-  }
-
-  protected static Material chestMaterial(String texture) {
+  private static Material chestMaterial(String texture) {
     return new Material(ModMaterialAtlases.ENERGY_BALL, FutureFood.modRL(texture));
   }
 
   @Override
-  public void render(T blockEntity, float partialTick, PoseStack poseStack,
+  public void render(QedBlockEntity blockEntity, float partialTick, PoseStack poseStack,
                      MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
     final BlockState blockState = blockEntity.getBlockState();
     final Activate activateState = blockState.getValue(QedEntityBlock.ACTIVATE);
@@ -130,53 +124,58 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
     }
 
     poseStack.pushPose();
-    poseStack.translate(0.5, 0.15, 0.5);
+    {
+      poseStack.translate(0.5, 0.15, 0.5);
 
-    switch (directionState) {
-      case DOWN -> poseStack.translate(0, -1, 0);
-      case UP -> poseStack.translate(0, 1, 0);
-      case NORTH -> poseStack.translate(0, 0, -1);
-      case SOUTH -> poseStack.translate(0, 0, 1);
-      case WEST -> poseStack.translate(-1, 0, 0);
-      case EAST -> poseStack.translate(1, 0, 0);
+      switch (directionState) {
+        case DOWN -> poseStack.translate(0, -1, 0);
+        case UP -> poseStack.translate(0, 1, 0);
+        case NORTH -> poseStack.translate(0, 0, -1);
+        case SOUTH -> poseStack.translate(0, 0, 1);
+        case WEST -> poseStack.translate(-1, 0, 0);
+        case EAST -> poseStack.translate(1, 0, 0);
+      }
+
+      double alpha = switch (activateState) {
+        case WORK -> Math.sin(timeVariable1 * 5) * 0.4 + 0.6;
+        case FLASH -> Math.sin(timeVariable1 * 10) * 0.2 + 0.6;
+        case FLASH1 -> Math.sin((timeVariable / 5000.0f * Math.PI) * 10) % 0.5;
+        default -> 0;
+      };
+
+      poseStack.pushPose();
+      {
+        switch (lightState) {
+          case DEFAULT -> {
+            poseStack.translate(0, 0.1f, 0);
+            float time = (timeVariable / 2000.0f * (float) Math.PI);
+            poseStack.mulPose(Axis.YP.rotation(time));
+            float bobbing = (float) Math.sin(time * 2) * 0.1f;
+            poseStack.translate(0, bobbing, 0);
+          }
+          case WORK -> {
+            poseStack.translate(0, 0.2f, 0);
+            float time = (timeVariable / 1000.0f * (float) Math.PI);
+            poseStack.mulPose(Axis.YP.rotation(time));
+            float bobbing = (float) Math.sin(time * 2) * 0.1f;
+            poseStack.translate(0, bobbing, 0);
+          }
+          case ABNORMAL -> {
+            float time = (timeVariable / 4000.0f * (float) Math.PI);
+            float bobbing = (float) Math.sin(time * 2) * 0.05f;
+            poseStack.translate(0, bobbing, 0);
+          }
+        }
+
+        poseStack.pushPose();
+        {
+          int color = FastColor.ARGB32.color((int) (alpha * 255), 255, 255, 255);
+          sphere.render(poseStack, vertexConsumer, LightTexture.FULL_BRIGHT, packedOverlay, color);
+        }
+        poseStack.popPose();
+      }
+      poseStack.popPose();
     }
-
-    double alpha = switch (activateState) {
-      case WORK -> Math.sin(timeVariable1 * 5) * 0.4 + 0.6;
-      case FLASH -> Math.sin(timeVariable1 * 10) * 0.2 + 0.6;
-      case FLASH1 -> Math.sin((timeVariable / 5000.0f * Math.PI) * 10) % 0.5;
-      default -> 0;
-    };
-
-    poseStack.pushPose();
-    switch (lightState) {
-      case DEFAULT -> {
-        poseStack.translate(0, 0.1f, 0);
-        float time = (timeVariable / 2000.0f * (float) Math.PI);
-        poseStack.mulPose(Axis.YP.rotation(time));
-        float bobbing = (float) Math.sin(time * 2) * 0.1f;
-        poseStack.translate(0, bobbing, 0);
-      }
-      case WORK -> {
-        poseStack.translate(0, 0.2f, 0);
-        float time = (timeVariable / 1000.0f * (float) Math.PI);
-        poseStack.mulPose(Axis.YP.rotation(time));
-        float bobbing = (float) Math.sin(time * 2) * 0.1f;
-        poseStack.translate(0, bobbing, 0);
-      }
-      case ABNORMAL -> {
-        float time = (timeVariable / 4000.0f * (float) Math.PI);
-        float bobbing = (float) Math.sin(time * 2) * 0.05f;
-        poseStack.translate(0, bobbing, 0);
-      }
-    }
-    poseStack.pushPose();
-
-    int color = FastColor.ARGB32.color((int) (alpha * 255), 255, 255, 255);
-    sphere.render(poseStack, vertexConsumer, LightTexture.FULL_BRIGHT, packedOverlay, color);
-
-    poseStack.popPose();
-    poseStack.popPose();
     poseStack.popPose();
   }
 
@@ -191,17 +190,17 @@ public class QedBlockEntityRenderer<T extends QedBlockEntity> implements BlockEn
   }
 
   @Nullable
-  private VertexConsumer getVertexConsumer(MultiBufferSource bufferSource, List<Material> workMaterials, long timeVariable, float partialTick) {
-    if (workMaterials.isEmpty()) {
+  private VertexConsumer getVertexConsumer(MultiBufferSource bufferSource, List<Material> material, long timeVariable, float partialTick) {
+    if (material.isEmpty()) {
       return null;
     }
-    int size = workMaterials.size() - 1;
+    int size = material.size() - 1;
     int index = (int) (timeVariable / 50.0 % size);
     if (index > size) {
       index = size;
     } else if (index < 0) {
       index = 0;
     }
-    return workMaterials.get(index).buffer(bufferSource, ModRenderType::getEnergyBall);
+    return material.get(index).buffer(bufferSource, ModRenderType::getEnergyBall);
   }
 }

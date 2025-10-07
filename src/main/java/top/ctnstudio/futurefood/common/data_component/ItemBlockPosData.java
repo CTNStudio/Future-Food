@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.common.item.data_component;
+package top.ctnstudio.futurefood.common.data_component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

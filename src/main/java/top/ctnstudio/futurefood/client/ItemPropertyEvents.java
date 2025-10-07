@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.event;
+package top.ctnstudio.futurefood.client;
 
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;

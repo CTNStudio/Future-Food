@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
+import top.ctnstudio.futurefood.common.block.QedEntityBlock;
+import top.ctnstudio.futurefood.common.block.QerEntityBlock;
 import top.ctnstudio.futurefood.common.menu.InputEnergyMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 import top.ctnstudio.futurefood.util.BlockUtil;
@@ -84,5 +86,27 @@ public class QerBlockEntity extends BaseEnergyStorageBlockEntity<InputEnergyMenu
       return null;
     }
     return new InputEnergyMenu(containerId, playerInventory, itemHandler, energyData);
+  }
+
+  @Override
+  public void onEnergyChanged() {
+    super.onEnergyChanged();
+    if (level == null) {
+      return;
+    }
+    BlockPos pos = getBlockPos();
+    BlockState blockState = level.getBlockState(pos);
+    BlockState newBlockState = level.getBlockState(pos);
+    IEnergyStorage iEnergyStorage = externalGetEnergyStorage(null);
+    if (iEnergyStorage.getEnergyStored() > 0) {
+      newBlockState = newBlockState.setValue(QerEntityBlock.ACTIVATE, QerEntityBlock.Activate.WORK);
+      newBlockState = newBlockState.setValue(QedEntityBlock.LIGHT, QedEntityBlock.Light.WORK);
+    } else {
+      newBlockState = newBlockState.setValue(QerEntityBlock.ACTIVATE, QerEntityBlock.Activate.DEFAULT);
+      newBlockState = newBlockState.setValue(QedEntityBlock.LIGHT, QedEntityBlock.Light.DEFAULT);
+    }
+    if (!blockState.equals(newBlockState)) {
+      level.setBlockAndUpdate(pos, newBlockState);
+    }
   }
 }

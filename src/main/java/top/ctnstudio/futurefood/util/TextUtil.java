@@ -10,13 +10,13 @@ public class TextUtil {
   public static String getDigitalText(long value) {
     int valueTextLength = String.valueOf(Math.abs(value)).length();
     if (valueTextLength >= 12) {
-      return formatNumber(value / 1000000000000.0, "t");
+      return formatNumber(value / 1000000000000.0, "T");
     } else if (valueTextLength >= 10) {
-      return formatNumber(value / 1000000000.0, "g");
+      return formatNumber(value / 1000000000.0, "G");
     } else if (valueTextLength >= 7) {
-      return formatNumber(value / 1000000.0, "m");
+      return formatNumber(value / 1000000.0, "M");
     } else if (valueTextLength >= 4) {
-      return formatNumber(value / 1000.0, "k");
+      return formatNumber(value / 1000.0, "K");
     }
     return String.valueOf(value);
   }
@@ -30,7 +30,7 @@ public class TextUtil {
    */
   public static String formatNumber(double value, String unit) {
     if (Math.abs(value - Math.round(value)) < 1e-10) {
-      return String.format("%.0f %s", value, unit);
+      return String.format("%.0f%s", value, unit);
     }
     String formatted = String.format("%.2f", value);
     formatted = formatted.replaceAll("\\.?0+$", "");

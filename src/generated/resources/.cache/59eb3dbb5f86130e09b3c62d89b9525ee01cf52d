@@ -1,6 +1,7 @@
-// 1.21.1	2025-10-06T22:38:12.3647535	Loot Tables
-cbab5c0fa5fa5789f4461a5f5ad7c1da0d5b5b10 data/futurefood/loot_table/blocks/battery.json
+// 1.21.1	2025-10-07T19:57:49.1596663	Loot Tables
+f02e1e085acac59faf684efda5fc546f24f51997 data/futurefood/loot_table/blocks/battery.json
 0a2a358df6f3a56898cbc4a796fc3f93d866fb94 data/futurefood/loot_table/blocks/gluttony.json
+c72340dc685ad2926c49711e24a08ff29c3d5ef0 data/futurefood/loot_table/blocks/infinite_battery.json
 2b78696bcfaf4b8dae4217962d2837c84fea5939 data/futurefood/loot_table/blocks/particle_collider.json
 c2e76271f7b2d4fec7d67fafa9059c2c5f702c48 data/futurefood/loot_table/blocks/quantum_energy_diffuser.json
 7058111c46dd376cf1a61c03bfa503e7ee0af4f4 data/futurefood/loot_table/blocks/quantum_energy_receiver.json

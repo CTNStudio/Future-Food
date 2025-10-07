@@ -26,13 +26,13 @@ public final class ModTileEntity {
   public static final Supplier<BlockEntityType<GluttonyBlockEntity>> GLUTTONY = register(
     "gluttony", GluttonyBlockEntity::new, ModBlock.GLUTTONY);
   public static final Supplier<BlockEntityType<BatteryBlockEntity>> BATTERY = register(
-    "battery", BatteryBlockEntity::new, ModBlock.BATTERY);
+    "battery", BatteryBlockEntity::new, ModBlock.BATTERY, ModBlock.INFINITE_BATTERY);
 
   @SafeVarargs
-  private static <T extends BlockEntity>
+  private static <T extends BlockEntity, B extends Block>
   DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(String name,
                                                                   BlockEntitySupplier<T> factory,
-                                                                  Supplier<Block>... validBlocks) {
+                                                                  Supplier<B>... validBlocks) {
     return TILES.register(name, () -> BlockEntityType.Builder.of(factory,
         Arrays.stream(validBlocks)
           .map(Supplier::get)

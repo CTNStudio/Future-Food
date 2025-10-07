@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "futurefood:battery"
+          "name": "futurefood:infinite_battery"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "futurefood:blocks/battery"
+  "random_sequence": "futurefood:blocks/infinite_battery"
 }
