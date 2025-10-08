@@ -8,7 +8,8 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import top.ctnstudio.futurefood.client.renderer.item.ParticleColliderBlockItemRenderer;
 import top.ctnstudio.futurefood.common.item.BatteryItem;
-import top.ctnstudio.futurefood.common.item.food.ModGeoBlockItem;
+import top.ctnstudio.futurefood.common.item.ModGeoBlockItem;
+import top.ctnstudio.futurefood.common.item.food.*;
 import top.ctnstudio.futurefood.common.item.tool.CyberWrenchItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 
@@ -34,6 +35,31 @@ public final class ModItem {
     "infinite_battery", () -> new BatteryItem(ModBlock.INFINITE_BATTERY.get()));
   public static final DeferredItem<Item> FOOD_ESSENCE = ITEMS.registerSimpleItem(
     "food_essence");
+
+  public static final DeferredItem<Item> ANTIMATTER_SNACK = ITEMS.register("antimatter_snack",
+    AntimatterSnack::new);
+  public static final DeferredItem<Item> STRONGLY_INTERACTING_BREAD = ITEMS.register(
+    "stronglg_interacting_bread", StronglyInteractingBread::new);
+  public static final DeferredItem<Item> WEAKLY_INTERACTING_WATER_BOTTLE = ITEMS.register(
+    "weakly_interacting_water_bottle", WeaklyInteractingWaterBottle::new);
+  public static final DeferredItem<Item> LEYDEN_JAR = ITEMS.register("leyden_jar",
+    LeydenJar::new);
+  public static final DeferredItem<Item> SCHRODINGERS_CAN = ITEMS.register(
+    "schrodingers_can", SchrodingersCan::new);
+  public static final DeferredItem<Item> WORMHOLE_COOKIE = ITEMS.register(
+    "wormhole_cookie", WormholeCookie::new);
+  public static final DeferredItem<Item> POWERED_MILK = ITEMS.register(
+    "powered_milk", PowderedMilk::new);
+  public static final DeferredItem<Item> ENTROPY_STEW = ITEMS.register(
+    "entropy_stew", EntropyStew::new);
+  public static final DeferredItem<Item> UNPREDICTABLE_CHORUS_FRUIT = ITEMS.register(
+    "unpredictable_chorus_fruit", UnpredictableChorusFruit::new);
+  public static final DeferredItem<Item> BLACK_HOLE_CAKE = ITEMS.register(
+    "black_hole_cake", BlackHoleCake::new);
+  public static final DeferredItem<Item> WHITE_HOLE_CAKE = ITEMS.register(
+    "white_hole_cake", WhiteHoleCake::new);
+  public static final DeferredItem<Item> ATOM_COLA = ITEMS.register(
+    "atom_cola", AtomCola::new);
 
   private static Supplier<BlockItem> createBlockItem(Supplier<Block> block) {
     return () -> new BlockItem(block.get(), new Item.Properties());

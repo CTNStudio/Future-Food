@@ -46,7 +46,8 @@ public class BatteryBlockEntity extends BaseEnergyStorageBlockEntity<InputOutput
       EnergyUtil.getSurroundingEnergyStorage(level, pos).values().stream()
         .filter(e -> e.getValue().isPresent())
         .map(e -> e.getValue().get())
-        .forEach(energyStorage -> EnergyUtil.controlEnergy(this.energyStorage, energyStorage));
+        .forEach(energyStorage ->
+          EnergyUtil.controlEnergy(this.energyStorage, energyStorage));
     }
   }
 

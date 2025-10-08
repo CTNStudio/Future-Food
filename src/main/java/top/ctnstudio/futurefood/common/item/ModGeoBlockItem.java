@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.common.item.food;
+package top.ctnstudio.futurefood.common.item;
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.BlockItem;

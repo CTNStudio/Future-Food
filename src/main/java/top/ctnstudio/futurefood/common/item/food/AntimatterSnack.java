@@ -3,18 +3,20 @@ package top.ctnstudio.futurefood.common.item.food;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Level.ExplosionInteraction;
+import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 
-public class AntimatterSnack extends Item {
+public class AntimatterSnack extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .alwaysEdible()
     .build();
 
   public AntimatterSnack() {
-    super(new Properties().food(foodProperties));
+    super(new Properties()
+      .food(foodProperties)
+      .stacksTo(1));
   }
 
   @Override

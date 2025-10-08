@@ -6,8 +6,9 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 
-public class StronglyInteractingBread extends Item {
+public class StronglyInteractingBread extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .nutrition(2)
     .saturationModifier(0.1f)
@@ -22,7 +23,8 @@ public class StronglyInteractingBread extends Item {
     if (!(livingEntity instanceof Player player)) {
       return stack;
     }
-    player.hurt(livingEntity.damageSources().playerAttack(player), 1);
+    player.hurt(livingEntity.damageSources().playerAttack(player), 2);
+    player.eat(level, stack);
 
     return stack;
   }

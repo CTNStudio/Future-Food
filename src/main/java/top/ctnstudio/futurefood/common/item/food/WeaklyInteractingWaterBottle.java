@@ -7,8 +7,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 
-public class WeaklyInteractingWaterBottle extends Item {
+public class WeaklyInteractingWaterBottle extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .alwaysEdible()
     .usingConvertsTo(Items.GLASS_BOTTLE)

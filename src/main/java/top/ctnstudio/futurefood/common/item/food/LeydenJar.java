@@ -1,10 +1,10 @@
 package top.ctnstudio.futurefood.common.item.food;
 
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 
-public class LeydenJar extends Item {
+public class LeydenJar extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .alwaysEdible()
     .usingConvertsTo(Items.GLASS_BOTTLE)

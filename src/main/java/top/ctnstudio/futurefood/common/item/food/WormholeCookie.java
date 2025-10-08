@@ -6,8 +6,9 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 
-public class WormholeCookie extends Item {
+public class WormholeCookie extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .alwaysEdible()
     .build();

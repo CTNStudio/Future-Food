@@ -4,14 +4,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 
 import javax.annotation.Nonnull;
 
-public class EntropyStew extends Item {
+public class EntropyStew extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .alwaysEdible()
     .usingConvertsTo(Items.BOWL)
