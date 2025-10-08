@@ -33,11 +33,13 @@ public class GluttonyEntityBlock extends HorizontalDirectionalEntityBlock<Glutto
 
   public GluttonyEntityBlock(Properties properties) {
     super(properties
-      .noOcclusion()
-      .isValidSpawn(ModBlock.argumentNever())
-      .isRedstoneConductor(ModBlock.never())
-      .isSuffocating(ModBlock.never())
-      .isViewBlocking(ModBlock.never()), ModTileEntity.GLUTTONY);
+        .noOcclusion()
+        .isValidSpawn(ModBlock.argumentNever())
+        .isRedstoneConductor(ModBlock.never())
+        .isSuffocating(ModBlock.never())
+        .isViewBlocking(ModBlock.never())
+        .strength(0.4f)
+      , ModTileEntity.GLUTTONY);
     this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVATE, false));
   }
 

@@ -38,11 +38,13 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
 
   public ParticleColliderEntityBlock(Properties properties) {
     super(properties
-      .noOcclusion()
-      .isValidSpawn(ModBlock.argumentNever())
-      .isRedstoneConductor(ModBlock.never())
-      .isSuffocating(ModBlock.never())
-      .isViewBlocking(ModBlock.never()), ModTileEntity.PARTICLE_COLLIDER);
+        .noOcclusion()
+        .isValidSpawn(ModBlock.argumentNever())
+        .isRedstoneConductor(ModBlock.never())
+        .isSuffocating(ModBlock.never())
+        .isViewBlocking(ModBlock.never())
+        .strength(0.4f)
+      , ModTileEntity.PARTICLE_COLLIDER);
     this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVATE, false));
   }
 

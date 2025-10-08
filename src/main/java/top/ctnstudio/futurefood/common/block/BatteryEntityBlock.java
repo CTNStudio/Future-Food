@@ -44,7 +44,7 @@ public class BatteryEntityBlock extends HorizontalDirectionalEntityBlock<Battery
   }
 
   public BatteryEntityBlock(boolean isInfinite) {
-    this(BlockBehaviour.Properties.of(), isInfinite);
+    this(BlockBehaviour.Properties.of().strength(0.4f), isInfinite);
   }
 
   protected BatteryEntityBlock(Properties properties, boolean isInfinite) {

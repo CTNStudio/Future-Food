@@ -44,11 +44,13 @@ public class QerEntityBlock extends DirectionEntityBlock<QerBlockEntity> impleme
 
   public QerEntityBlock(Properties properties) {
     super(properties
-      .noOcclusion()
-      .isValidSpawn(ModBlock.argumentNever())
-      .isRedstoneConductor(ModBlock.never())
-      .isSuffocating(ModBlock.never())
-      .isViewBlocking(ModBlock.never()), ModTileEntity.QER);
+        .noOcclusion()
+        .isValidSpawn(ModBlock.argumentNever())
+        .isRedstoneConductor(ModBlock.never())
+        .isSuffocating(ModBlock.never())
+        .isViewBlocking(ModBlock.never())
+        .strength(0.4f)
+      , ModTileEntity.QER);
     this.registerDefaultState(this.stateDefinition.any()
       .setValue(ACTIVATE, Activate.DEFAULT)
       .setValue(LIGHT, QedEntityBlock.Light.DEFAULT)
