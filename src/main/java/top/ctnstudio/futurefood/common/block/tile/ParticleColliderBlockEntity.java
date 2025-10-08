@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
@@ -23,18 +24,18 @@ import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
 import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipeManager;
+import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import java.util.Optional;
 
-// TODO 自定义配方
 // TODO 让外部无法提取能源
 // TODO 根据方向调整物品抽入
 public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<ParticleColliderMenu>
   implements GeoBlockEntity, IUnlimitedEntityReceive {
   protected static final RawAnimation DEPLOY_ANIM = RawAnimation.begin();
-  private int remainingTick;
+  private int progressTick;
   private int maxWorkTick;
   private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -93,7 +94,7 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
   @Override
   protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
     super.loadAdditional(nbt, provider);
-    if (nbt.contains("remainingTick")) remainingTick = nbt.getInt("remainingTick");
+    if (nbt.contains("remainingTick")) progressTick = nbt.getInt("remainingTick");
     if (nbt.contains("maxWorkTick")) maxWorkTick = nbt.getInt("maxWorkTick");
   }
 
@@ -103,7 +104,7 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
   @Override
   protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
     super.saveAdditional(nbt, provider);
-    nbt.putInt("remainingTick", remainingTick);
+    nbt.putInt("remainingTick", progressTick);
     nbt.putInt("maxWorkTick", maxWorkTick);
   }
 
@@ -119,7 +120,7 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
     @Override
     public int get(int index) {
       return switch (index) {
-        case 0 -> blockEntity.remainingTick;
+        case 0 -> blockEntity.progressTick;
         case 1 -> blockEntity.maxWorkTick;
         default -> 0;
       };
@@ -128,7 +129,7 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
     @Override
     public void set(int index, int value) {
       switch (index) {
-        case 0 -> blockEntity.remainingTick = value;
+        case 0 -> blockEntity.progressTick = value;
         case 1 -> blockEntity.maxWorkTick = value;
       }
     }
@@ -146,36 +147,50 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
     Optional<ParticleColliderRecipe> recipe = ParticleColliderRecipeManager.findRecipe(input1, input2);
 
     if (recipe.isEmpty()) {
-      remainingTick = 0;
+      progressTick = 0;
       return;
     }
 
     ParticleColliderRecipe currentRecipe = recipe.get();
     if (!canCraft(currentRecipe)) {
-      remainingTick = 0;
+      progressTick = 0;
       return;
     }
 
-    maxWorkTick = currentRecipe.getProcessingTime();
+    maxWorkTick = currentRecipe.processingTime();
     int energyPerTick = currentRecipe.getEnergyPerTick();
 
     if (energyStorage.getEnergyStored() < energyPerTick) {
       return;
     }
 
+    setBlockState();
+
     energyStorage.extractEnergy(energyPerTick, false);
-    remainingTick++;
-    if (this.remainingTick >= this.maxWorkTick) {
+    progressTick++;
+    if (this.progressTick >= this.maxWorkTick) {
       craftItem(currentRecipe);
-      remainingTick = 0;
+      progressTick = 0;
     }
     setChanged();
+  }
+
+  private void setBlockState() {
+    if (!(level instanceof ServerLevel)) {
+      return;
+    }
+    BlockState blockState = getBlockState();
+    BlockState newBlockState = getBlockState();
+    newBlockState = newBlockState.setValue(ParticleColliderEntityBlock.ACTIVATE, progressTick > 0);
+    if (!blockState.equals(newBlockState)) {
+      level.setBlockAndUpdate(getBlockPos(), newBlockState);
+    }
   }
 
   private boolean canCraft(ParticleColliderRecipe recipe) {
     if (recipe == null) return false;
     ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
-    ItemStack result = recipe.getOutput();
+    ItemStack result = recipe.output();
 
     if (output.isEmpty()) return true;
     if (!ItemStack.isSameItemSameComponents(output, result)) return false;
@@ -184,7 +199,7 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
 
   private void craftItem(ParticleColliderRecipe recipe) {
     if (!canCraft(recipe)) return;
-    ItemStack result = recipe.getOutput();
+    ItemStack result = recipe.output();
     ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
 
     if (output.isEmpty()) {
@@ -196,6 +211,6 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
     itemHandler.extractItem(INPUT_SLOT_1, 1, false);
     itemHandler.extractItem(INPUT_SLOT_2, 1, false);
 
-    remainingTick = 0;
+    progressTick = 0;
   }
 }

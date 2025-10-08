@@ -40,7 +40,6 @@ import top.ctnstudio.futurefood.datagen.tag.FfBlockTags;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO 完成状态变化
 public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
   public static final EnumProperty<Light> LIGHT = EnumProperty.create("light", Light.class);

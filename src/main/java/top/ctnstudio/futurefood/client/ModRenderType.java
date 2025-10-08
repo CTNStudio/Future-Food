@@ -1,7 +1,6 @@
 package top.ctnstudio.futurefood.client;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -11,15 +10,20 @@ import net.neoforged.api.distmarker.OnlyIn;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR;
+import static com.mojang.blaze3d.vertex.VertexFormat.Mode.DEBUG_LINE_STRIP;
+import static com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS;
 import static net.minecraft.client.renderer.RenderStateShard.*;
+import static net.minecraft.client.renderer.RenderType.CompositeState.builder;
 import static net.minecraft.client.renderer.RenderType.OutlineProperty.AFFECTS_OUTLINE;
+import static net.minecraft.client.renderer.RenderType.create;
 
 @OnlyIn(Dist.CLIENT)
 public final class ModRenderType {
   public static final Function<DepthTestStateShard, RenderType> HIGHLIGHTED = Util.memoize(
-    depth -> RenderType.create("highlighted",
-      DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS,
-      1536, RenderType.CompositeState.builder()
+    depth -> create("highlighted",
+      POSITION_COLOR, QUADS,
+      1536, builder()
         .setShaderState(RENDERTYPE_GUI_GHOST_RECIPE_OVERLAY_SHADER)
         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
         .setCullState(NO_CULL)
@@ -27,19 +31,27 @@ public final class ModRenderType {
         .createCompositeState(AFFECTS_OUTLINE)));
 
   public static final BiFunction<DepthTestStateShard, ResourceLocation, RenderType> ICON =
-    Util.memoize((depth, texture) -> RenderType.create("icon",
-      DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS,
-      256, false, true, RenderType.CompositeState.builder()
+    Util.memoize((depth, texture) -> create("icon",
+      DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, QUADS,
+      256, false, true, builder()
         .setDepthTestState(depth)
-        .setShaderState(RenderType.RENDERTYPE_TEXT_SHADER)
+        .setShaderState(RENDERTYPE_TEXT_SHADER)
         .setTextureState(new TextureStateShard(texture, false, false))
-        .setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
-        .setLightmapState(RenderType.LIGHTMAP)
+        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+        .setLightmapState(LIGHTMAP)
         .createCompositeState(false)));
 
+  public static final RenderType LINK_LINE = create("link_line",
+    POSITION_COLOR, DEBUG_LINE_STRIP, 1536,
+    builder()
+      .setShaderState(POSITION_COLOR_SHADER)
+      .setTransparencyState(ADDITIVE_TRANSPARENCY)
+      .setCullState(NO_CULL)
+      .createCompositeState(false));
+
   public static final Function<ResourceLocation, RenderType> ENERGY_BALL = Util.memoize((texture) ->
-    RenderType.create("energy_ball", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS,
-      1536, false, false, RenderType.CompositeState.builder()
+    create("energy_ball", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, QUADS,
+      1536, false, false, builder()
         .setShaderState(RENDERTYPE_TEXT_SHADER)
         .setTextureState(new TextureStateShard(texture, false, false))
         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)

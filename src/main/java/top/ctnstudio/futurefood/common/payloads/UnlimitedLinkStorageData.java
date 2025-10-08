@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO 待完成
 public record UnlimitedLinkStorageData(List<List<Integer>> linkPosSet,
                                        List<Integer> targetPos) implements CustomPacketPayload {
   public static final CustomPacketPayload.Type<UnlimitedLinkStorageData> TYPE = new CustomPacketPayload.Type<>(FutureFood.modRL("unlimited_link_storage_data"));

@@ -166,11 +166,7 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
     if (level == null) {
       return;
     }
-    if (level instanceof ServerLevel serverLevel) {
-      serverLevel.players().stream()
-        .filter(Objects::nonNull)
-        .forEach(p -> ModPayloadUtil.sendToClient(p, new UnlimitedLinkStorageData(getUnlimitedStorage().getLinkPosList(), getBlockPos())));
-    }
+    synchronousLink();
     BlockPos pos = getBlockPos();
     BlockState blockState = level.getBlockState(pos);
     BlockState newBlockState = level.getBlockState(pos);
@@ -196,7 +192,11 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
   @Override
   public void onEnergyChanged() {
     super.onEnergyChanged();
-    if (level == null) {
+    setBlockState();
+  }
+
+  private void setBlockState() {
+    if (!(level instanceof ServerLevel)) {
       return;
     }
     BlockPos pos = getBlockPos();
@@ -212,6 +212,15 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
 
   @Override
   public void onLinkLoad() {
-    onLinkChanged();
+    synchronousLink();
+  }
+
+  public void synchronousLink() {
+    if (!(level instanceof ServerLevel serverLevel)) {
+      return;
+    }
+    serverLevel.players().stream()
+      .filter(Objects::nonNull)
+      .forEach(p -> ModPayloadUtil.sendToClient(p, new UnlimitedLinkStorageData(getUnlimitedStorage().getLinkPosList(), getBlockPos())));
   }
 }

@@ -17,7 +17,6 @@ import top.ctnstudio.futurefood.util.EnergyUtil;
 
 import java.util.function.Supplier;
 
-// TODO 无限状态会被修改 仅影响物品
 public record ModComponentEnergyStorage(MutableDataComponentHolder parent,
                                         DataComponentType<EnergyStorageData> dataComponentType)
   implements IModEnergyStorage {

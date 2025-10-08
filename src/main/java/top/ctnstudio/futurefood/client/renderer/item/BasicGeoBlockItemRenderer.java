@@ -6,11 +6,20 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.model.GeoModel;
 import top.ctnstudio.futurefood.client.model.BasicGeoModel;
 
 @OnlyIn(Dist.CLIENT)
 public class BasicGeoBlockItemRenderer<T extends BlockItem & GeoAnimatable> extends BasicGeoItemRenderer<T> {
   public BasicGeoBlockItemRenderer(BasicGeoModel.BlockModel<T> model) {
+    super(model);
+  }
+
+  public BasicGeoBlockItemRenderer(BasicGeoModel.ItemModel<T> model) {
+    super(model);
+  }
+
+  public BasicGeoBlockItemRenderer(GeoModel<T> model) {
     super(model);
   }
 

@@ -33,7 +33,6 @@ import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import javax.annotation.Nullable;
 
-// TODO 完成状态变化
 public class QerEntityBlock extends DirectionEntityBlock<QerBlockEntity> implements IEntityStorageBlock, SimpleWaterloggedBlock {
   public static final EnumProperty<Activate> ACTIVATE = EnumProperty.create("activate", Activate.class);
   public static final EnumProperty<QedEntityBlock.Light> LIGHT = QedEntityBlock.LIGHT;

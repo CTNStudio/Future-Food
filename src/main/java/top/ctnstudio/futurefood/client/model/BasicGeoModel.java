@@ -3,6 +3,7 @@ package top.ctnstudio.futurefood.client.model;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 import top.ctnstudio.futurefood.core.FutureFood;
@@ -17,10 +18,26 @@ public class BasicGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
     this(pathName, pathName, pathName);
   }
 
+  public BasicGeoModel(String pathName, String texturePath) {
+    this(pathName, texturePath, pathName);
+  }
+
   public BasicGeoModel(String modelPath, String texturePath, String animationsPath) {
-    this.modelPath = FutureFood.modRL("geo/" + modelPath + ".geo.json");
-    this.texturePath = FutureFood.modRL("textures/" + texturePath + ".png");
-    this.animationsPath = FutureFood.modRL("textures/" + animationsPath + ".png");
+    this.modelPath = getGeoModelPath(modelPath);
+    this.texturePath = getGeoTexturePath(texturePath);
+    this.animationsPath = getGeoAnimationsPath(animationsPath);
+  }
+
+  public static @NotNull ResourceLocation getGeoAnimationsPath(String animationsPath) {
+    return FutureFood.modRL("animations/" + animationsPath + ".png");
+  }
+
+  public static @NotNull ResourceLocation getGeoTexturePath(String texturePath) {
+    return FutureFood.modRL("textures/" + texturePath + ".png");
+  }
+
+  public static @NotNull ResourceLocation getGeoModelPath(String modelPath) {
+    return FutureFood.modRL("geo/" + modelPath + ".geo.json");
   }
 
   @Override
@@ -43,8 +60,12 @@ public class BasicGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
       super("block/" + pathName);
     }
 
+    public BlockModel(String modelPath, String texturePath) {
+      super("block/" + modelPath, "block/" + texturePath);
+    }
+
     public BlockModel(String modelPath, String texturePath, String animationsPath) {
-      super(modelPath, texturePath, animationsPath);
+      super("block/" + modelPath, "block/" + texturePath, "block/" + animationsPath);
     }
   }
 
@@ -53,8 +74,12 @@ public class BasicGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
       super("item/" + pathName);
     }
 
+    public ItemModel(String modelPath, String texturePath) {
+      super("item/" + modelPath, "item/" + texturePath);
+    }
+
     public ItemModel(String modelPath, String texturePath, String animationsPath) {
-      super(modelPath, texturePath, animationsPath);
+      super("item/" + modelPath, "item/" + texturePath, "item/" + animationsPath);
     }
   }
 }

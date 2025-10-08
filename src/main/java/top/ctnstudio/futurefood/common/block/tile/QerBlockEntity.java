@@ -2,6 +2,7 @@ package top.ctnstudio.futurefood.common.block.tile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -91,12 +92,15 @@ public class QerBlockEntity extends BaseEnergyStorageBlockEntity<InputEnergyMenu
   @Override
   public void onEnergyChanged() {
     super.onEnergyChanged();
-    if (level == null) {
+    setBlockState();
+  }
+
+  private void setBlockState() {
+    if (!(level instanceof ServerLevel)) {
       return;
     }
-    BlockPos pos = getBlockPos();
-    BlockState blockState = level.getBlockState(pos);
-    BlockState newBlockState = level.getBlockState(pos);
+    BlockState blockState = getBlockState();
+    BlockState newBlockState = getBlockState();
     IEnergyStorage iEnergyStorage = externalGetEnergyStorage(null);
     if (iEnergyStorage.getEnergyStored() > 0) {
       newBlockState = newBlockState.setValue(QerEntityBlock.ACTIVATE, QerEntityBlock.Activate.WORK);
@@ -106,7 +110,7 @@ public class QerBlockEntity extends BaseEnergyStorageBlockEntity<InputEnergyMenu
       newBlockState = newBlockState.setValue(QedEntityBlock.LIGHT, QedEntityBlock.Light.DEFAULT);
     }
     if (!blockState.equals(newBlockState)) {
-      level.setBlockAndUpdate(pos, newBlockState);
+      level.setBlockAndUpdate(getBlockPos(), newBlockState);
     }
   }
 }

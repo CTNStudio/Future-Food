@@ -12,7 +12,7 @@ import top.ctnstudio.futurefood.common.block.tile.ParticleColliderBlockEntity;
 public final class ParticleColliderBlockEntityRender
   extends BasicGeoBlockRender<ParticleColliderBlockEntity> {
   public ParticleColliderBlockEntityRender(BlockEntityRendererProvider.Context context) {
-    super(new ParticleColliderModel<>("particle_collider"));
+    super(new ParticleColliderModel<>());
   }
 
   @Override

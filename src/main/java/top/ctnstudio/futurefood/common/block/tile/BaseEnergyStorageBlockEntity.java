@@ -204,15 +204,20 @@ public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> ex
 
   @Override
   public void onEnergyChanged() {
-    if (getLevel() instanceof ServerLevel serverLevel) {
-      serverLevel.players().stream()
-        .filter(Objects::nonNull)
-        .forEach(p -> ModPayloadUtil.sendToClient(p, new EnergyStorageData(getBlockPos(), energyStorage)));
-    }
+    synchronousEnergy();
   }
 
   @Override
   public void onEnergyLoad() {
-    onEnergyChanged();
+    synchronousEnergy();
+  }
+
+  public void synchronousEnergy() {
+    if (!(level instanceof ServerLevel serverLevel)) {
+      return;
+    }
+    serverLevel.players().stream()
+      .filter(Objects::nonNull)
+      .forEach(p -> ModPayloadUtil.sendToClient(p, new EnergyStorageData(getBlockPos(), energyStorage)));
   }
 }

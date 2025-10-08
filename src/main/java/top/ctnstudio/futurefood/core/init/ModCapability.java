@@ -10,6 +10,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.ctnstudio.futurefood.api.adapter.InfiniteModEnergyStorage;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
 import top.ctnstudio.futurefood.common.block.tile.BaseEnergyStorageBlockEntity;
 import top.ctnstudio.futurefood.common.data_component.ModComponentEnergyStorage;
@@ -25,7 +26,8 @@ public final class ModCapability {
   public static void register(final RegisterCapabilitiesEvent event) {
     event.registerItem(Capabilities.EnergyStorage.ITEM, (item, v) ->
       item.getCount() == 1 && item.has(ModDataComponent.ENERGY_STORAGE) ?
-        new ModComponentEnergyStorage(item, ModDataComponent.ENERGY_STORAGE) : null, ModItem.BATTERY, ModItem.INFINITE_BATTERY);
+        new ModComponentEnergyStorage(item, ModDataComponent.ENERGY_STORAGE) : null, ModItem.BATTERY);
+    event.registerItem(Capabilities.EnergyStorage.ITEM, (item, v) -> new InfiniteModEnergyStorage(), ModItem.INFINITE_BATTERY);
 
     ModTileEntity.TILES.getEntries().forEach(entry -> {
       Block validBlock = entry.get().getValidBlocks().stream().iterator().next();
