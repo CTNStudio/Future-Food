@@ -2,6 +2,8 @@ package top.ctnstudio.futurefood.common.item.food;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 import top.ctnstudio.futurefood.core.init.ModEffect;
 
@@ -17,5 +19,10 @@ public class AtomCola extends FoodItem {
 
   public AtomCola() {
     super(new Properties().food(foodProperties));
+  }
+
+  @Override
+  public UseAnim getUseAnimation(ItemStack stack) {
+    return UseAnim.DRINK;
   }
 }

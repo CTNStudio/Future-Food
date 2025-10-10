@@ -12,6 +12,7 @@ public class StronglyInteractingBread extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .nutrition(2)
     .saturationModifier(0.1f)
+    .alwaysEdible()
     .build();
 
   public StronglyInteractingBread() {
@@ -24,7 +25,7 @@ public class StronglyInteractingBread extends FoodItem {
       return stack;
     }
     player.hurt(livingEntity.damageSources().playerAttack(player), 2);
-    player.eat(level, stack);
+    player.eat(level, stack.copy());
 
     return stack;
   }

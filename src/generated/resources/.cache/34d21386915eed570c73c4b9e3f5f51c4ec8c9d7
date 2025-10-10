@@ -1,9 +1,21 @@
-// 1.21.1	2025-10-07T19:57:49.1616654	Item Models: futurefood
+// 1.21.1	2025-10-10T16:18:44.1216384	Item Models: futurefood
+66684eb356b1463e5b38e36b309206e7968c3d4a assets/futurefood/models/item/antimatter_snack.json
+fcf4bfffde1b1679c846c63b7bd6d6f74079bf27 assets/futurefood/models/item/atom_cola.json
 8f780145ad2000b0300eb2dfb01eb5f356276c2e assets/futurefood/models/item/battery.json
+62ef6d666a86540db90c7ee3cdbab1e25769a29f assets/futurefood/models/item/black_hole_cake.json
 d0a59be612dbaf93cb4d5963ff91c314b55fde23 assets/futurefood/models/item/cyber_wrench.json
-939de49376d8b37f26c3602097e6469f28ca3333 assets/futurefood/models/item/food_essence.json
+ff3d03ebf37b304e0ea3e99381627eb8a4ee898b assets/futurefood/models/item/entropy_stew.json
+9a7633c527c0e8844bacf67659be721449eaa758 assets/futurefood/models/item/food_essence.json
 558b99d41471bba5ece3ff7c757173383db95d30 assets/futurefood/models/item/food_essence1.json
 92955f95517826b1a46f49009ebf9252b894998d assets/futurefood/models/item/gluttony.json
 8f780145ad2000b0300eb2dfb01eb5f356276c2e assets/futurefood/models/item/infinite_battery.json
+9ef9bc3ecb1c23a32b3a1c46f2e5344e90cb8d31 assets/futurefood/models/item/leyden_jar.json
+3b535f8af8a4c846ccbc130a7ea5d1be439c54ad assets/futurefood/models/item/powered_milk.json
 cf22bfb9e3b1a3f6751185b38846e707c90e2b8e assets/futurefood/models/item/quantum_energy_diffuser.json
 ebe5021677af67de7a7528e7cb59bc3cd1b0cab7 assets/futurefood/models/item/quantum_energy_receiver.json
+1d55cf75878f0f7e1e6b945a64b16d4bf0c0adef assets/futurefood/models/item/schrodingers_can.json
+ae9cfd849255f094175cf3518712d81e68ba6e48 assets/futurefood/models/item/stronglg_interacting_bread.json
+2e7e88c84ffdcdafe3fe68c6a2b8036637865aa5 assets/futurefood/models/item/unpredictable_chorus_fruit.json
+45b71b87193d7765696d6dbc1d42e9364a1a9533 assets/futurefood/models/item/weakly_interacting_water_bottle.json
+4c7d838a82ce513484c6b9e7be03214d32642290 assets/futurefood/models/item/white_hole_cake.json
+60300c749a150fb2b7fa66ae56288d22afa2eb41 assets/futurefood/models/item/wormhole_cookie.json

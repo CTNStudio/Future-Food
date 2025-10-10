@@ -28,10 +28,10 @@ public class ParticleColliderScreen extends BasicEnergyScreen<ParticleColliderMe
       46, 12,
       menu.getRemainingTick(), menu.getMaxWorkTick(),
       PROGRESS_BAR_TEXTURE, TOOLTIP, false) {
-      @Override
-      public @NotNull Component getTooltipComponent() {
-        return Component.translatable(getTooltipKey(), TextUtil.formatGameTime(getRenderValue()));
-      }
+        @Override
+        public @NotNull Component getTooltipComponent() {
+          return Component.translatable(getTooltipKey(), TextUtil.formatGameTime(getRenderValue()));
+        }
     };
     addRenderableWidget(progressBar);
   }

@@ -44,6 +44,7 @@ public class ParticleColliderEntityBlock extends HorizontalDirectionalEntityBloc
         .isSuffocating(ModBlock.never())
         .isViewBlocking(ModBlock.never())
         .strength(0.4f)
+        .lightLevel(state -> state.getValue(ACTIVATE) ? 7 : 0)
       , ModTileEntity.PARTICLE_COLLIDER);
     this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVATE, false));
   }

@@ -12,8 +12,6 @@ import net.minecraft.world.level.Level;
 import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 import top.ctnstudio.futurefood.core.init.ModItem;
 
-import java.util.Objects;
-
 public class BlackHoleCake extends FoodItem {
   private static final FoodProperties foodProperties = new FoodProperties.Builder()
     .alwaysEdible()
@@ -30,10 +28,20 @@ public class BlackHoleCake extends FoodItem {
     }
 
     final var cake = ModItem.WHITE_HOLE_CAKE.get().getDefaultInstance();
-    final var data = cake.getOrDefault(DataComponents.CUSTOM_DATA,
+    var data = cake.getOrDefault(
+      DataComponents.CUSTOM_DATA,
       CustomData.of(new CompoundTag()));
-    data.update(it -> it.putLong("pos", livingEntity.blockPosition().asLong()));
+    final var pos = livingEntity.position();
+
+    data = data.update(nbt -> {
+      nbt.putDouble("x", pos.x());
+      nbt.putDouble("y", pos.y());
+      nbt.putDouble("z", pos.z());
+      nbt.putString("world", world.dimension().location().toString());
+    });
+
     cake.set(DataComponents.CUSTOM_DATA, data);
+
     ((Player) livingEntity).addItem(cake);
     return super.finishUsingItem(stack, world, livingEntity);
   }
