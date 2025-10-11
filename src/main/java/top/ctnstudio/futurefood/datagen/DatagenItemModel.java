@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import top.ctnstudio.futurefood.client.ItemPropertyEvents;
+import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModItem;
@@ -37,6 +38,12 @@ public class DatagenItemModel extends ItemModelProvider {
     item(ModBlock.INFINITE_BATTERY.get(), getBlockRl(ModBlock.BATTERY.get()));
     handheldItem(ModItem.CYBER_WRENCH.get());
     createModelFile(ModItem.FOOD_ESSENCE.get(), Map.of(0.00f, "", 0.07f, "1"), ItemPropertyEvents.STACKING);
+
+    while(!FoodItem.FOODS.isEmpty()) {
+      Item item = FoodItem.FOODS.poll();
+      assert item != null;
+      basicItem(item);
+    }
   }
 
   private ModelFile.UncheckedModelFile getParent(String name) {

@@ -1,6 +1,7 @@
 package top.ctnstudio.futurefood.common.item.tool;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.Queues;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -9,11 +10,16 @@ import net.minecraft.world.item.TooltipFlag;
 import top.ctnstudio.futurefood.core.FutureFood;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.function.Supplier;
 
 public class FoodItem extends Item {
+  public static final Queue<Item> FOODS = Queues.newArrayDeque();
+
   public FoodItem(Item.Properties properties) {
     super(properties);
+
+    FOODS.add(this);
   }
 
   public Supplier<String> tooltipInfo = Suppliers.memoize(() -> {

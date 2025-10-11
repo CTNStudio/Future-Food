@@ -24,7 +24,7 @@ public class UnpredictableChorusFruit extends FoodItem {
     final var y = livingEntity.getY() + world.getRandom().nextIntBetweenInclusive(-20, 20);
     final var z = livingEntity.getZ() + world.getRandom().nextIntBetweenInclusive(-20, 20);
 
-    livingEntity.setPos(x, y, z);
+    livingEntity.setPos(x, Math.max(-60, y), z);
 
     return super.finishUsingItem(stack, world, livingEntity);
   }
