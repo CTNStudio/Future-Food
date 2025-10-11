@@ -19,6 +19,7 @@ public class ParticleColliderRecipeManager {
     addRecipe(new ParticleColliderRecipe(
       Ingredient.of(Items.IRON_INGOT),
       Ingredient.of(Items.GOLD_INGOT),
+      1,1,
       new ItemStack(Items.DIAMOND, 1),
       0, // 能量消耗
       200   // 处理时间 (ticks)
@@ -26,6 +27,7 @@ public class ParticleColliderRecipeManager {
     addRecipe(new ParticleColliderRecipe(
       Ingredient.of(Items.GOLD_INGOT),
       Ingredient.of(Items.GOLD_INGOT),
+      1,1,
       new ItemStack(Items.DIAMOND, 2),
       100, // 能量消耗
       100   // 处理时间 (ticks)
@@ -37,7 +39,7 @@ public class ParticleColliderRecipeManager {
 
   public static Optional<ParticleColliderRecipe> findRecipe(ItemStack input1, ItemStack input2){
     return RECIPES.stream()
-      .filter(recipe -> recipe.matchesReverse(input1, input2))// 检查两个输入是否匹配（无序）
+      .filter(recipe -> recipe.matches(input1, input2))// 检查两个输入是否匹配（无序）
       .findFirst();
   }
 

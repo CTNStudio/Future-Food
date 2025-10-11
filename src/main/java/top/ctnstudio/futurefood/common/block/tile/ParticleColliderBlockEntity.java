@@ -148,12 +148,14 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
 
     if (recipe.isEmpty()) {
       progressTick = 0;
+      maxWorkTick = 0;
       return;
     }
 
     ParticleColliderRecipe currentRecipe = recipe.get();
     if (!canCraft(currentRecipe)) {
       progressTick = 0;
+      maxWorkTick = 0;
       return;
     }
 
@@ -208,8 +210,8 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
       output.grow(result.getCount());
     }
 
-    itemHandler.extractItem(INPUT_SLOT_1, 1, false);
-    itemHandler.extractItem(INPUT_SLOT_2, 1, false);
+    itemHandler.extractItem(INPUT_SLOT_1, recipe.getInputCount(1), false);
+    itemHandler.extractItem(INPUT_SLOT_2, recipe.getInputCount(2), false);
 
     progressTick = 0;
   }
