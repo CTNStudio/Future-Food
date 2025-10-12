@@ -21,9 +21,9 @@ import top.ctnstudio.futurefood.core.init.ModItem;
 
 import java.util.function.Supplier;
 
-public class DatagenI18ZhCn extends LanguageProvider {
-  public DatagenI18ZhCn(PackOutput output) {
-    super(output, FutureFood.ID, "zh_cn");
+public class DatagenI18EnUS extends LanguageProvider {
+  public DatagenI18EnUS(PackOutput output) {
+    super(output, FutureFood.ID, "en_us");
   }
 
   public static String translationKey(String string) {
@@ -36,41 +36,41 @@ public class DatagenI18ZhCn extends LanguageProvider {
 
   @Override
   protected void addTranslations() {
-    add("itemGroup.futurefood", "未来食物");
-    add(EnergyBar.TOOLTIP, "能量存储：%s/%s");
-    add(ModItemTooltipRender.ITEM_TOOLTIP_POSITION, "绑定的方块坐标：%s %s %s");
-    add(ModItemTooltipRender.ITEM_TOOLTIP_POSITION_EMPTY, "没有绑定方块坐标");
-    add(ModItemTooltipRender.ITEM_TOOLTIP_ENERGY_STORAGE, "能量存储：%s/%s");
-    add(CyberWrenchItem.BINDING_SUCCESS, "绑定成功，坐标： x %s y %s z %s");
-    add(CyberWrenchItem.BINDING_CANCEL, "已取消绑定，坐标： x %s y %s z %s");
-    add(CyberWrenchItem.BINDING_FAILURE, "绑定失败，坐标： x %s y %s z %s");
-    add(CyberWrenchItem.LINK_SUCCESS, "链接成功，坐标： x %s y %s z %s");
-    add(CyberWrenchItem.LINK_REMOVE, "已断开链接，坐标： x %s y %s z %s");
-    add(CyberWrenchItem.LINK_REMOVE_FAILURE, "断开链接失败，坐标： x %s y %s z %s");
-    add(CyberWrenchItem.LINK_FAILURE, "链接失败坐标： x %s y %s z %s");
-    add(ParticleColliderScreen.TOOLTIP, "剩余时间：%s");
-    add(GluttonyScreen.TOOLTIP, "剩余时间：%s");
-    addItem(ModItem.CYBER_WRENCH, "赛博扳手");
-    addBlock(ModBlock.QED, "量子能源扩散器");
-    addBlock(ModBlock.QER, "量子能源接收器");
-    addBlock(ModBlock.PARTICLE_COLLIDER, "粒子对撞器");
-    addBlock(ModBlock.GLUTTONY, "暴食者");
-    addBlock(ModBlock.BATTERY, "储蓄方块");
-    addBlock(ModBlock.INFINITE_BATTERY, "无限储蓄方块");
-    addItem(ModItem.FOOD_ESSENCE, "食物源质");
+    add("itemGroup.futurefood", "Future Food");
+    add(EnergyBar.TOOLTIP, "Energy：%s/%s");
+    add(ModItemTooltipRender.ITEM_TOOLTIP_POSITION, "Pos to：%s %s %s");
+    add(ModItemTooltipRender.ITEM_TOOLTIP_POSITION_EMPTY, "Non block pos.");
+    add(ModItemTooltipRender.ITEM_TOOLTIP_ENERGY_STORAGE, "Energy：%s/%s");
+    add(CyberWrenchItem.BINDING_SUCCESS, "Successful! Block pos： x %s y %s z %s");
+    add(CyberWrenchItem.BINDING_CANCEL, "Success cancel! Pos ： x %s y %s z %s");
+    add(CyberWrenchItem.BINDING_FAILURE, "Fail, pos: x %s y %s z %s");
+    add(CyberWrenchItem.LINK_SUCCESS, "Success linked! Pos： x %s y %s z %s");
+    add(CyberWrenchItem.LINK_REMOVE, "Discontinue，pos： x %s y %s z %s");
+    add(CyberWrenchItem.LINK_REMOVE_FAILURE, "Failed discontinue，pos： x %s y %s z %s");
+    add(CyberWrenchItem.LINK_FAILURE, "Fail, pos： x %s y %s z %s");
+    add(ParticleColliderScreen.TOOLTIP, "Timeless：%s");
+    add(GluttonyScreen.TOOLTIP, "Timeless：%s");
+    addItem(ModItem.CYBER_WRENCH, "Cyber Wrench");
+    addBlock(ModBlock.QED, "Quantum Energy Diffuser");
+    addBlock(ModBlock.QER, "Quantum Energy Receiver");
+    addBlock(ModBlock.PARTICLE_COLLIDER, "Particle Collider");
+    addBlock(ModBlock.GLUTTONY, "Gluttony");
+    addBlock(ModBlock.BATTERY, "Battery");
+    addBlock(ModBlock.INFINITE_BATTERY, "Infinite Battery");
+    addItem(ModItem.FOOD_ESSENCE, "Food Essence");
 
-    addFood(ModItem.ANTIMATTER_SNACK, "反物质小吃", "非常美味的小吃，能量密度极高。如果你一口没有吃饱，那么可能会在你的胃里膨胀。");
-    addFood(ModItem.STRONGLY_INTERACTING_BREAD, "强相互作用面包", "在你吃面包的时候，面包也在吃你。");
-    addFood(ModItem.WEAKLY_INTERACTING_WATER_BOTTLE, "弱相互作用水瓶", "喝起来有一种前所未有的清凉感。但是你真的在喝吗？");
-    addFood(ModItem.LEYDEN_JAR, "莱顿瓶", "里面装满了电，或许不应该用来吃。");
-    addFood(ModItem.SCHRODINGERS_CAN, "薛定谔的罐头", "你永远不知道你打开它会发生什么。");
-    addFood(ModItem.WORMHOLE_COOKIE, "虫洞曲奇", "它会穿越。");
-    addFood(ModItem.POWERED_MILK, "凝固牛奶", "它足够充实，以至于根本无从下口。");
-    addFood(ModItem.ENTROPY_STEW, "增熵炖菜", "一种从未有过的混乱感。");
-    addFood(ModItem.UNPREDICTABLE_CHORUS_FRUIT, "不可预测的紫颂果", "它比一般的紫颂果更危险，它会随意带你到任何地方。");
-    addFood(ModItem.BLACK_HOLE_CAKE, "黑洞蛋糕", "有东西想把你吸进去。");
-    addFood(ModItem.WHITE_HOLE_CAKE, "白洞蛋糕", "有东西想把你吐出来。");
-    addFood(ModItem.ATOM_COLA, "原子可乐", "BONK!");
+    addFood(ModItem.ANTIMATTER_SNACK, "Antimatter Snack", "Delicious snack with extremely high energy density. If you don't eat it in one bite, it may expand in your stomach.");
+    addFood(ModItem.STRONGLY_INTERACTING_BREAD, "Strongly Interacting Bread", "If you eat the bread, the bread is also eating you.");
+    addFood(ModItem.WEAKLY_INTERACTING_WATER_BOTTLE, "Weakly Interacting Water Bottle", "Drinking it gives you an unprecedented sense of coolness. But are you really drinking it?");
+    addFood(ModItem.LEYDEN_JAR, "Leyden Jar", "Fulled with electricity, maybe not for eating.");
+    addFood(ModItem.SCHRODINGERS_CAN, "Schrodingers Can", "We never know what will happen when you open it.");
+    addFood(ModItem.WORMHOLE_COOKIE, "Wormhole Cookie", "It can travel through space.");
+    addFood(ModItem.POWERED_MILK, "Powered Milk", "It is so solid that you can't even take a bite.");
+    addFood(ModItem.ENTROPY_STEW, "Entropy Stew", "A kind of unprecedented sense of chaos.");
+    addFood(ModItem.UNPREDICTABLE_CHORUS_FRUIT, "Unpredictable Chorus Fruit", "It is more dangerous than ordinary chorus fruit, it can take you anywhere at will.");
+    addFood(ModItem.BLACK_HOLE_CAKE, "Black Hole Cake", "Something wants to suck you in.");
+    addFood(ModItem.WHITE_HOLE_CAKE, "White Hole Cake", "Something wants to spit you out.");
+    addFood(ModItem.ATOM_COLA, "Atom Cola", "BONK!");
 
     // addFood(ModItem.NEUTRINO_SOUP, "中微子汤", "你感觉不到它，但它确实存在。");
     // addFood(ModItem.QUARKS_SALAD, "夸克沙拉", "各种夸克组成的沙拉，味道复杂且难以捉摸。");
