@@ -29,8 +29,6 @@ public class FutureFood {
     ModCreativeModeTab.TABS.register(modEventBus);
     ModEffect.EFFECT.register(modEventBus);
 
-    //配方
-    ParticleColliderRecipeManager.initRecipes();
   }
 
   /**
