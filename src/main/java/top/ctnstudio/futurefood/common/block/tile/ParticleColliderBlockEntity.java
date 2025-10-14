@@ -23,7 +23,7 @@ import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
-import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipeManager;
+import top.ctnstudio.futurefood.core.ParticleColliderRecipeManager;
 import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;

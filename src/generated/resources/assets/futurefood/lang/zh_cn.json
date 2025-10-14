@@ -44,5 +44,8 @@
   "item.futurefood.weakly_interacting_water_bottle": "弱相互作用水瓶",
   "item.futurefood.white_hole_cake": "白洞蛋糕",
   "item.futurefood.wormhole_cookie": "虫洞曲奇",
-  "itemGroup.futurefood": "未来食物"
+  "itemGroup.futurefood": "未来食物",
+  "recipe.particle_collider,jei": "粒子对撞器",
+  "recipe.particle_collider,processingTime": "处理时间：%s",
+  "recipe.particle_collider.energy": "能量消耗：%s"
 }

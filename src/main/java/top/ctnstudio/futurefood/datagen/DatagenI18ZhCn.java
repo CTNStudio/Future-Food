@@ -82,6 +82,10 @@ public class DatagenI18ZhCn extends LanguageProvider {
     // addFood(ModItem.GRAVITON_GELATO, "引力子冰淇淋", "这是铁砧做的吗？");
     // addFood(ModItem.PLASMA_SOUP, "等离子体汤", "这汤热得能把你烫伤。");
     // addFood(ModItem.NEUTRONIUM_STEAK, "中子星牛排", "中子星可以轻松的吃掉你的鱼子酱，但你可没法那么容易吃掉中子星的牛排。");
+
+    add("recipe.particle_collider,jei", "粒子对撞器");
+    add("recipe.particle_collider.energy", "能量消耗：%s");
+    add("recipe.particle_collider,processingTime", "处理时间：%s");
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {
