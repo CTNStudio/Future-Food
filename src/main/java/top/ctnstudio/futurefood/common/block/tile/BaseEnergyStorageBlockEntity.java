@@ -173,6 +173,16 @@ public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> ex
     return getBlockState().getBlock().getName();
   }
 
+  public void controlBlockEnergy(Level world, BlockPos pos, BlockState state) {
+    final var capability = getSurroundingEnergyStorage(world, pos, state);
+    if (Objects.isNull(capability)) {
+      return;
+    }
+
+    EnergyUtil.controlEnergy(capability, this.energyStorage);
+  }
+
+
   /**
    * 操控能源物品槽的能量
    */

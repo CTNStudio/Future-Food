@@ -31,7 +31,6 @@ import java.util.Queue;
 
 // TODO 添加配置功能
 // TODO 让外部无法提取能源
-// TODO 添加主动抽取
 public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMenu> implements IUnlimitedLinkModify {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
@@ -94,6 +93,8 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
 
     // 提取物品方块的能量
     controlItemEnergy(itemHandler, false);
+
+    controlBlockEnergy(level, pos, bs);
 
     Queue<BlockPos> cacheData = linkStorage.getCacheData();
     if (!cacheData.isEmpty()) {

@@ -17,6 +17,7 @@ import top.ctnstudio.futurefood.common.item.tool.CyberWrenchItem;
 import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
+import top.ctnstudio.futurefood.core.init.ModEffect;
 import top.ctnstudio.futurefood.core.init.ModItem;
 
 import java.util.function.Supplier;
@@ -58,6 +59,8 @@ public class DatagenI18ZhCn extends LanguageProvider {
     addBlock(ModBlock.BATTERY, "储蓄方块");
     addBlock(ModBlock.INFINITE_BATTERY, "无限储蓄方块");
     addItem(ModItem.FOOD_ESSENCE, "食物源质");
+
+    addEffect(ModEffect.RADIATION, "辐射");
 
     addFood(ModItem.ANTIMATTER_SNACK, "反物质小吃", "非常美味的小吃，能量密度极高。如果你一口没有吃饱，那么可能会在你的胃里膨胀。");
     addFood(ModItem.STRONGLY_INTERACTING_BREAD, "强相互作用面包", "在你吃面包的时候，面包也在吃你。");

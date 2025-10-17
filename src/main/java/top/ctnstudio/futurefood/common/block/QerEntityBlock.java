@@ -26,7 +26,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import top.ctnstudio.futurefood.api.block.IEntityStorageBlock;
-import top.ctnstudio.futurefood.common.block.QedEntityBlock.Light;
 import top.ctnstudio.futurefood.common.block.tile.ModBlockEntity;
 import top.ctnstudio.futurefood.common.block.tile.QerBlockEntity;
 import top.ctnstudio.futurefood.core.init.ModBlock;
@@ -52,11 +51,10 @@ public class QerEntityBlock extends DirectionEntityBlock<QerBlockEntity> impleme
       .isViewBlocking(ModBlock.never())
       .strength(0.4f)
       .lightLevel(state -> {
-        Light light = state.getValue(LIGHT);
-        return switch (light) {
+        Activate activate = state.getValue(ACTIVATE);
+        return switch (activate) {
           case DEFAULT -> 0;
-          case WORK -> 7;
-          case ABNORMAL -> 14;
+          case WORK -> 12;
         };
       })      , ModTileEntity.QER);
     this.registerDefaultState(this.stateDefinition.any()

@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -137,12 +138,15 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
     itemHandler.insertItem(2, outputItem, false);
 
     // 避免满了还继续修改
-    if (!energyStorage.canReceive() || energyStorage.getEnergyStored() >= energyStorage.getMaxEnergyStored() ||
-      energyStorage.receiveEnergy(outputEnergy, true) <= 0) {
+    if (energyStorage.getEnergyStored() >= energyStorage.getMaxEnergyStored()) {
       return;
     }
 
-    energyStorage.receiveEnergy(outputEnergy, false);
+    final var energy = Mth.clamp(energyStorage.getEnergyStored() + outputEnergy,
+      0,
+      energyStorage.getMaxEnergyStored());
+
+    energyStorage.setEnergy(energy);
     outputEnergy(level, pos);
   }
 
@@ -181,8 +185,9 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
       resetProgress();
       return;
     }
-    if (cacheRecipeEntry != null && ItemStack.isSameItem(item, cacheRecipeEntry.inputItem) &&
-      item.get(DataComponents.FOOD).equals(cacheRecipeEntry.inputItem.get(DataComponents.FOOD))) {
+    if (cacheRecipeEntry != null
+      && ItemStack.isSameItem(item, cacheRecipeEntry.inputItem)
+      && item.get(DataComponents.FOOD).equals(cacheRecipeEntry.inputItem.get(DataComponents.FOOD))) {
       return;
     }
 

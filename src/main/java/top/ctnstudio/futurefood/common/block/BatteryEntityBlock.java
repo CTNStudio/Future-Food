@@ -48,9 +48,10 @@ public class BatteryEntityBlock extends HorizontalDirectionalEntityBlock<Battery
         .strength(0.4f)
         .lightLevel(state -> {
           if (state.getBlock() instanceof BatteryEntityBlock battery && battery.isInfinite) {
-            return 7;
+            return 15;
+          } else {
+            return 12;
           }
-          return 0;
         })
       , isInfinite);
   }
