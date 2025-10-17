@@ -95,6 +95,8 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
     // 提取物品方块的能量
     controlItemEnergy(itemHandler, false);
 
+    controlBlockEnergy(level, pos, bs);
+
     Queue<BlockPos> cacheData = linkStorage.getCacheData();
     if (!cacheData.isEmpty()) {
       for (BlockPos cache : cacheData) {

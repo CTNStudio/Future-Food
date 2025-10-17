@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
@@ -23,9 +24,9 @@ import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
 import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
-import top.ctnstudio.futurefood.core.ParticleColliderRecipeManager;
 import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
+import top.ctnstudio.futurefood.core.ParticleColliderRecipeManager;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
 
 import java.util.Optional;
@@ -168,7 +169,12 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
 
     setBlockState();
 
-    energyStorage.extractEnergy(energyPerTick, false);
+    final var energy = Mth.clamp(energyStorage.getEnergyStored() - energyPerTick,
+      0,
+      energyStorage.getMaxEnergyStored());
+
+    energyStorage.setEnergy(energy);
+
     progressTick++;
     if (this.progressTick >= this.maxWorkTick) {
       craftItem(currentRecipe);
@@ -181,11 +187,12 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
     if (!(level instanceof ServerLevel)) {
       return;
     }
-    BlockState blockState = getBlockState();
-    BlockState newBlockState = getBlockState();
-    newBlockState = newBlockState.setValue(ParticleColliderEntityBlock.ACTIVATE, progressTick > 0);
-    if (!blockState.equals(newBlockState)) {
-      level.setBlockAndUpdate(getBlockPos(), newBlockState);
+
+    final BlockState state = getBlockState();
+    final boolean flag = progressTick > 0;
+    if (state.getValue(ParticleColliderEntityBlock.ACTIVATE) != flag) {
+      level.setBlockAndUpdate(getBlockPos(),
+        state.setValue(ParticleColliderEntityBlock.ACTIVATE, flag));
     }
   }
 

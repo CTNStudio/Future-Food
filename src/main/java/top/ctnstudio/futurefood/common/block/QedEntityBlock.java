@@ -58,11 +58,12 @@ public class QedEntityBlock extends DirectionEntityBlock<QedBlockEntity> impleme
         .isViewBlocking(ModBlock.never()      )
         .strength(0.4f)
         .lightLevel(state -> {
-          Light light = state.getValue(LIGHT);
-          return switch (light) {
+          Activate activate = state.getValue(ACTIVATE);
+          return switch (activate) {
             case DEFAULT -> 0;
-            case WORK -> 7;
-            case ABNORMAL -> 14;
+            case WORK -> 14;
+            case FLASH -> 7;
+            case FLASH1 -> 9;
           };
         })
       , ModTileEntity.QED);

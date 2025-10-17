@@ -17,6 +17,7 @@ import top.ctnstudio.futurefood.common.item.tool.CyberWrenchItem;
 import top.ctnstudio.futurefood.common.item.tool.FoodItem;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
+import top.ctnstudio.futurefood.core.init.ModEffect;
 import top.ctnstudio.futurefood.core.init.ModItem;
 
 import java.util.function.Supplier;
@@ -58,6 +59,8 @@ public class DatagenI18EnUS extends LanguageProvider {
     addBlock(ModBlock.BATTERY, "Battery");
     addBlock(ModBlock.INFINITE_BATTERY, "Infinite Battery");
     addItem(ModItem.FOOD_ESSENCE, "Food Essence");
+
+    addEffect(ModEffect.RADIATION, "Radiation");
 
     addFood(ModItem.ANTIMATTER_SNACK, "Antimatter Snack", "Delicious snack with extremely high energy density. If you don't eat it in one bite, it may expand in your stomach.");
     addFood(ModItem.STRONGLY_INTERACTING_BREAD, "Strongly Interacting Bread", "If you eat the bread, the bread is also eating you.");
