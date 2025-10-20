@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.client.jei;
+package top.ctnstudio.futurefood.linkage.jei;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -11,9 +11,9 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
 import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
+import top.ctnstudio.futurefood.core.recipe.ParticleColliderRecipe;
 
 import java.util.Arrays;
 
@@ -22,8 +22,11 @@ public class ParticleColliderJeiRecipe implements IRecipeCategory<ParticleCollid
     FutureFood.ID, "particle_collider", ParticleColliderRecipe.class);
 
   public static final ResourceLocation BACKGROUND = FutureFood.modRL("textures/gui/jei/particle_collider.png");
+  public static final String TITLE_KEY = "recipe.particle_collider.jei";
+  public static final String ENERGY_KEY = "recipe.particle_collider.energy";
+  public static final String PROCESSING_TIME_KEY = "recipe.particle_collider.processingTime";
 
-  private IGuiHelper guiHelper;
+  private final IGuiHelper guiHelper;
 
   public ParticleColliderJeiRecipe(IGuiHelper guiHelper) {
     this.guiHelper = guiHelper;
@@ -36,7 +39,7 @@ public class ParticleColliderJeiRecipe implements IRecipeCategory<ParticleCollid
 
   @Override
   public Component getTitle() {
-    return Component.translatable("recipe.particle_collider,jei");
+    return Component.translatable(TITLE_KEY);
   }
 
   @Override
@@ -49,6 +52,7 @@ public class ParticleColliderJeiRecipe implements IRecipeCategory<ParticleCollid
     return 67;
   }
 
+  @SuppressWarnings("removal")
   @Override
   public @Nullable IDrawable getBackground() {
     return guiHelper.createDrawable(BACKGROUND, 0, 0, this.getWidth(), this.getHeight());
@@ -75,9 +79,9 @@ public class ParticleColliderJeiRecipe implements IRecipeCategory<ParticleCollid
     IRecipeCategory.super.getTooltip(tooltip, recipe, recipeSlotsView, mouseX, mouseY);
 
     if (mouseX > 1 && mouseX < 12 && mouseY > 15 && mouseY < 53) {
-      tooltip.add(Component.translatable("recipe.particle_collider.energy", recipe.energyCost()));
+      tooltip.add(Component.translatable(ENERGY_KEY, recipe.energyCost()));
     } else if (mouseX > 57 && mouseX < 105 && mouseY > 4 && mouseY < 15) {
-      tooltip.add(Component.translatable("recipe.particle_collider,processingTime", recipe.processingTime()));
+      tooltip.add(Component.translatable(PROCESSING_TIME_KEY, recipe.processingTime()));
     }
   }
 }

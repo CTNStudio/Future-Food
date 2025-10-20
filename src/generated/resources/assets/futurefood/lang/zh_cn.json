@@ -46,7 +46,10 @@
   "item.futurefood.white_hole_cake": "白洞蛋糕",
   "item.futurefood.wormhole_cookie": "虫洞曲奇",
   "itemGroup.futurefood": "未来食物",
-  "recipe.particle_collider,jei": "粒子对撞器",
-  "recipe.particle_collider,processingTime": "处理时间：%s",
-  "recipe.particle_collider.energy": "能量消耗：%s"
+  "recipe.gluttony.energy": "能量产生：%s",
+  "recipe.gluttony.jei": "暴食者",
+  "recipe.gluttony.processingTime": "处理时间：%s",
+  "recipe.particle_collider.energy": "能量消耗：%s",
+  "recipe.particle_collider.jei": "粒子对撞器",
+  "recipe.particle_collider.processingTime": "处理时间：%s"
 }

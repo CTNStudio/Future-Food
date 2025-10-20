@@ -19,6 +19,8 @@ import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.core.init.ModBlock;
 import top.ctnstudio.futurefood.core.init.ModEffect;
 import top.ctnstudio.futurefood.core.init.ModItem;
+import top.ctnstudio.futurefood.linkage.jei.GluttonyJeiRecipe;
+import top.ctnstudio.futurefood.linkage.jei.ParticleColliderJeiRecipe;
 
 import java.util.function.Supplier;
 
@@ -86,9 +88,12 @@ public class DatagenI18ZhCn extends LanguageProvider {
     // addFood(ModItem.PLASMA_SOUP, "等离子体汤", "这汤热得能把你烫伤。");
     // addFood(ModItem.NEUTRONIUM_STEAK, "中子星牛排", "中子星可以轻松的吃掉你的鱼子酱，但你可没法那么容易吃掉中子星的牛排。");
 
-    add("recipe.particle_collider,jei", "粒子对撞器");
-    add("recipe.particle_collider.energy", "能量消耗：%s");
-    add("recipe.particle_collider,processingTime", "处理时间：%s");
+    add(ParticleColliderJeiRecipe.TITLE_KEY, "粒子对撞器");
+    add(ParticleColliderJeiRecipe.ENERGY_KEY, "能量消耗：%s");
+    add(ParticleColliderJeiRecipe.PROCESSING_TIME_KEY, "处理时间：%s");
+    add(GluttonyJeiRecipe.TITLE_KEY, "暴食者");
+    add(GluttonyJeiRecipe.ENERGY_KEY, "能量产生：%s");
+    add(GluttonyJeiRecipe.PROCESSING_TIME_KEY, "处理时间：%s");
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {

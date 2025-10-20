@@ -23,13 +23,11 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
 import top.ctnstudio.futurefood.api.block.IUnlimitedEntityReceive;
-import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
 import top.ctnstudio.futurefood.common.block.ParticleColliderEntityBlock;
 import top.ctnstudio.futurefood.common.menu.ParticleColliderMenu;
-import top.ctnstudio.futurefood.core.ParticleColliderRecipeManager;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
-
-import java.util.Optional;
+import top.ctnstudio.futurefood.core.recipe.ParticleColliderRecipe;
+import top.ctnstudio.futurefood.core.recipe_manager.ParticleColliderRecipeManager;
 
 // TODO 让外部无法提取能源
 // TODO 根据方向调整物品抽入
@@ -145,7 +143,7 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
     ItemStack input1 = itemHandler.getStackInSlot(INPUT_SLOT_1);
     ItemStack input2 = itemHandler.getStackInSlot(INPUT_SLOT_2);
 
-    Optional<ParticleColliderRecipe> recipe = ParticleColliderRecipeManager.findRecipe(input1, input2);
+    final var recipe = ParticleColliderRecipeManager.findRecipe(input1, input2);
 
     if (recipe.isEmpty()) {
       progressTick = 0;

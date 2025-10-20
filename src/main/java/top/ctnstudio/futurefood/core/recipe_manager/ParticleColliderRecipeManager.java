@@ -1,12 +1,12 @@
-package top.ctnstudio.futurefood.core;
+package top.ctnstudio.futurefood.core.recipe_manager;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import top.ctnstudio.futurefood.api.recipe.ParticleColliderRecipe;
 import top.ctnstudio.futurefood.core.init.ModItem;
+import top.ctnstudio.futurefood.core.recipe.ParticleColliderRecipe;
 
 import java.util.List;
 import java.util.Optional;
@@ -112,10 +112,11 @@ public class ParticleColliderRecipeManager {
   }
 
   public static void checkAndInit() {
-    if (needsInitialization) {
-      initRecipes();
-      needsInitialization = false;
+    if (!needsInitialization) {
+      return;
     }
+    initRecipes();
+    needsInitialization = false;
   }
 
   public static void addRecipe(ParticleColliderRecipe recipe) {
@@ -130,6 +131,7 @@ public class ParticleColliderRecipeManager {
   }
 
   public static List<ParticleColliderRecipe> getALLRecipes(){
+    checkAndInit();
     return ImmutableList.copyOf(RECIPES);
   }
 }

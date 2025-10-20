@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,20 +17,20 @@ import top.ctnstudio.futurefood.api.adapter.ModEnergyStorage;
 import top.ctnstudio.futurefood.api.adapter.ModItemStackHandler;
 import top.ctnstudio.futurefood.common.block.GluttonyEntityBlock;
 import top.ctnstudio.futurefood.common.menu.GluttonyMenu;
-import top.ctnstudio.futurefood.core.init.ModItem;
 import top.ctnstudio.futurefood.core.init.ModTileEntity;
+import top.ctnstudio.futurefood.core.recipe.GluttonyRecipe;
+import top.ctnstudio.futurefood.core.recipe_manager.GluttonyRecipeManager;
 import top.ctnstudio.futurefood.util.EnergyUtil;
-
-import java.util.Objects;
 
 // TODO 添加配置功能
 // TODO 根据方向调整物品抽入
 public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMenu> {
+  public static final int MAX_WORK_TICK = 20 * 5;
   private int remainingTick;
   private int maxWorkTick;
   private final ContainerData workProgress;
   // 缓存
-  private RecipeEntry cacheRecipeEntry;
+  private GluttonyRecipe recipe;
 
   public GluttonyBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.GLUTTONY.get(), pos, blockState,
@@ -85,11 +84,11 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
 
     // 此次是避免直接修改工作进度导致配方为空
     // 获取缓存配方
-    if (cacheRecipeEntry == null) {
-      ItemStack stackInSlot = itemHandler.getStackInSlot(1).copy();
+    if (recipe == null) {
+      final var stackInSlot = itemHandler.getStackInSlot(1).copy();
       if (!stackInSlot.isEmpty()) {
         produceProducts(stackInSlot);
-        if (cacheRecipeEntry == null) {
+        if (recipe == null) {
           resetProducts();
           resetProgress();
           return;
@@ -102,8 +101,8 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
     }
 
     // 存储值避免移除输入槽导致值为空
-    ItemStack outputItem = cacheRecipeEntry.outputItem.copy();
-    int outputEnergy = cacheRecipeEntry.outputEnergy;
+    ItemStack outputItem = recipe.outputItem().copy();
+    int outputEnergy = recipe.outputEnergy();
     // 如果输入槽为空，则重置进度
     if (itemHandler.extractItem(1, 1, true).isEmpty()) {
       resetProducts();
@@ -156,7 +155,7 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
   }
 
   public void resetProducts() {
-    cacheRecipeEntry = null;
+    recipe = null;
   }
 
   @Override
@@ -185,36 +184,15 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
       resetProgress();
       return;
     }
-    if (cacheRecipeEntry != null
-      && ItemStack.isSameItem(item, cacheRecipeEntry.inputItem)
-      && item.get(DataComponents.FOOD).equals(cacheRecipeEntry.inputItem.get(DataComponents.FOOD))) {
+    if (recipe != null
+      && ItemStack.isSameItem(item, recipe.inputItem())
+      && item.get(DataComponents.FOOD).equals(recipe.inputItem().get(DataComponents.FOOD))) {
       return;
     }
 
-    maxWorkTick = 20 * 5;
+    maxWorkTick = MAX_WORK_TICK;
     remainingTick = maxWorkTick;
-    cacheRecipeEntry = getProduct(item);
-  }
-
-  /**
-   * 计算产物
-   *
-   * @return 产物
-   */
-  protected RecipeEntry getProduct(ItemStack item) {
-    FoodProperties food = item.get(DataComponents.FOOD);
-    int nutritionFactor = food.nutrition();
-    int saturationFactor = (int) (food.saturation() * 5);
-    int effectFactor = food.effects().stream()
-      .map(e -> e.probability() >= 1 ? e.effect() : null)
-      .filter(Objects::nonNull)
-      .mapToInt(e -> (int) (Math.max(1, (e.getDuration() / 20.0)) * e.getAmplifier() + 1)).sum();
-
-    ItemStack outputItem = ModItem.FOOD_ESSENCE.get().getDefaultInstance();
-    int count = Math.max(1, Math.min(outputItem.getMaxStackSize(), (int) (((nutritionFactor * saturationFactor) / 3.5f + effectFactor / 5.0f) / 10.0f)));
-    outputItem.setCount(count);
-    int outputEnergy = ((nutritionFactor * saturationFactor) * 5 + effectFactor * 10) * 2;
-    return new RecipeEntry(item, outputEnergy, outputItem);
+    recipe = GluttonyRecipeManager.findRecipe(item);
   }
 
   public boolean isWorking() {
@@ -247,9 +225,6 @@ public class GluttonyBlockEntity extends BaseEnergyStorageBlockEntity<GluttonyMe
       return null;
     }
     return new GluttonyMenu(containerId, playerInventory, itemHandler, energyData, workProgress);
-  }
-
-  public record RecipeEntry(ItemStack inputItem, int outputEnergy, ItemStack outputItem) {
   }
 
   public record Data(GluttonyBlockEntity blockEntity) implements ContainerData {

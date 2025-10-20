@@ -1,4 +1,4 @@
-package top.ctnstudio.futurefood.api.recipe;
+package top.ctnstudio.futurefood.core.recipe;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
