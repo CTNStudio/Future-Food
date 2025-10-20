@@ -101,11 +101,6 @@ public interface IUnlimitedLinkStorage extends INBTSerializable<CompoundTag> {
   void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt);
 
   /**
-   * 添加一个链接缓存
-   */
-  void addLinkCache(BlockPos pos);
-
-  /**
    * 清空链接列表
    */
   void clear();

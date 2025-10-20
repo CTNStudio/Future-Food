@@ -1,6 +1,7 @@
 package top.ctnstudio.futurefood.common.item.food;
 
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -12,8 +13,11 @@ public class AtomCola extends FoodItem {
     .nutrition(2)
     .saturationModifier(0.2f)
     .effect(() ->
-      new MobEffectInstance(ModEffect.RADIATION, 20 * 60 * 5, 0),
-      1.0f)
+      new MobEffectInstance(ModEffect.RADIATION, 20 * 60 * 3, 0), 1.0f)
+    .effect(() ->
+      new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 60, 4), 1.0f)
+    .effect(() ->
+      new MobEffectInstance(MobEffects.DIG_SPEED, 20 * 60, 4), 1.0f)
     .alwaysEdible()
     .build();
 

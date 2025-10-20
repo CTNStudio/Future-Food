@@ -68,11 +68,11 @@ public final class ModGameRender {
 
     float f = (float) Mth.lerp(1.0f, event.getPartialTick(), 5.0F);
     if (event.getMode() == FogRenderer.FogMode.FOG_SKY) {
-      start = 0.0F;
-      end = f * 0.8F;
+      start = 0.5F;
+      end = f * 1.8F;
     } else {
-      start = f * 0.25F;
-      end = f;
+      start = f;
+      end = f * 4.75F;
     }
 
     event.setCanceled(true);

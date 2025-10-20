@@ -94,6 +94,8 @@ public class DatagenI18EnUS extends LanguageProvider {
     add(GluttonyJeiRecipe.TITLE_KEY, "Gluttony");
     add(GluttonyJeiRecipe.ENERGY_KEY, "energy generation：%s");
     add(GluttonyJeiRecipe.PROCESSING_TIME_KEY, "processing time：%sT");
+
+    add("death.attack.radiation", "%s has mutated.");
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {

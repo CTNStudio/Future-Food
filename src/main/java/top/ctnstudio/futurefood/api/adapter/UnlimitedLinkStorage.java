@@ -1,7 +1,6 @@
 package top.ctnstudio.futurefood.api.adapter;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup.Provider;
@@ -11,70 +10,36 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkModify;
 import top.ctnstudio.futurefood.api.capability.IUnlimitedLinkStorage;
-import top.ctnstudio.futurefood.core.FutureFood;
 import top.ctnstudio.futurefood.util.EnergyUtil;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static top.ctnstudio.futurefood.util.BlockUtil.getBlockPos;
 
 /**
  * 无限连接存储
  */
+// TODO - 貌似不应该把会在 Client Side 处理的 tick 方法删掉，但是安全性有待讨论。
 public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
   /**
    * 链接哈希集合
    */
   private final Set<BlockPos> linkSet;
 
-  /**
-   * 变更缓存，用于从变更事件中提交需要检查更新的坐标。
-   *
-   * @see top.ctnstudio.futurefood.event.ModBlockEvent
-   */
-  private final Queue<BlockPos> cacheData;
 
   @Nullable
   protected IUnlimitedLinkModify onContentsChanged;
 
   public UnlimitedLinkStorage() {
     this.linkSet = Sets.newHashSet();
-    this.cacheData = Queues.newArrayDeque();
-  }
-
-  /**
-   * 从变更缓存向链接目标添加或删除数据。
-   */
-  public final void tick() {
-    final Level world = this.getLevel();
-    if (Objects.isNull(world) || world.isClientSide) {
-      return;
-    }
-
-    Queue<BlockPos> cacheData = this.getCacheData();
-
-    while (!cacheData.isEmpty()) {
-      final BlockPos cache = cacheData.poll();
-      var flag = world.getBlockEntity(cache) instanceof IEnergyStorage;
-      flag = flag
-        ? this.linkBlock(world, cache)
-        : this.removeLink(cache);
-
-      if (!flag) {
-        FutureFood.LOGGER.warn("Something warn in block pos {} ", cache);
-      }
-    }
-  }
-
-  @Nonnull
-  public final Queue<BlockPos> getCacheData() {
-    return cacheData;
   }
 
   @Override
@@ -154,11 +119,6 @@ public abstract class UnlimitedLinkStorage implements IUnlimitedLinkStorage {
 
     BlockState blockState = getLevel().getBlockState(pos);
     return !blockState.isEmpty() ? blockState : null;
-  }
-
-  @Override
-  public final void addLinkCache(BlockPos pos) {
-    this.cacheData.add(pos);
   }
 
   @Nonnull

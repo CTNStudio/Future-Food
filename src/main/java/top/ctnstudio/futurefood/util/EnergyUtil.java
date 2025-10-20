@@ -58,7 +58,7 @@ public class EnergyUtil {
   }
 
   /**
-   * 获取方块的能接收能量的能量接口
+   * 获取方块的能接收能量的能量接口，当接口不存在或能力系统未被实现时，返回 null。
    *
    * @param level 世界
    * @param pos   方块位置

@@ -4,10 +4,12 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.EffectCure;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import top.ctnstudio.futurefood.core.init.ModDamageType;
 import top.ctnstudio.futurefood.core.init.ModEffect;
 
 import java.awt.*;
@@ -18,6 +20,18 @@ import java.util.Set;
 public class EffectRadiation extends MobEffect {
   public EffectRadiation() {
     super(MobEffectCategory.HARMFUL, Color.GREEN.getRGB());
+  }
+
+  @Override
+  public boolean applyEffectTick(LivingEntity livingEntity, int amplifier) {
+    livingEntity.hurt(ModDamageType
+      .getDamageBy(livingEntity, ModDamageType.DAMAGE_TYPE_RADIATION), 0.5f);
+    return true;
+  }
+
+  @Override
+  public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+    return duration % 100 == 0;
   }
 
   @SubscribeEvent

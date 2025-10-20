@@ -7,7 +7,11 @@ import top.ctnstudio.futurefood.core.init.ModItem;
 
 import java.util.Objects;
 
-public record GluttonyRecipe(ItemStack inputItem, int outputEnergy, ItemStack outputItem) {
+public record GluttonyRecipe(
+  ItemStack inputItem,
+  int outputEnergy,
+  ItemStack outputItem
+) {
   public boolean matches(ItemStack inputItem) {
     return ItemStack.isSameItemSameComponents(this.inputItem, inputItem);
   }

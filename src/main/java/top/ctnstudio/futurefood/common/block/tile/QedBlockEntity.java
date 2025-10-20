@@ -1,5 +1,6 @@
 package top.ctnstudio.futurefood.common.block.tile;
 
+import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
@@ -27,14 +28,12 @@ import top.ctnstudio.futurefood.util.ModPayloadUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
-import java.util.Queue;
 
 // TODO 添加配置功能
 // TODO 让外部无法提取能源
 public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMenu> implements IUnlimitedLinkModify {
   public static final int DEFAULT_MAX_REMAINING_TIME = 5;
   protected final UnlimitedLinkStorage linkStorage; // 无限链接存储
-  public float sphereTick;
 
   /**
    * 剩余传递计时
@@ -93,19 +92,7 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
 
     // 提取物品方块的能量
     controlItemEnergy(itemHandler, false);
-
     controlBlockEnergy(level, pos, bs);
-
-    Queue<BlockPos> cacheData = linkStorage.getCacheData();
-    if (!cacheData.isEmpty()) {
-      for (BlockPos cache : cacheData) {
-        if (level.getBlockEntity(cache) instanceof IEnergyStorage) {
-          linkStorage.linkBlock(level, cache);
-        } else {
-          linkStorage.removeLink(pos);
-        }
-      }
-    }
 
     // 使用方法方便重写逻辑
     if (getRemainingTime() <= 0) {
@@ -125,18 +112,23 @@ public class QedBlockEntity extends BaseEnergyStorageBlockEntity<OutputEnergyMen
    * @param qedLevel      qed世界
    * @param qedBlockState qed方块状态
    */
+  // TODO - 或许一部分应该放到客户端去处理。
   public void executeEnergyTransmission(Level qedLevel, BlockState qedBlockState) {
     if (!energyStorage.canExtract() || energyStorage.getEnergyStored() <= 0) {
       return;
     }
 
+    final var removeSet = Sets.<BlockPos>newHashSet();
     linkStorage.getLinkSet().forEach(bp -> {
       IEnergyStorage capability = EnergyUtil.getEnergyStorageCapabilities(qedLevel, bp);
       if (capability == null) {
+        removeSet.add(bp);
         return;
       }
       EnergyUtil.controlEnergy(energyStorage, capability);
     });
+
+    removeSet.forEach(linkStorage::removeLink);
   }
 
   /**
