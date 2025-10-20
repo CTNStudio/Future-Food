@@ -90,10 +90,10 @@ public class DatagenI18ZhCn extends LanguageProvider {
 
     add(ParticleColliderJeiRecipe.TITLE_KEY, "粒子对撞器");
     add(ParticleColliderJeiRecipe.ENERGY_KEY, "能量消耗：%s");
-    add(ParticleColliderJeiRecipe.PROCESSING_TIME_KEY, "处理时间：%s");
+    add(ParticleColliderJeiRecipe.PROCESSING_TIME_KEY, "处理时间：%s刻");
     add(GluttonyJeiRecipe.TITLE_KEY, "暴食者");
     add(GluttonyJeiRecipe.ENERGY_KEY, "能量产生：%s");
-    add(GluttonyJeiRecipe.PROCESSING_TIME_KEY, "处理时间：%s");
+    add(GluttonyJeiRecipe.PROCESSING_TIME_KEY, "处理时间：%s刻");
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {

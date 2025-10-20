@@ -90,10 +90,10 @@ public class DatagenI18EnUS extends LanguageProvider {
 
     add(ParticleColliderJeiRecipe.TITLE_KEY, "Particle Collider");
     add(ParticleColliderJeiRecipe.ENERGY_KEY, "energy cost：%s");
-    add(ParticleColliderJeiRecipe.PROCESSING_TIME_KEY, "processing time：%s");
+    add(ParticleColliderJeiRecipe.PROCESSING_TIME_KEY, "processing time：%sT");
     add(GluttonyJeiRecipe.TITLE_KEY, "Gluttony");
     add(GluttonyJeiRecipe.ENERGY_KEY, "energy generation：%s");
-    add(GluttonyJeiRecipe.PROCESSING_TIME_KEY, "processing time：%s");
+    add(GluttonyJeiRecipe.PROCESSING_TIME_KEY, "processing time：%sT");
   }
 
   public void addConfig(String configKey, String translationDescribe, String commentDescribe) {
