@@ -21,7 +21,8 @@ import top.ctnstudio.futurefood.util.EnergyUtil;
 
 // TODO 添加配置功能
 // TODO 让外部无法输入能源
-public class QerBlockEntity extends BaseEnergyStorageBlockEntity<InputEnergyMenu> implements IUnlimitedEntityReceive {
+public class QerBlockEntity extends BaseEnergyStorageBlockEntity<InputEnergyMenu>
+  implements IUnlimitedEntityReceive {
 
   public QerBlockEntity(BlockPos pos, BlockState blockState) {
     super(ModTileEntity.QER.get(), pos, blockState, new ModEnergyStorage(20480));

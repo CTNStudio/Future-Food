@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -43,7 +44,7 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class BaseEnergyStorageBlockEntity<T extends BasicEnergyMenu> extends ModBlockEntity
-  implements MenuProvider, IItemStackModify, IEnergyStorageModify {
+  implements MenuProvider, IItemStackModify, IEnergyStorageModify, WorldlyContainer {
 
   protected final ModEnergyStorage energyStorage;
   protected final ModItemStackHandler itemHandler;

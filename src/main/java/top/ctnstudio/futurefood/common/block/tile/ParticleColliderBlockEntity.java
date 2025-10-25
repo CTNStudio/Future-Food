@@ -115,6 +115,73 @@ public class ParticleColliderBlockEntity extends BaseEnergyStorageBlockEntity<Pa
     return new ParticleColliderMenu(containerId, playerInventory, itemHandler, energyData, workProgress);
   }
 
+
+  // TODO - 还没做完
+  @Override
+  public int[] getSlotsForFace(Direction direction) {
+    if (direction == Direction.DOWN) {
+      return new int[] { 0 };
+    } else if (direction == Direction.UP) {
+      return new int[] { 1 };
+    }
+
+    return new int[] { 2 };
+  }
+
+  @Override
+  public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
+    // TODO true 改成检查 ItemStack 可以存储电力。
+    return i != 2 && (direction == Direction.UP || true);
+  }
+
+  @Override
+  public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
+    return direction == Direction.DOWN && i == 2;
+  }
+
+  @Override
+  public int getContainerSize() {
+    return this.itemHandler.getSlots();
+  }
+
+  @Override
+  public boolean isEmpty() {
+    for(int i = 0; i < this.itemHandler.getSlots(); i++) {
+      if (!this.itemHandler.getStackInSlot(i).isEmpty()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  @Override
+  public ItemStack getItem(int i) {
+    return this.itemHandler.getStackInSlot(i);
+  }
+
+  @Override
+  public ItemStack removeItem(int i, int i1) {
+    return this.itemHandler.extractItem(i, i1, false);
+  }
+
+  @Override
+  public ItemStack removeItemNoUpdate(int i) {
+    return this.itemHandler.extractItem(i, i, false);
+  }
+
+  @Override
+  public void setItem(int i, ItemStack itemStack) {
+    this.itemHandler.setStackInSlot(i, itemStack);
+  }
+
+  @Override
+  public void clearContent() {
+    for(int i = 0; i < this.itemHandler.getSlots(); i++) {
+      this.itemHandler.setStackInSlot(i, ItemStack.EMPTY);
+    }
+  }
+
   public record Data(ParticleColliderBlockEntity blockEntity) implements ContainerData {
     @Override
     public int get(int index) {
